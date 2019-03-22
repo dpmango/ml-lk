@@ -9,6 +9,9 @@
     "deploy": "yarn build && surge --project ./dist --domain ml-lk.surge.sh"
   },
   "dependencies": {
+    "axios": "^0.18.0",
+    "moment": "^2.24.0",
+    "normalize-scss": "^7.0.1",
     "vue": "^2.6.6"
   },
   "devDependencies": {

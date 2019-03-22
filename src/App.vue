@@ -3,8 +3,7 @@
     <div class="page">
       <Header/>
       <div class="page__content">
-        <img alt="Vue logo" src="./assets/logo.png">
-        <HelloWorld msg="Welcome to Your Vue.js App"/>
+        <Messenger/>
       </div>
     </div>
   </div>
@@ -12,17 +11,19 @@
 
 <script>
 import Header from './components/Shared/Header.vue';
-import HelloWorld from './components/HelloWorld.vue';
+import Messenger from '@/pages/Messenger.vue';
 
 export default {
   name: 'app',
   components: {
+    Messenger,
     Header,
-    HelloWorld,
   },
 };
 </script>
 
 <style lang="scss">
+@import 'normalize-scss';
+@include normalize();
 @import '@/theme/app.scss';
 </style>
