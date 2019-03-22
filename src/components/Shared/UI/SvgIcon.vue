@@ -47,6 +47,6 @@ export default {
   vertical-align: baseline;
   margin-bottom: -2px;
   fill: currentColor;
-  transition: opacity 0.25s ease-in-out, fill 0.25s ease-in-out, stroke 0.25s ease-in-out;
+  transition: opacity 0.25s ease-in-out;
 }
 </style>

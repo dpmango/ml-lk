@@ -29,7 +29,7 @@ export default {
     };
   },
   mounted() {
-    api.get('ladies').then(response => {
+    api.get('ladies').then((response) => {
       this.ladies = response.data;
     });
   },
