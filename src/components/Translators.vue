@@ -51,7 +51,12 @@ export default {
 @import '@/theme/utils.scss';
 
 .table {
+  flex: 0 1 auto;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
   &__head {
+    flex: 0 0 auto;
     display: flex;
     align-items: center;
     padding: 16px 12px;
@@ -65,6 +70,9 @@ export default {
     }
   }
   &__content {
+    flex: 0 1 auto;
+    max-height: 100%;
+    overflow-y: scroll;
     padding: 12px;
   }
 }

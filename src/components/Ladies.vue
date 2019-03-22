@@ -5,8 +5,8 @@
         <div class="table__cell table__cell--name">Девушки</div>
         <div class="table__cell table__cell--name">Переводчик</div>
       </div>
-      <div class="table__content" v-for="(lady, idx) in ladies" :key="idx">
-        <Lady :lady="lady"/>
+      <div class="table__content">
+        <Lady v-for="(lady, idx) in ladies" :key="idx" :lady="lady"/>
       </div>
     </div>
   </Panel>
@@ -29,7 +29,7 @@ export default {
     };
   },
   mounted() {
-    api.get('ladies').then((response) => {
+    api.get('ladies').then(response => {
       this.ladies = response.data;
     });
   },
@@ -40,7 +40,12 @@ export default {
 @import '@/theme/utils.scss';
 
 .table {
+  flex: 0 1 auto;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
   &__head {
+    flex: 0 0 auto;
     display: flex;
     align-items: center;
     padding: 16px 12px;
@@ -54,7 +59,10 @@ export default {
     }
   }
   &__content {
-    padding: 12px;
+    flex: 0 1 auto;
+    max-height: 100%;
+    overflow-y: scroll;
+    padding: 20px;
   }
 }
 </style>

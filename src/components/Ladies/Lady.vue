@@ -1,5 +1,5 @@
 <template>
-  <div class="lady" data-id="lady.ID">
+  <div class="lady" :data-id="lady.ID">
     <div class="lady__avatar">
       <img :src="lady.Thumbnail" :alt="lady.RealName">
     </div>
@@ -61,7 +61,7 @@ export default {
       return birthday.diff(moment(), 'years') * -1;
     },
     registration() {
-      const date = moment(this.lady.LastReg);
+      const date = moment.unix(this.lady.LastReg);
       return date.format('DD.MM.YYYY');
     },
   },
@@ -72,6 +72,10 @@ export default {
 .lady {
   display: flex;
   align-items: center;
+  margin-bottom: 20px;
+  &:last-child {
+    margin-bottom: 0;
+  }
   &__avatar {
     position: relative;
     z-index: 1;
