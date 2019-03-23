@@ -14,6 +14,9 @@
             </span>
           </button>
         </div>
+        <div class="header__actions">
+          <Button primary>Добавить переводчика</Button>
+        </div>
       </div>
     </Container>
   </header>
@@ -21,11 +24,13 @@
 
 <script>
 import Container from '@/components/Shared/Layout/Container.vue';
+import Button from '@/components/Shared/UI/Button.vue';
 
 export default {
   name: 'Header',
   components: {
     Container,
+    Button,
   },
   props: {
     modifier: String,
@@ -61,6 +66,9 @@ export default {
   }
   &__hamburger {
     margin-left: -10px;
+  }
+  &__actions {
+    margin-left: 30px;
   }
 }
 </style>
