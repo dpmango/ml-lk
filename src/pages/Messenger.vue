@@ -27,6 +27,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import '@/theme/utils.scss';
+
 .grid {
   display: flex;
   flex-wrap: wrap;
@@ -48,6 +50,19 @@ export default {
   &--girls {
     flex-basis: 36%;
     max-width: 36%;
+  }
+}
+@include r($lg) {
+  .col {
+    &--translators {
+      flex-basis: 100%;
+      max-width: 100%;
+      margin-bottom: 20px;
+    }
+    &--girls {
+      flex-basis: 100%;
+      max-width: 100%;
+    }
   }
 }
 </style>

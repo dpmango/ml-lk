@@ -1,8 +1,9 @@
 <template>
   <button
     class="btn"
-    @click="$emit('click')"
     :class="{ 'btn--primary': primary, 'btn--orange': orange }"
+    :type="type"
+    @click="$emit('click')"
   >
     <slot></slot>
   </button>
@@ -14,6 +15,7 @@ export default {
   props: {
     primary: Boolean,
     orange: Boolean,
+    type: String,
   },
 };
 </script>
