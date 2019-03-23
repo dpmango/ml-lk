@@ -2,19 +2,19 @@
   <Panel name="Переводчик">
     <div class="table">
       <div class="table__head">
-        <div class="table__cell table__cell--translator">
-          Переводчик
+        <div class="table__cell table__cell--translator" @click="sortTable('name')">
+          <span>Переводчик</span>
           <svg-icon name="sort" width="16" height="12"/>
         </div>
-        <div class="table__cell table__cell--translator">Активность</div>
-        <div class="table__cell table__cell--translator">
-          Количество девушек
+        <div class="table__cell table__cell--activity">Активность</div>
+        <div class="table__cell table__cell--count" @click="sortTable('count')">
+          <span>Количество девушек</span>
           <svg-icon name="sort" width="16" height="12"/>
         </div>
-        <div class="table__cell table__cell--translator">Блокировка</div>
+        <div class="table__cell table__cell--block">Блокировка</div>
       </div>
-      <div class="table__content" v-for="(translator, idx) in translators" :key="idx">
-        <Translator :translator="translator"/>
+      <div class="table__content">
+        <Translator v-for="(translator, idx) in translators" :key="idx" :translator="translator"/>
       </div>
     </div>
   </Panel>
@@ -40,9 +40,14 @@ export default {
     };
   },
   mounted() {
-    api.get('translators').then((response) => {
+    api.get('translators').then(response => {
       this.translators = response.data;
     });
+  },
+  methods: {
+    sortTable(name) {
+      console.log('sorting table', name);
+    },
   },
 };
 </script>
@@ -65,8 +70,32 @@ export default {
   &__cell {
     font-size: 13px;
     font-weight: 500;
+    span {
+      display: inline-block;
+    }
+    .svg-icon {
+      fill: rgba(#1e1e1e, 0.5);
+    }
     &--translator {
-      flex: 0 1 25%;
+      flex: 0 0 25%;
+    }
+    &--activity {
+      flex: 0 0 34%;
+      text-align: center;
+    }
+    &--count {
+      flex: 0 0 12%;
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      span {
+        max-width: 75px;
+      }
+    }
+    &--block {
+      flex: 0 0 130px;
+      margin-left: 35px;
     }
   }
   &__content {

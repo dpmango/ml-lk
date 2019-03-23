@@ -41,17 +41,17 @@ export default {
     outline: none;
   }
   &--primary {
-    border-color: #5aa6ff;
+    border-color: $colorPrimary;
     &:hover {
       color: white;
-      background-color: #5aa6ff;
+      background-color: $colorPrimary;
     }
   }
   &--orange {
-    border-color: #ff9800;
+    border-color: $colorOrange;
     &:hover {
       color: white;
-      background-color: #ff9800;
+      background-color: $colorOrange;
     }
   }
 }

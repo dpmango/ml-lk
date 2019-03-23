@@ -65,8 +65,12 @@ export default {
   border-radius: 4px;
   font-size: 14px;
   color: $fontColor;
+  transition: border 0.25s ease-in-out;
   &::placeholder {
     color: rgba($fontColor, 0.4);
+  }
+  &:focus {
+    border-color: $colorPrimary;
   }
 }
 </style>
