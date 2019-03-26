@@ -29,7 +29,12 @@
                 type="password"
                 placeholder="Пароль"
               />
-              <ui-input group v-model="form.bankCredentials" placeholder="Реквизиты банка"/>
+              <ui-input
+                group
+                v-model="form.bankCredentials"
+                type="textarea"
+                placeholder="Реквизиты банка"
+              />
             </div>
           </div>
 
@@ -38,91 +43,49 @@
             <div class="modal__col-50">
               <div class="ui-input-row">
                 <label for="price_1">Входящее письмо</label>
-                <ui-input
-                  compact
-                  min="0"
-                  max="100"
-                  v-model="form.prices.price_1"
-                  name="price_1"
-                  placeholder
-                />
+                <ui-input compact min="0" max="100" v-model="form.prices.price_1" name="price_1"/>
                 <span class="ui-input-row__helper">% = {{ getCommission(1) }}</span>
               </div>
               <div class="ui-input-row">
                 <label for="price_2">Исходящее письмо</label>
-                <ui-input
-                  compact
-                  min="0"
-                  max="100"
-                  v-model="form.prices.price_2"
-                  name="price_2"
-                  placeholder
-                />
+                <ui-input compact min="0" max="100" v-model="form.prices.price_2" name="price_2"/>
                 <span class="ui-input-row__helper">% = {{ getCommission(2) }}</span>
               </div>
               <div class="ui-input-row">
                 <label for="price_3">Файл в письме</label>
-                <ui-input
-                  compact
-                  min="0"
-                  max="100"
-                  v-model="form.prices.price_3"
-                  name="price_3"
-                  placeholder
-                />
+                <ui-input compact min="0" max="100" v-model="form.prices.price_3" name="price_3"/>
                 <span class="ui-input-row__helper">% = {{ getCommission(3) }}</span>
               </div>
               <div class="ui-input-row">
                 <label for="price_4">Минута чата</label>
-                <ui-input
-                  compact
-                  min="0"
-                  max="100"
-                  v-model="form.prices.price_4"
-                  name="price_4"
-                  placeholder
-                />
+                <ui-input compact min="0" max="100" v-model="form.prices.price_4" name="price_4"/>
                 <span class="ui-input-row__helper">% = {{ getCommission(4) }}</span>
               </div>
               <div class="ui-input-row">
                 <label for="price_5">Файл в чате</label>
-                <ui-input
-                  compact
-                  min="0"
-                  max="100"
-                  v-model="form.prices.price_5"
-                  name="price_5"
-                  placeholder
-                />
+                <ui-input compact min="0" max="100" v-model="form.prices.price_5" name="price_5"/>
                 <span class="ui-input-row__helper">% = {{ getCommission(5) }}</span>
               </div>
               <div class="ui-input-row">
                 <label for="price_6">Видео</label>
-                <ui-input
-                  compact
-                  min="0"
-                  max="100"
-                  v-model="form.prices.price_6"
-                  name="price_6"
-                  placeholder
-                />
+                <ui-input compact min="0" max="100" v-model="form.prices.price_6" name="price_6"/>
                 <span class="ui-input-row__helper">% = {{ getCommission(6) }}</span>
               </div>
               <div class="ui-input-row">
                 <label for="price_7">Доставка</label>
-                <ui-input
-                  compact
-                  min="0"
-                  max="100"
-                  v-model="form.prices.price_7"
-                  name="price_7"
-                  placeholder
-                />
+                <ui-input compact min="0" max="100" v-model="form.prices.price_7" name="price_7"/>
                 <span class="ui-input-row__helper">%</span>
               </div>
             </div>
             <div class="modal__col-50">
-              <ui-input group v-model="form.notes" placeholder="Комментарии"/>
+              <ui-input
+                group
+                type="textarea"
+                :minheight="275"
+                :maxheight="400"
+                v-model="form.notes"
+                placeholder="Комментарии"
+              />
             </div>
           </div>
 
@@ -153,7 +116,7 @@ const defaultFormState = {
   login: '',
   password: '',
   bankCredentials: '',
-  notes: '',
+  notes: 'sdasdasd',
   file: '',
   prices: {
     price_1: '',
@@ -195,6 +158,7 @@ export default {
     },
     handleSubmit(e) {
       e.preventDefault();
+      console.log(this.form.notes);
       api
         .post('translators', {
           login: this.form.login, // логин (обязательно)

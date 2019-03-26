@@ -1,5 +1,17 @@
 <template>
-  <div :class="{ 'ui-group': group }">
+  <div v-if="type === 'textarea'" :class="{ 'ui-group': group }">
+    <textarea-autosize
+      class="ui-input"
+      :name="name"
+      :required="required"
+      :placeholder="requiredPlaceholder"
+      :min-height="minheight"
+      :max-height="maxheight"
+      :value="value"
+      @input="handleChange"
+    />
+  </div>
+  <div v-else :class="{ 'ui-group': group }">
     <input
       class="ui-input"
       :name="name"
@@ -23,6 +35,15 @@ export default {
     group: Boolean,
     big: Boolean,
     compact: Boolean,
+    // textarea props
+    minheight: {
+      type: [Number, String],
+      default: 100,
+    },
+    maxheight: {
+      type: [Number, String],
+      default: 200,
+    },
     // functional props
     name: String,
     placeholder: String,
@@ -54,7 +75,9 @@ export default {
       }
     },
     handleChange(e) {
-      this.$emit('input', e.target.value);
+      const valueOfType = this.type !== 'textarea' ? e.target.value : e;
+      // as VueTextareaAutosize is passing clear value in event
+      this.$emit('input', valueOfType);
     },
   },
 };
