@@ -8,9 +8,10 @@
       :type="type"
       :value="value"
       :required="required"
+      @keydown="handleKeyDown"
       @input="handleChange"
       @click="$emit('click')"
-    />
+    >
   </div>
 </template>
 
@@ -47,6 +48,11 @@ export default {
     },
   },
   methods: {
+    handleKeyDown() {
+      if (this.min && this.max) {
+        // assume that its a mask
+      }
+    },
     handleChange(e) {
       this.$emit('input', e.target.value);
     },

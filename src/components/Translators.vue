@@ -40,7 +40,7 @@ export default {
     };
   },
   mounted() {
-    api.get('translators').then(response => {
+    api.get('translators').then((response) => {
       this.translators = response.data;
     });
   },

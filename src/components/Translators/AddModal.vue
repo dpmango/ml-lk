@@ -4,7 +4,7 @@
       <div class="modal__head">
         <div class="modal__title">Добавление переводчика</div>
         <div class="modal__close" @click="$modal.hide('add-translator')">
-          <svg-icon name="close" width="14" height="14" />
+          <svg-icon name="close" width="14" height="14"/>
         </div>
       </div>
       <div class="modal__content">
@@ -12,16 +12,16 @@
         <form @submit="handleSubmit">
           <div class="modal__inputs">
             <div class="modal__col-50">
-              <ui-input group required v-model="form.name" placeholder="Имя" />
-              <ui-input group required v-model="form.surname" placeholder="Фамилия" />
-              <ui-input group v-model="form.phone" type="tel" placeholder="Телефон" />
-              <ui-input group v-model="form.skype" placeholder="Skype" />
-              <ui-input group v-model="form.passport" placeholder="Номер и серия паспорта" />
+              <ui-input group required v-model="form.name" placeholder="Имя"/>
+              <ui-input group required v-model="form.surname" placeholder="Фамилия"/>
+              <ui-input group v-model="form.phone" type="tel" placeholder="Телефон"/>
+              <ui-input group v-model="form.skype" placeholder="Skype"/>
+              <ui-input group v-model="form.passport" placeholder="Номер и серия паспорта"/>
             </div>
             <div class="modal__col-50">
-              <ui-input group required v-model="form.email" type="email" placeholder="Email" />
-              <ui-input group v-model="form.adress" placeholder="Адрес" />
-              <ui-input group required v-model="form.login" placeholder="Логин" />
+              <ui-input group required v-model="form.email" type="email" placeholder="Email"/>
+              <ui-input group v-model="form.adress" placeholder="Адрес"/>
+              <ui-input group required v-model="form.login" placeholder="Логин"/>
               <ui-input
                 group
                 required
@@ -29,30 +29,22 @@
                 type="password"
                 placeholder="Пароль"
               />
-              <ui-input group v-model="form.bankCredentials" placeholder="Реквизиты банка" />
+              <ui-input group v-model="form.bankCredentials" placeholder="Реквизиты банка"/>
             </div>
           </div>
 
-          <div class="modal__inputs">
-            <div class="modal__col-50"></div>
-            <div class="modal__col-50">
-              <ui-input group v-model="form.notes" placeholder="Комментарии" />
-            </div>
-          </div>
-
+          <div class="modal__title modal__title--section">Финансовые показатели</div>
           <div class="modal__inputs">
             <div class="modal__col-50">
-              <div class="modal__title">Добавление переводчика</div>
               <div class="ui-input-row">
                 <label for="price_1">Входящее письмо</label>
                 <ui-input
                   compact
-                  type="number"
                   min="0"
                   max="100"
                   v-model="form.prices.price_1"
                   name="price_1"
-                  placeholder=""
+                  placeholder
                 />
                 <span class="ui-input-row__helper">% = {{ getCommission(1) }}</span>
               </div>
@@ -60,12 +52,11 @@
                 <label for="price_2">Исходящее письмо</label>
                 <ui-input
                   compact
-                  type="number"
                   min="0"
                   max="100"
                   v-model="form.prices.price_2"
                   name="price_2"
-                  placeholder=""
+                  placeholder
                 />
                 <span class="ui-input-row__helper">% = {{ getCommission(2) }}</span>
               </div>
@@ -73,12 +64,11 @@
                 <label for="price_3">Файл в письме</label>
                 <ui-input
                   compact
-                  type="number"
                   min="0"
                   max="100"
                   v-model="form.prices.price_3"
                   name="price_3"
-                  placeholder=""
+                  placeholder
                 />
                 <span class="ui-input-row__helper">% = {{ getCommission(3) }}</span>
               </div>
@@ -86,12 +76,11 @@
                 <label for="price_4">Минута чата</label>
                 <ui-input
                   compact
-                  type="number"
                   min="0"
                   max="100"
                   v-model="form.prices.price_4"
                   name="price_4"
-                  placeholder=""
+                  placeholder
                 />
                 <span class="ui-input-row__helper">% = {{ getCommission(4) }}</span>
               </div>
@@ -99,12 +88,11 @@
                 <label for="price_5">Файл в чате</label>
                 <ui-input
                   compact
-                  type="number"
                   min="0"
                   max="100"
                   v-model="form.prices.price_5"
                   name="price_5"
-                  placeholder=""
+                  placeholder
                 />
                 <span class="ui-input-row__helper">% = {{ getCommission(5) }}</span>
               </div>
@@ -112,12 +100,11 @@
                 <label for="price_6">Видео</label>
                 <ui-input
                   compact
-                  type="number"
                   min="0"
                   max="100"
                   v-model="form.prices.price_6"
                   name="price_6"
-                  placeholder=""
+                  placeholder
                 />
                 <span class="ui-input-row__helper">% = {{ getCommission(6) }}</span>
               </div>
@@ -125,17 +112,18 @@
                 <label for="price_7">Доставка</label>
                 <ui-input
                   compact
-                  type="number"
                   min="0"
                   max="100"
                   v-model="form.prices.price_7"
                   name="price_7"
-                  placeholder=""
+                  placeholder
                 />
                 <span class="ui-input-row__helper">%</span>
               </div>
             </div>
-            <div class="modal__col-50"></div>
+            <div class="modal__col-50">
+              <ui-input group v-model="form.notes" placeholder="Комментарии"/>
+            </div>
           </div>
 
           <div class="modal__cta">
@@ -195,8 +183,7 @@ export default {
   },
   mounted() {
     api.get('translators/prices').then((res) => {
-      console.log('prices responce from API', res.data[0]);
-      this.rates = res.data[0];
+      [this.rates] = res.data;
     });
   },
   methods: {
@@ -204,7 +191,6 @@ export default {
       const priceName = `Price_${priceId}`;
       const rate = this.rates[priceName];
       const commision = this.form.prices[priceName.toLowerCase()] / 100;
-      console.log(rate, commision)
       return `${parseFloat(rate * commision).toFixed(2).toString()} y.e`;
     },
     handleSubmit(e) {
@@ -217,7 +203,7 @@ export default {
           phone: this.form.phone, // телефон
           passport: this.form.passport, // номер и серия паспорта
           email: this.form.email, // емейл (обязательно)
-          // ADRESS ?
+          address: this.form.adress, // адрес
           skype: this.form.skype, // скайп
           password: this.form.password, // пароль (обязательно)
           bank: this.form.bankCredentials, // реквизиты
@@ -254,6 +240,9 @@ export default {
   &__title {
     font-weight: 500;
     font-size: 14px;
+    &--section{
+      margin: 15px 0;
+    }
   }
   &__close {
     margin-top: -10px;
