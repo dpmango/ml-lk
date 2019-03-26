@@ -2,14 +2,15 @@
   <div :class="{ 'ui-group': group }">
     <input
       class="ui-input"
-      :class="{ 'ui-input--big': big }"
+      :name="name"
+      :class="{ 'ui-input--big': big, 'ui-input--compact': compact }"
       :placeholder="requiredPlaceholder"
       :type="type"
       :value="value"
       :required="required"
       @input="handleChange"
       @click="$emit('click')"
-    >
+    />
   </div>
 </template>
 
@@ -20,7 +21,9 @@ export default {
     // layout modifiers
     group: Boolean,
     big: Boolean,
+    compact: Boolean,
     // functional props
+    name: String,
     placeholder: String,
     required: Boolean,
     type: {
@@ -28,6 +31,8 @@ export default {
       default: 'text',
     },
     value: String,
+    min: String,
+    max: String,
   },
   model: {
     prop: 'value',
@@ -35,6 +40,9 @@ export default {
   },
   computed: {
     requiredPlaceholder() {
+      if (!this.placeholder) {
+        return '';
+      }
       return this.placeholder + (this.required ? ' (*)' : '');
     },
   },
@@ -71,6 +79,13 @@ export default {
   }
   &:focus {
     border-color: $colorPrimary;
+  }
+  &--compact {
+    width: auto;
+    padding-left: 5px;
+    padding-right: 5px;
+    text-align: center;
+    max-width: 40px;
   }
 }
 </style>
