@@ -17,6 +17,19 @@
               <ui-input group v-model="form.phone" type="tel" placeholder="Телефон"/>
               <ui-input group v-model="form.skype" placeholder="Skype"/>
               <ui-input group v-model="form.passport" placeholder="Номер и серия паспорта"/>
+              <vue-dropzone
+                :include-styling="true"
+                ref="DropzoneRef"
+                id="dropzone-translators-add"
+                :options="dropzoneOptions"
+                :useCustomSlot="true"
+              >
+                <div class="dropzone-custom-message">
+                  <svg-icon name="attach" width="16" height="16"/>
+                  <span>Прикрепить скан паспорта</span>
+                </div>
+              </vue-dropzone>
+              <!-- :vdropzone-thumbnail="dropzoneThumbnail" -->
             </div>
             <div class="modal__col-50">
               <ui-input group required v-model="form.email" type="email" placeholder="Email"/>
@@ -99,6 +112,7 @@
 </template>
 
 <script>
+import vue2Dropzone from 'vue2-dropzone';
 import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import Button from '@/components/Shared/UI/Button.vue';
 import UiInput from '@/components/Shared/UI/Input.vue';
@@ -136,12 +150,23 @@ export default {
     UiInput,
     Button,
     Notification,
+    vueDropzone: vue2Dropzone,
   },
   data() {
     return {
       errorMessage: '',
       form: defaultFormState,
       rates: {},
+      dropzoneOptions: {
+        // https://www.dropzonejs.com/#configuration-options
+        url: 'https://api-m.marmeladies.com/v1/translators/files',
+        method: 'POST',
+        headers: { Authorization: 'Bearer BqxKJPW-BrOQA3YbNwp54gFaNcpnO9Iv' },
+        thumbnailWidth: 200,
+        maxFilesize: 5,
+        thumbnailMethod: 'crop', // crop or contain
+        // previewTemplate: this.dropzoneTemplate(),
+      },
     };
   },
   mounted() {
@@ -172,8 +197,14 @@ export default {
           password: this.form.password, // пароль (обязательно)
           bank: this.form.bankCredentials, // реквизиты
           notes: this.form.notes, // комментарии
-          file: this.form.file, // имя загруженного файла
-          price_1: this.form.price_1, // фин.показатели 1..7
+          file: this.form.files[0], // TODO send multiple ? - имя загруженного файла
+          price_1: this.form.prices.price_1, // фин.показатели 1..7
+          price_2: this.form.prices.price_2,
+          price_3: this.form.prices.price_3,
+          price_4: this.form.prices.price_4,
+          price_5: this.form.prices.price_5,
+          price_6: this.form.prices.price_6,
+          price_7: this.form.prices.price_7,
         })
         .then((res) => {
           console.log(res.data, res.data.message);
@@ -188,9 +219,60 @@ export default {
           console.log(error);
         });
     },
+    // dropzoneTemplate() {
+    //   return `<div class="dz-preview dz-file-preview">
+    //           <div class="dz-image">
+    //               <div data-dz-thumbnail-bg></div>
+    //           </div>
+    //           <div class="dz-details">
+    //               <div class="dz-size"><span data-dz-size></span></div>
+    //               <div class="dz-filename"><span data-dz-name></span></div>
+    //           </div>
+    //           <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+    //           <div class="dz-error-message"><span data-dz-errormessage></span></div>
+    //           <div class="dz-success-mark"><i class="fa fa-check"></i></div>
+    //           <div class="dz-error-mark"><i class="fa fa-close"></i></div>
+    //       </div>
+    //   `;
+    // },
+    // // dropzoneThumbnail(file, dataUrl) {
+    //   let j; let len; let ref; let thumbnailElement;
+    //   if (file.previewElement) {
+    //     file.previewElement.classList.remove('dz-file-preview');
+    //     ref = file.previewElement.querySelectorAll('[data-dz-thumbnail-bg]');
+    //     for (j = 0, len = ref.length; j < len; j++) {
+    //       thumbnailElement = ref[j];
+    //       thumbnailElement.alt = file.name;
+    //       thumbnailElement.style.backgroundImage = `url("${dataUrl}")`;
+    //     }
+
+    //     return setTimeout(() => () => file.previewElement.classList.add('dz-image-preview'), 1);
+    //   }
+    // },
   },
 };
 </script>
+
+<style lang="scss" >
+@import '@/theme/utils.scss';
+@import '@/theme/vendor/dropzone.scss';
+
+.dropzone{
+  outline: 1px solid tomato;
+}
+
+.dropzone-custom-message{
+  display: flex;
+  align-items: center;
+  span{
+    display: inline-block;
+    margin-left: 8px;
+    font-size: 11px;
+    color: rgba($fontColor, .6);
+    border-bottom: 1px dashed rgba($fontColor, .6)
+  }
+}
+</style>
 
 <style lang="scss" scoped>
 @import '@/theme/utils.scss';

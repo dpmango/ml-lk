@@ -38,7 +38,7 @@ export default {
     // textarea props
     minheight: {
       type: [Number, String],
-      default: 100,
+      default: 118,
     },
     maxheight: {
       type: [Number, String],
