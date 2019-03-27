@@ -46,7 +46,7 @@
             <template v-else-if="isRemovedAlready">
               <Button primary type="submit">Восстановить</Button>
             </template>
-            <Button @click="closeModal">Отмена</Button>
+            <Button type="button" @click="closeModal">Отмена</Button>
           </div>
         </form>
       </div>

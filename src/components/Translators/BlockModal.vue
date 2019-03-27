@@ -46,7 +46,7 @@
             <template v-else-if="isBlockedAlready">
               <Button primary type="submit">Разблокировать</Button>
             </template>
-            <Button @click="closeModal">Отмена</Button>
+            <Button type="button" @click="closeModal">Отмена</Button>
           </div>
         </form>
       </div>
