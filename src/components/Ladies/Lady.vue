@@ -36,7 +36,7 @@
 
 
 <script>
-import moment from 'moment';
+import { timestampToDate, dateToAge } from '@/helpers/Dates';
 import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 
 export default {
@@ -65,12 +65,10 @@ export default {
   },
   computed: {
     age() {
-      const birthday = moment(this.lady.DateOfBirth, 'YYYY-MM-DD');
-      return birthday.diff(moment(), 'years') * -1;
+      return dateToAge(this.lady.DateOfBirth);
     },
     registration() {
-      const date = moment.unix(this.lady.LastReg);
-      return date.format('DD.MM.YYYY');
+      return timestampToDate(this.lady.LastReg);
     },
     renderStatus() {
       switch (this.lady.Status) {

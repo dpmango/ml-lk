@@ -1,5 +1,5 @@
 <template>
-  <div class="translator" :data-id="translator.ID">
+  <div class="translator" :class="{'is-removed': isRemoved}" :data-id="translator.ID">
     <div class="translator__name">{{fullName}}</div>
     <div class="translator__activities">
       <div class="translator__activity">
@@ -18,7 +18,6 @@
     <div class="translator__count">{{translator.LadiesCount}}</div>
     <div class="translator__block">
       <ui-switch @click="handleBlockClick" :active="isBlocked"/>
-      <RemoveModal :name="fullName"/>
     </div>
     <div class="translator__actions">
       <div @click="handleEditClick" class="translator__edit">
@@ -35,14 +34,12 @@
 <script>
 import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import UiSwitch from '@/components/Shared/UI/Switch.vue';
-import RemoveModal from '@/components/Translators/RemoveModal.vue';
 
 export default {
   name: 'Translator',
   components: {
     SvgIcon,
     UiSwitch,
-    RemoveModal,
   },
   props: {
     translator: {
@@ -66,16 +63,29 @@ export default {
     isBlocked() {
       return this.translator.BlockDate !== '0';
     },
+    isRemoved() {
+      return this.translator.RemovalDate !== '0';
+    },
   },
   methods: {
     handleBlockClick() {
-      this.$modal.show('block-translator');
+      this.$modal.show('block-translator', {
+        name: this.fullName,
+        id: this.translator.ID,
+        blockDate: this.translator.BlockDate,
+        blockReason: this.translator.BlockReason,
+      });
     },
     handleEditClick() {
       console.log('edit click');
     },
     handleRemoveClick() {
-      console.log('remove click');
+      this.$modal.show('remove-translator', {
+        name: this.fullName,
+        id: this.translator.ID,
+        removalDate: this.translator.RemovalDate,
+        removalReason: this.translator.RemovalReason,
+      });
     },
   },
 };
@@ -148,6 +158,14 @@ export default {
     transition: color 0.25s ease-in-out;
     &:hover {
       color: $colorRed;
+    }
+  }
+  // modifiers
+  &.is-removed{
+    .translator{
+      &__name, &__activities, &__count{
+        opacity: 0.5;
+      }
     }
   }
 }

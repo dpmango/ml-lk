@@ -1,6 +1,6 @@
 <template>
   <modal
-    name="remove-translator"
+    name="block-translator"
     :adaptive="true"
     width="380"
     height="auto"
@@ -16,15 +16,15 @@
         <br>
         {{actionType}}
       </div>
-      <div class="modal__info" v-if="isRemovedAlready">
-        <p>Удален: {{removalDateFormated}}</p>
-        <p>Причина: {{removalReason}}</p>
+      <div class="modal__info" v-if="isBlockedAlready">
+        <p>Заблокирован: {{blockDateFormated}}</p>
+        <p>Причина: {{blockReason}}</p>
       </div>
 
       <div class="modal__content">
         <Notification v-if="errorMessage" type="danger">{{errorMessage}}</Notification>
         <form @submit="handleSubmit">
-          <template v-if="!isRemovedAlready">
+          <template v-if="!isBlockedAlready">
             <multiselect
               v-model="form.reason"
               :options="selectOptions"
@@ -40,11 +40,11 @@
           </template>
 
           <div class="modal__cta">
-            <template v-if="!isRemovedAlready">
-              <Button orange type="submit">Удалить</Button>
+            <template v-if="!isBlockedAlready">
+              <Button orange type="submit">Заблокировать</Button>
             </template>
-            <template v-else-if="isRemovedAlready">
-              <Button primary type="submit">Восстановить</Button>
+            <template v-else-if="isBlockedAlready">
+              <Button primary type="submit">Разблокировать</Button>
             </template>
             <Button @click="closeModal">Отмена</Button>
           </div>
@@ -69,7 +69,7 @@ const defaultFormState = {
 };
 
 export default {
-  name: 'RemoveModal',
+  name: 'BlockModal',
   components: {
     SvgIcon,
     Button,
@@ -85,24 +85,24 @@ export default {
     return {
       name: '',
       id: '',
-      removalDate: '',
-      removalReason: '',
+      blockDate: '',
+      blockReason: '',
       errorMessage: '',
       form: defaultFormState,
-      selectOptions: ['Причина №1', 'Причина №2', 'Другое'],
+      selectOptions: ['Спам', 'Невыполнение обязательств', 'Другое'],
     };
   },
   computed: {
-    isRemovedAlready() {
-      return this.removalDate !== '0' && this.removalReason !== '-';
+    isBlockedAlready() {
+      return this.blockDate !== '0' && this.blockReason !== '-';
     },
     actionType() {
-      return this.isRemovedAlready ? 'удален' : 'будет удален';
+      return this.isBlockedAlready ? 'заблокирован' : 'будет заблокирован';
     },
     shouldShowInput() {
       return this.form.reason === 'Другое';
     },
-    removalDateFormated() {
+    blockDateFormated() {
       return timestampToDate(this.blockDate);
     },
   },
@@ -110,11 +110,11 @@ export default {
     beforeOpen(event) {
       this.name = event.params.name;
       this.id = event.params.id;
-      this.removalDate = event.params.removalDate;
-      this.removalReason = event.params.removalReason;
+      this.blockDate = event.params.blockDate;
+      this.blockReason = event.params.blockReason;
     },
     closeModal() {
-      this.$modal.hide('remove-translator');
+      this.$modal.hide('block-translator');
     },
     getReason() {
       return this.reason !== 'Другое' ? this.form.reason : this.form.reasonInput;
@@ -123,15 +123,14 @@ export default {
       e.preventDefault();
 
       let patchObj = {};
-      if (this.isRemovedAlready) {
+      if (this.isBlockedAlready) {
         patchObj = {
-          type: 'restore',
+          type: 'unblock',
           reason: '-',
         };
-      } else if (!this.isRemovedAlready) {
-        // TODO - what is the action type ?
+      } else if (!this.isBlockedAlready) {
         patchObj = {
-          type: 'delete',
+          type: 'block',
           reason: this.getReason(),
         };
       }
@@ -139,7 +138,6 @@ export default {
       api
         .patch(`translators/${this.id}`, patchObj)
         .then((res) => {
-          console.log('remove modal res', res);
           if (res.data[0].success) {
             this.form = defaultFormState;
             this.errorMessage = '';

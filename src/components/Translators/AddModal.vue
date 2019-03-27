@@ -116,7 +116,7 @@ const defaultFormState = {
   login: '',
   password: '',
   bankCredentials: '',
-  notes: 'sdasdasd',
+  notes: '',
   file: '',
   prices: {
     price_1: '',

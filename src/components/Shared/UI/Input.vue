@@ -102,12 +102,13 @@ export default {
   border-radius: 4px;
   font-size: 14px;
   color: $fontColor;
-  transition: border 0.25s ease-in-out;
+  transition: border 0.25s ease-in-out, box-shadow .25s ease-in-out;
   &::placeholder {
     color: rgba($fontColor, 0.4);
   }
   &:focus {
-    border-color: $colorPrimary;
+    // border-color: $colorPrimary;
+    box-shadow: 0px 8px 6px rgba(0, 0, 0, 0.14);
   }
   &--compact {
     width: auto;

@@ -14,7 +14,9 @@
         <div class="table__cell table__cell--block">Блокировка</div>
       </div>
       <div class="table__content">
-        <Translator v-for="(translator, idx) in translators" :key="idx" :translator="translator"/>
+        <Translator v-for="(translator, idx) in sortById" :key="idx" :translator="translator"/>
+        <BlockModal @sucessCallback="updateComponenet"/>
+        <RemoveModal @sucessCallback="updateComponenet"/>
       </div>
     </div>
   </Panel>
@@ -25,6 +27,8 @@
 import Panel from '@/components/Shared/Layout/Panel.vue';
 import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import Translator from '@/components/Translators/Translator.vue';
+import BlockModal from '@/components/Translators/BlockModal.vue';
+import RemoveModal from '@/components/Translators/RemoveModal.vue';
 import api from '@/helpers/Api';
 
 export default {
@@ -33,20 +37,60 @@ export default {
     Panel,
     SvgIcon,
     Translator,
+    BlockModal,
+    RemoveModal,
   },
   data() {
     return {
-      translators: null,
+      translators: [],
     };
   },
   mounted() {
-    api.get('translators').then((response) => {
-      this.translators = response.data;
-    });
+    this.fetchApi();
+  },
+  computed: {
+    sortById() {
+      return this.translators ? this.translators.slice().sort((a, b) => b.ID - a.ID) : [];
+    },
   },
   methods: {
+    fetchApi() {
+      // TODO - request BE developer
+      // by default it's showing only non-blocked and non-deleted ites
+      const showBlocked = 1;
+      const showDeleted = 1;
+
+      // get blocked
+      api
+        .get(`translators?blocked=${showBlocked}`)
+        .then((res) => {
+          this.contactResults(res.data);
+        });
+
+      // get deleted
+      api
+        .get(`translators?deleted=${showDeleted}`)
+        .then((res) => {
+          this.contactResults(res.data);
+        });
+
+      // get defaults
+      api
+        .get('translators')
+        .then((res) => {
+          this.contactResults(res.data);
+        });
+    },
+    contactResults(arr) {
+      this.translators = this.translators.concat(arr);
+    },
     sortTable(name) {
       console.log('sorting table', name);
+    },
+    updateComponenet() {
+      // TODO - concat
+      this.translators = [];
+      this.fetchApi();
     },
   },
 };
