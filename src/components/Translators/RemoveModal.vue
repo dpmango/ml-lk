@@ -103,7 +103,7 @@ export default {
       return this.form.reason === 'Другое';
     },
     removalDateFormated() {
-      return timestampToDate(this.blockDate);
+      return timestampToDate(this.removalDate);
     },
   },
   methods: {
@@ -121,37 +121,39 @@ export default {
     },
     handleSubmit(e) {
       e.preventDefault();
-
-      let patchObj = {};
       if (this.isRemovedAlready) {
-        patchObj = {
-          type: 'restore',
-          reason: '-',
-        };
+        api
+          .patch(`translators/${this.id}`, {
+            type: 'restore',
+            reason: '-',
+          })
+          .then(res => this.handleResponce(res))
+          .catch((error) => {
+            console.log(error);
+          });
       } else if (!this.isRemovedAlready) {
-        // TODO - what is the action type ?
-        patchObj = {
-          type: 'delete',
-          reason: this.getReason(),
-        };
+        api
+          .delete(`translators/${this.id}`, {
+            data: {
+              reason: this.getReason(),
+            },
+          })
+          .then(res => this.handleResponce(res))
+          .catch((error) => {
+            console.log(error);
+          });
       }
-
-      api
-        .patch(`translators/${this.id}`, patchObj)
-        .then((res) => {
-          console.log('remove modal res', res);
-          if (res.data[0].success) {
-            this.form = defaultFormState;
-            this.errorMessage = '';
-            this.$emit('sucessCallback');
-            this.closeModal();
-          } else {
-            this.errorMessage = res.data[0].message;
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    },
+    handleResponce(res) {
+      console.log(res);
+      if (res.data[0].success) {
+        this.form = defaultFormState;
+        this.errorMessage = '';
+        this.$emit('sucessCallback');
+        this.closeModal();
+      } else {
+        this.errorMessage = res.data[0].message;
+      }
     },
   },
 };

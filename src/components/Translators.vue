@@ -55,26 +55,6 @@ export default {
   },
   methods: {
     fetchApi() {
-      // TODO - request BE developer
-      // by default it's showing only non-blocked and non-deleted ites
-      const showBlocked = 1;
-      const showDeleted = 1;
-
-      // get blocked
-      api
-        .get(`translators?blocked=${showBlocked}`)
-        .then((res) => {
-          this.contactResults(res.data);
-        });
-
-      // get deleted
-      api
-        .get(`translators?deleted=${showDeleted}`)
-        .then((res) => {
-          this.contactResults(res.data);
-        });
-
-      // get defaults
       api
         .get('translators')
         .then((res) => {
@@ -88,8 +68,7 @@ export default {
       console.log('sorting table', name);
     },
     updateComponenet() {
-      // TODO - concat
-      this.translators = [];
+      this.translators = []; // TODO - concat
       this.fetchApi();
     },
   },
