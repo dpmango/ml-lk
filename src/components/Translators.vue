@@ -15,6 +15,7 @@
       </div>
       <div class="table__content">
         <Translator v-for="(translator, idx) in sortById" :key="idx" :translator="translator"/>
+        <AddEditModal @sucessCallback="updateComponenet"/>
         <BlockModal @sucessCallback="updateComponenet"/>
         <RemoveModal @sucessCallback="updateComponenet"/>
       </div>
@@ -28,6 +29,7 @@ import Panel from '@/components/Shared/Layout/Panel.vue';
 import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import Translator from '@/components/Translators/Translator.vue';
 import BlockModal from '@/components/Translators/BlockModal.vue';
+import AddEditModal from '@/components/Translators/AddEditModal.vue';
 import RemoveModal from '@/components/Translators/RemoveModal.vue';
 import api from '@/helpers/Api';
 
@@ -39,6 +41,7 @@ export default {
     Translator,
     BlockModal,
     RemoveModal,
+    AddEditModal,
   },
   data() {
     return {

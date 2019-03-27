@@ -5,6 +5,7 @@
     width="380"
     height="auto"
     @before-open="beforeOpen"
+    @before-close="resetState"
   >
     <div class="modal">
       <div class="modal__close" @click="closeModal">
@@ -55,6 +56,7 @@
 </template>
 
 <script>
+import cloneDeep from 'lodash/cloneDeep';
 import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import Button from '@/components/Shared/UI/Button.vue';
 import UiInput from '@/components/Shared/UI/Input.vue';
@@ -88,7 +90,7 @@ export default {
       blockDate: '',
       blockReason: '',
       errorMessage: '',
-      form: defaultFormState,
+      form: cloneDeep(defaultFormState),
       selectOptions: ['Спам', 'Невыполнение обязательств', 'Другое'],
     };
   },
@@ -116,6 +118,10 @@ export default {
     closeModal() {
       this.$modal.hide('block-translator');
     },
+    resetState() {
+      this.errorMessage = '';
+      this.form = cloneDeep(defaultFormState);
+    },
     getReason() {
       return this.reason !== 'Другое' ? this.form.reason : this.form.reasonInput;
     },
@@ -139,8 +145,7 @@ export default {
         .patch(`translators/${this.id}`, patchObj)
         .then((res) => {
           if (res.data[0].success) {
-            this.form = defaultFormState;
-            this.errorMessage = '';
+            this.resetState();
             this.$emit('sucessCallback');
             this.closeModal();
           } else {

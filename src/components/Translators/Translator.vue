@@ -90,7 +90,10 @@ export default {
       });
     },
     handleEditClick() {
-      console.log('edit click');
+      this.$modal.show('add-translator', {
+        type: 'edit',
+        translatorID: this.translator.ID,
+      });
     },
     handleRemoveClick() {
       this.$modal.show('remove-translator', {

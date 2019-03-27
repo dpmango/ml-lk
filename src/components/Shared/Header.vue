@@ -16,7 +16,6 @@
         </div>
         <div class="header__actions">
           <Button primary @click="openAddEdit">Добавить переводчика</Button>
-          <AddModal/>
         </div>
       </div>
     </Container>
@@ -26,14 +25,12 @@
 <script>
 import Container from '@/components/Shared/Layout/Container.vue';
 import Button from '@/components/Shared/UI/Button.vue';
-import AddModal from '@/components/Translators/AddModal.vue';
 
 export default {
   name: 'Header',
   components: {
     Container,
     Button,
-    AddModal,
   },
   props: {
     modifier: String,
@@ -48,7 +45,9 @@ export default {
       this.hamburgerActive = !this.hamburgerActive;
     },
     openAddEdit() {
-      this.$modal.show('add-translator');
+      this.$modal.show('add-translator', {
+        type: 'add',
+      });
     },
   },
 };

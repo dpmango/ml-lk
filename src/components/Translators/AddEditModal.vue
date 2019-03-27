@@ -1,9 +1,17 @@
 <template>
-  <modal name="add-translator" :adaptive="true" width="640" height="auto">
+  <modal
+    name="add-translator"
+    :adaptive="true"
+    width="640"
+    height="auto"
+    :scrollable="true"
+    @before-open="beforeOpen"
+    @before-close="resetState"
+  >
     <div class="modal">
       <div class="modal__head">
-        <div class="modal__title">Добавление переводчика</div>
-        <div class="modal__close" @click="$modal.hide('add-translator')">
+        <div class="modal__title">{{actionType}} переводчика</div>
+        <div class="modal__close" @click="closeModal">
           <svg-icon name="close" width="14" height="14"/>
         </div>
       </div>
@@ -103,7 +111,10 @@
           </div>
 
           <div class="modal__cta">
-            <Button orange type="submit">Добавить переводчика</Button>
+            <Button orange type="submit">
+              <template v-if="type === 'add'">Добавить переводчика</template>
+              <template v-if="type === 'edit'">Сохранить изминения</template>
+            </Button>
           </div>
         </form>
       </div>
@@ -112,6 +123,7 @@
 </template>
 
 <script>
+import cloneDeep from 'lodash/cloneDeep';
 import vue2Dropzone from 'vue2-dropzone';
 import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import Button from '@/components/Shared/UI/Button.vue';
@@ -144,7 +156,7 @@ const defaultFormState = {
 };
 
 export default {
-  name: 'AddModal',
+  name: 'AddEditModal',
   components: {
     SvgIcon,
     UiInput,
@@ -154,8 +166,17 @@ export default {
   },
   data() {
     return {
+      type: '', // action type 'add' or 'edit'
+      id: null,
       errorMessage: '',
-      form: defaultFormState,
+      form: cloneDeep(defaultFormState),
+      status: {
+        type: 0,
+        blockDate: '',
+        blockReason: '',
+        removalDate: '',
+        removalReason: '',
+      },
       rates: {},
       dropzoneOptions: {
         // https://www.dropzonejs.com/#configuration-options
@@ -170,11 +191,72 @@ export default {
     };
   },
   mounted() {
-    api.get('translators/prices').then((res) => {
-      [this.rates] = res.data;
-    });
+    this.getRates();
+  },
+  computed: {
+    actionType() {
+      return this.type === 'edit' ? 'Редактирование' : 'Добавление';
+    },
   },
   methods: {
+    closeModal() {
+      this.resetState();
+      this.$modal.hide('add-translator');
+    },
+    getRates() {
+      api.get('translators/prices').then((res) => {
+        [this.rates] = res.data;
+      });
+    },
+    beforeOpen(event) {
+      this.type = event.params.type;
+      if (event.params.type === 'edit') {
+        this.id = event.params.translatorID;
+        api
+          .get(`translators/${event.params.translatorID}`)
+          .then((res) => {
+            const apiData = res.data[0];
+            if (apiData) {
+              this.status.type = apiData.Status;
+              this.status.blockDate = apiData.BlockDate;
+              this.status.blockReason = apiData.BlockReason;
+              this.status.removalDate = apiData.RemovalDate;
+              this.status.removalReason = apiData.RemovalReason;
+              // LadiesCount - not used
+              this.form.login = apiData.Login;
+              this.form.name = apiData.FirstName;
+              this.form.surname = apiData.LastName;
+              this.form.phone = apiData.Phone;
+              this.form.passport = apiData.Passport;
+              this.form.email = apiData.Email;
+              this.form.address = apiData.Address;
+              this.form.skype = apiData.Skype;
+              // this.form.password: apiData,
+              this.form.bankCredentials = apiData.BankAccount;
+              this.form.notes = apiData.Notes;
+              // this.form.file: apiData.Scan,
+              this.form.prices.price_1 = apiData.Price_1;
+              this.form.prices.price_2 = apiData.Price_2;
+              this.form.prices.price_3 = apiData.Price_3;
+              this.form.prices.price_4 = apiData.Price_4;
+              this.form.prices.price_5 = apiData.Price_5;
+              this.form.prices.price_6 = apiData.Price_6;
+              this.form.prices.price_7 = apiData.Price_7;
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+
+      if (event.params.type === 'add') {
+        this.resetState();
+      }
+    },
+    resetState() {
+      this.id = null;
+      this.form = cloneDeep(defaultFormState);
+    },
     getCommission(priceId) {
       const priceName = `Price_${priceId}`;
       const rate = this.rates[priceName];
@@ -183,41 +265,55 @@ export default {
     },
     handleSubmit(e) {
       e.preventDefault();
-      console.log(this.form.notes);
-      api
-        .post('translators', {
-          login: this.form.login, // логин (обязательно)
-          fname: this.form.name, // имя (обязательно)
-          lname: this.form.surname, // фамилия (обязательно)
-          phone: this.form.phone, // телефон
-          passport: this.form.passport, // номер и серия паспорта
-          email: this.form.email, // емейл (обязательно)
-          address: this.form.adress, // адрес
-          skype: this.form.skype, // скайп
-          password: this.form.password, // пароль (обязательно)
-          bank: this.form.bankCredentials, // реквизиты
-          notes: this.form.notes, // комментарии
-          file: this.form.files[0], // TODO send multiple ? - имя загруженного файла
-          price_1: this.form.prices.price_1, // фин.показатели 1..7
-          price_2: this.form.prices.price_2,
-          price_3: this.form.prices.price_3,
-          price_4: this.form.prices.price_4,
-          price_5: this.form.prices.price_5,
-          price_6: this.form.prices.price_6,
-          price_7: this.form.prices.price_7,
-        })
-        .then((res) => {
-          console.log(res.data, res.data.message);
-          if (res.data[0].success) {
-            this.form = defaultFormState;
-            this.errorMessage = '';
-          } else {
-            this.errorMessage = res.data[0].message;
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      const postObject = {
+        login: this.form.login, // логин (обязательно)
+        fname: this.form.name, // имя (обязательно)
+        lname: this.form.surname, // фамилия (обязательно)
+        phone: this.form.phone, // телефон
+        passport: this.form.passport, // номер и серия паспорта
+        email: this.form.email, // емейл (обязательно)
+        address: this.form.adress, // адрес
+        skype: this.form.skype, // скайп
+        password: this.form.password, // пароль (обязательно)
+        bank: this.form.bankCredentials, // реквизиты
+        notes: this.form.notes, // комментарии
+        // file: this.form.files[0], // TODO send multiple ? - имя загруженного файла
+        price_1: this.form.prices.price_1, // фин.показатели 1..7
+        price_2: this.form.prices.price_2,
+        price_3: this.form.prices.price_3,
+        price_4: this.form.prices.price_4,
+        price_5: this.form.prices.price_5,
+        price_6: this.form.prices.price_6,
+        price_7: this.form.prices.price_7,
+      };
+
+      if (this.type === 'add') {
+        api
+          .post('translators', postObject)
+          .then(res => this.handleResponce(res))
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+      if (this.type === 'edit') {
+        api
+          .patch(`translators/${this.id}`, postObject)
+          .then(res => this.handleResponce(res))
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    },
+    handleResponce(res) {
+      console.log('addEditModal responce', res);
+      if (res.data[0].success) {
+        this.form = cloneDeep(defaultFormState);
+        this.errorMessage = '';
+        this.$emit('sucessCallback');
+        this.closeModal();
+      } else {
+        this.errorMessage = res.data[0].message;
+      }
     },
     // dropzoneTemplate() {
     //   return `<div class="dz-preview dz-file-preview">
