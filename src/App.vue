@@ -26,4 +26,10 @@ export default {
 @import 'normalize-scss';
 @include normalize();
 @import '@/theme/app.scss';
+
+@import '@/theme/vendor/tooltip.scss';
+@import '@/theme/vendor/select.scss';
+.v--modal-overlay .v--modal-box {
+  overflow: visible;
+}
 </style>

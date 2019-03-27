@@ -1,5 +1,5 @@
 <template>
-  <Panel name="Переводчик">
+  <Panel name="Переводчики">
     <div class="table">
       <div class="table__head">
         <div class="table__cell table__cell--translator" @click="sortTable('name')">
@@ -79,7 +79,7 @@ export default {
 @import '@/theme/utils.scss';
 
 .table {
-  flex: 0 1 auto;
+  flex: 1 1 auto;
   max-height: 100%;
   display: flex;
   flex-direction: column;
@@ -122,7 +122,7 @@ export default {
     }
   }
   &__content {
-    flex: 0 1 auto;
+    flex: 1 1 auto;
     max-height: 100%;
     overflow-y: scroll;
     padding: 12px;

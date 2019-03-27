@@ -159,14 +159,6 @@ export default {
 };
 </script>
 
-<style lang="scss">
-@import '@/theme/vendor/select.scss';
-
-.v--modal-overlay .v--modal-box {
-  overflow: visible;
-}
-</style>
-
 <style lang="scss" scoped>
 @import '@/theme/utils.scss';
 

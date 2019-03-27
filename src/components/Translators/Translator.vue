@@ -2,17 +2,21 @@
   <div class="translator" :class="{'is-removed': isRemoved}" :data-id="translator.ID">
     <div class="translator__name">{{fullName}}</div>
     <div class="translator__activities">
-      <div class="translator__activity">
+      <div class="translator__activity" v-tooltip.bottom-start="'Письма'">
         <svg-icon name="mail" width="16" height="12"/>
-        <span>0/0 0/0</span>
+        <span>
+          {{translator.Stat11}}/{{translator.Stat12}}
+          <span class="stats-space"></span>
+          {{translator.Stat13}}/{{translator.Stat14}}
+        </span>
       </div>
-      <div class="translator__activity">
-        <svg-icon name="gift" width="16" height="16"/>
-        <span>0/0/0</span>
-      </div>
-      <div class="translator__activity">
+      <div class="translator__activity" v-tooltip.bottom-start="'Подарки'">
         <svg-icon name="chat" width="19" height="16"/>
-        <span>0/0/0</span>
+        <span>{{translator.Stat21}}/{{translator.Stat22}}</span>
+      </div>
+      <div class="translator__activity" v-tooltip.bottom-start="'Чаты'">
+        <svg-icon name="gift" width="16" height="16"/>
+        <span>{{translator.Stat31}}/{{translator.Stat32}}/{{translator.Stat33}}</span>
       </div>
     </div>
     <div class="translator__count">{{translator.LadiesCount}}</div>
@@ -54,6 +58,15 @@ export default {
       RemovalDate: String,
       RemovalReason: String,
       LadiesCount: String,
+      Stat11: String,
+      Stat12: String,
+      Stat13: String,
+      Stat14: String,
+      Stat21: String,
+      Stat22: String,
+      Stat31: String,
+      Stat32: String,
+      Stat33: String,
     },
   },
   computed: {
@@ -111,11 +124,16 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin-left: -5px;
+    margin-right: -5px;
   }
   &__activity {
     display: flex;
     align-items: center;
+    padding-left: 5px;
+    padding-right: 5px;
     .svg-icon {
+      flex: 0 0 auto;
       margin-right: 5px;
       margin-bottom: 0;
     }
@@ -167,6 +185,11 @@ export default {
         opacity: 0.5;
       }
     }
+  }
+
+  .stats-space{
+    display: inline-block;
+    min-width: 15px;
   }
 }
 </style>

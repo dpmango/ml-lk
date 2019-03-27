@@ -47,7 +47,7 @@ export default {
 
 .panel {
   background: #ffffff;
-  max-height: calc(100vh - 80px - 40px);
+  height: calc(100vh - 80px - 40px);
   display: flex;
   flex-direction: column;
   box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.08);
