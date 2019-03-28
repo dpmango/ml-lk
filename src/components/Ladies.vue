@@ -25,14 +25,19 @@
       </multiselect>
       <ui-checkbox v-model="filter.noTranslator" name="noTranslator" label="Без переводчика"/>
     </form>
-
     <div class="table">
       <div class="table__head">
         <div class="table__cell table__cell--name">Девушки</div>
         <div class="table__cell table__cell--name">Переводчик</div>
       </div>
-      <div class="table__content">
+      <div class="table__content" ref="list">
         <Lady v-for="(lady, idx) in ladiesResults" :key="idx" :lady="lady"/>
+        <spinner
+          class="table__loader"
+          v-if="scrollFetch.isLoading"
+          size="medium"
+          line-fg-color="#5aa6ff"
+        />
       </div>
     </div>
   </Panel>
@@ -40,7 +45,9 @@
 
 <script>
 // import debounce from 'lodash/debounce'
+import throttle from 'lodash/throttle';
 import cloneDeep from 'lodash/cloneDeep';
+import Spinner from 'vue-simple-spinner';
 import Panel from '@/components/Shared/Layout/Panel.vue';
 import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import UiInput from '@/components/Shared/UI/Input.vue';
@@ -60,6 +67,7 @@ const defaultFilterState = {
 export default {
   name: 'Ladies',
   components: {
+    Spinner,
     Panel,
     SvgIcon,
     Lady,
@@ -69,6 +77,9 @@ export default {
   },
   data() {
     return {
+      scrollFetch: {
+        isLoading: false,
+      },
       filter: cloneDeep(defaultFilterState),
       ladies: null,
     };
@@ -78,15 +89,25 @@ export default {
       return this.applySorting(this.applyFilters(this.ladies, this.filter));
     },
   },
+  created() {
+    this.scrollWithThrottle = throttle(this.handleListScroll, 100);
+  },
   mounted() {
-    api.get('ladies').then((response) => {
-      this.ladies = response.data;
-    });
+    this.fetchApi();
+    this.$refs.list.addEventListener('scroll', this.scrollWithThrottle, false);
+  },
+  beforeDestroy() {
+    this.$refs.list.removeEventListener('scroll', this.scrollWithThrottle, false);
   },
   methods: {
     // handleFilterChange(e) {
     //   console.log('form changed', e);
     // },
+    fetchApi() {
+      api.get('ladies').then((res) => {
+        this.ladies = res.data;
+      });
+    },
     applyFilters(arr, filter) {
       // TODO filter is applied on every change. Change to debounce
       const id = filter.id.trim();
@@ -118,6 +139,20 @@ export default {
     sortById(arr) {
       return arr;
       // return arr ? arr.slice().sort((a, b) => b.ID - a.ID) : [];
+    },
+    handleListScroll() {
+      const listDOM = this.$refs.list;
+      const scrollRemaining = listDOM.scrollHeight - listDOM.scrollTop - listDOM.offsetHeight;
+      if (scrollRemaining <= 150 && !this.scrollFetch.isLoading) {
+        const lastId = this.ladies[this.ladies.length - 1].ID;
+        this.scrollFetch.isLoading = true;
+
+        api.get(`ladies?last_id=${lastId}`).then((res) => {
+          this.ladies = this.ladies.concat(res.data);
+          this.scrollFetch.isLoading = false;
+          console.log(this.ladies);
+        });
+      }
     },
   },
 };
@@ -167,6 +202,9 @@ export default {
     max-height: 100%;
     overflow-y: scroll;
     padding: 20px;
+  }
+  &__loader{
+    margin: 30px 0 0px;
   }
 }
 </style>
