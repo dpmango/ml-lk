@@ -30,7 +30,14 @@
               v-model="form.reason"
               :options="selectOptions"
               placeholder="Укажите причину"
-            />
+              :searchable="false"
+            >
+              <template slot="caret">
+                <div @click="toggle()" class="multiselect__select multiselect__select--svg">
+                  <svg-icon name="down-arrow" width="10" height="6"/>
+                </div>
+              </template>
+            </multiselect>
             <ui-input
               v-if="shouldShowInput"
               group

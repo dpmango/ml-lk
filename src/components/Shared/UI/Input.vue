@@ -96,7 +96,7 @@ export default {
   -webkit-appearance: none;
   display: block;
   width: 100%;
-  padding: 6px 15px;
+  padding: 6px 13px;
   background: transparent;
   border: 1px solid rgba($fontColor, 0.2);
   border-radius: 4px;

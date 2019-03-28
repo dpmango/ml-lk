@@ -1,5 +1,46 @@
 <template>
   <Panel name="Переводчики">
+    <div class="filter">
+      <multiselect
+        v-model="filter.deleted"
+        track-by="label"
+        label="label"
+        placeholder="Выберите"
+        :searchable="false"
+        :allowEmpty="false"
+        :options="[
+          {label: 'Не показывать удаленных', value: 0},
+          {label: 'Показывать удаленных', value: 1}
+        ]"
+      >
+        <template slot="caret">
+          <div
+            @mousedown.prevent.stop="toggle()"
+            class="multiselect__select multiselect__select--svg"
+          >
+            <svg-icon name="down-arrow" width="10" height="6"/>
+          </div>
+        </template>
+      </multiselect>
+      <multiselect
+        v-model="filter.blocked"
+        track-by="label"
+        label="label"
+        placeholder="Выберите"
+        :searchable="false"
+        :allowEmpty="false"
+        :options="[
+          {label: 'Не показывать заблокированных', value: 0},
+          {label: 'Показывать заблокированных', value: 1}
+        ]"
+      >
+        <template slot="caret">
+          <div @click="toggle()" class="multiselect__select multiselect__select--svg">
+            <svg-icon name="down-arrow" width="10" height="6"/>
+          </div>
+        </template>
+      </multiselect>
+    </div>
     <div class="table">
       <div class="table__head">
         <div class="table__cell table__cell--translator" @click="sortTable('name')">
@@ -13,8 +54,12 @@
         </div>
         <div class="table__cell table__cell--block">Блокировка</div>
       </div>
-      <div class="table__content">
-        <Translator v-for="(translator, idx) in sortById" :key="idx" :translator="translator"/>
+      <div class="table__content" v-if="translators.length">
+        <Translator
+          v-for="(translator, idx) in translatorsResults"
+          :key="idx"
+          :translator="translator"
+        />
         <AddEditModal @sucessCallback="updateComponenet"/>
         <BlockModal @sucessCallback="updateComponenet"/>
         <RemoveModal @sucessCallback="updateComponenet"/>
@@ -27,6 +72,7 @@
 <script>
 import Panel from '@/components/Shared/Layout/Panel.vue';
 import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
+import Multiselect from 'vue-multiselect';
 import Translator from '@/components/Translators/Translator.vue';
 import BlockModal from '@/components/Translators/BlockModal.vue';
 import AddEditModal from '@/components/Translators/AddEditModal.vue';
@@ -38,6 +84,7 @@ export default {
   components: {
     Panel,
     SvgIcon,
+    Multiselect,
     Translator,
     BlockModal,
     RemoveModal,
@@ -45,6 +92,10 @@ export default {
   },
   data() {
     return {
+      filter: {
+        deleted: { label: 'Показывать удаленных', value: 1 },
+        blocked: { label: 'Показывать заблокированных', value: 1 },
+      },
       translators: [],
     };
   },
@@ -52,8 +103,8 @@ export default {
     this.fetchApi();
   },
   computed: {
-    sortById() {
-      return this.translators ? this.translators.slice().sort((a, b) => b.ID - a.ID) : [];
+    translatorsResults() {
+      return this.applySorting(this.applyFilters(this.translators, this.filter));
     },
   },
   methods: {
@@ -67,12 +118,33 @@ export default {
     contactResults(arr) {
       this.translators = this.translators.concat(arr);
     },
-    sortTable(name) {
-      console.log('sorting table', name);
-    },
     updateComponenet() {
       this.translators = []; // TODO - concat
       this.fetchApi();
+    },
+    applyFilters(arr, filter) {
+      const showDeleted = (x) => {
+        if (filter.deleted.value !== 1) {
+          return x.RemovalDate === '0';
+        }
+        return true;
+      };
+      const showBlocked = (x) => {
+        if (filter.blocked.value !== 1) {
+          return x.BlockDate === '0';
+        }
+        return true;
+      };
+      return arr ? arr.filter(x => showDeleted(x) && showBlocked(x)) : [];
+    },
+    applySorting(arr) {
+      return this.sortById(arr);
+    },
+    sortById(arr) {
+      return arr ? arr.slice().sort((a, b) => b.ID - a.ID) : [];
+    },
+    sortTable(name) {
+      console.log('sorting table', name);
     },
   },
 };
@@ -81,6 +153,16 @@ export default {
 <style lang="scss" scoped>
 @import '@/theme/utils.scss';
 
+.filter{
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 10px 12px;
+  .multiselect{
+    margin: 10px;
+    max-width: 240px;
+  }
+}
 .table {
   flex: 1 1 auto;
   max-height: 100%;
