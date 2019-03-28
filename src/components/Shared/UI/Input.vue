@@ -2,6 +2,7 @@
   <div v-if="type === 'textarea'" :class="{ 'ui-group': group }">
     <textarea-autosize
       class="ui-input"
+      :style="{ maxWidth: width + 'px' }"
       :name="name"
       :required="required"
       :placeholder="requiredPlaceholder"
@@ -14,8 +15,10 @@
   <div v-else :class="{ 'ui-group': group }">
     <input
       class="ui-input"
-      :name="name"
       :class="{ 'ui-input--big': big, 'ui-input--compact': compact }"
+      :style="{ maxWidth: width + 'px' }"
+      :name="name"
+      :id="name"
       :placeholder="requiredPlaceholder"
       :type="type"
       :value="value"
@@ -35,6 +38,7 @@ export default {
     group: Boolean,
     big: Boolean,
     compact: Boolean,
+    width: String,
     // textarea props
     minheight: {
       type: [Number, String],
