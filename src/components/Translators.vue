@@ -1,5 +1,6 @@
 <template>
-  <Panel name="Переводчики">
+  <Panel name="Переводчики" @clearFilter="clearFilter">
+    >
     <div class="filter">
       <multiselect
         v-model="filter.deleted"
@@ -70,6 +71,7 @@
 
 
 <script>
+import cloneDeep from 'lodash/cloneDeep';
 import Panel from '@/components/Shared/Layout/Panel.vue';
 import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import Multiselect from 'vue-multiselect';
@@ -78,6 +80,11 @@ import BlockModal from '@/components/Translators/BlockModal.vue';
 import AddEditModal from '@/components/Translators/AddEditModal.vue';
 import RemoveModal from '@/components/Translators/RemoveModal.vue';
 import api from '@/helpers/Api';
+
+const defaultFilterStatus = {
+  deleted: { label: 'Показывать удаленных', value: 1 },
+  blocked: { label: 'Показывать заблокированных', value: 1 },
+};
 
 export default {
   name: 'Translators',
@@ -92,10 +99,7 @@ export default {
   },
   data() {
     return {
-      filter: {
-        deleted: { label: 'Показывать удаленных', value: 1 },
-        blocked: { label: 'Показывать заблокированных', value: 1 },
-      },
+      filter: cloneDeep(defaultFilterStatus),
       translators: [],
     };
   },
@@ -136,6 +140,9 @@ export default {
         return true;
       };
       return arr ? arr.filter(x => showDeleted(x) && showBlocked(x)) : [];
+    },
+    clearFilter() {
+      this.filter = cloneDeep(defaultFilterStatus);
     },
     applySorting(arr) {
       return this.sortById(arr);

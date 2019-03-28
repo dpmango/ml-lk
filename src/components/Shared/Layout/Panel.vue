@@ -7,7 +7,7 @@
         </div>
       </div>
       <div class="panel-head__name">{{name}}</div>
-      <div class="panel-head__action">
+      <div class="panel-head__action" @click="$emit('clearFilter')">
         <span>Очистить фильтр</span>
       </div>
     </div>
@@ -61,7 +61,7 @@ export default {
   display: flex;
   align-items: center;
   min-height: 40px;
-  padding: 5px 20px;
+  padding: 5px 15px 5px 20px;
   &__icon {
     flex: 0 0 110px;
   }
@@ -73,6 +73,8 @@ export default {
   &__action {
     flex: 0 0 110px;
     font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
     span {
       display: inline-block;
       position: relative;
@@ -85,6 +87,12 @@ export default {
         right: 0;
         height: 1px;
         background: currentColor;
+        transition: right .25s ease;
+      }
+    }
+    &:hover{
+      span::after{
+        right: 100%;
       }
     }
   }

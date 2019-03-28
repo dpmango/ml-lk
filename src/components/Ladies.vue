@@ -1,5 +1,5 @@
 <template>
-  <Panel name="Девушки">
+  <Panel name="Девушки" @clearFilter="clearFilter">
     <form class="filter">
       <ui-input group v-model="filter.id" width="60" placeholder="ID"/>
       <ui-input group v-model="filter.nickname" width="155" placeholder="Ник"/>
@@ -40,6 +40,7 @@
 
 <script>
 // import debounce from 'lodash/debounce'
+import cloneDeep from 'lodash/cloneDeep';
 import Panel from '@/components/Shared/Layout/Panel.vue';
 import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import UiInput from '@/components/Shared/UI/Input.vue';
@@ -47,6 +48,14 @@ import UiCheckbox from '@/components/Shared/UI/Checkbox.vue';
 import Multiselect from 'vue-multiselect';
 import Lady from '@/components/Ladies/Lady.vue';
 import api from '@/helpers/Api';
+
+const defaultFilterState = {
+  id: '',
+  nickname: '',
+  lastname: '',
+  status: undefined,
+  noTranslator: false,
+};
 
 export default {
   name: 'Ladies',
@@ -60,13 +69,7 @@ export default {
   },
   data() {
     return {
-      filter: {
-        id: '',
-        nickname: '',
-        lastname: '',
-        status: undefined,
-        noTranslator: false,
-      },
+      filter: cloneDeep(defaultFilterState),
       ladies: null,
     };
   },
@@ -105,6 +108,9 @@ export default {
           .filter(x => filterByStatus(x))
           .filter(x => filterByTranslator(x))
         : [];
+    },
+    clearFilter() {
+      this.filter = cloneDeep(defaultFilterState);
     },
     applySorting(arr) {
       return this.sortById(arr);
