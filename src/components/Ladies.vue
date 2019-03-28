@@ -152,7 +152,7 @@ export default {
     flex: 0 0 auto;
     display: flex;
     align-items: center;
-    padding: 16px 12px;
+    padding: 8px 12px 16px;
     border-bottom: 1px solid rgba(#d1cfda, 0.8);
   }
   &__cell {

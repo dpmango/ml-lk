@@ -1,6 +1,5 @@
 <template>
   <Panel name="Переводчики" @clearFilter="clearFilter">
-    >
     <div class="filter">
       <multiselect
         v-model="filter.deleted"
@@ -44,12 +43,20 @@
     </div>
     <div class="table">
       <div class="table__head">
-        <div class="table__cell table__cell--translator" @click="sortTable('name')">
+        <div
+          class="table__cell table__cell--sortable table__cell--translator"
+          :class="{'is-sorting-active': sorting.col === 'name'}"
+          @click="sortTable('name')"
+        >
           <span>Переводчик</span>
           <svg-icon name="sort" width="16" height="12"/>
         </div>
         <div class="table__cell table__cell--activity">Активность</div>
-        <div class="table__cell table__cell--count" @click="sortTable('count')">
+        <div
+          class="table__cell table__cell--sortable table__cell--count"
+          :class="{'is-sorting-active': sorting.col === 'count'}"
+          @click="sortTable('count')"
+        >
           <span>Количество девушек</span>
           <svg-icon name="sort" width="16" height="12"/>
         </div>
@@ -72,6 +79,7 @@
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
+import sortBy from 'lodash/sortBy';
 import Panel from '@/components/Shared/Layout/Panel.vue';
 import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import Multiselect from 'vue-multiselect';
@@ -81,9 +89,14 @@ import AddEditModal from '@/components/Translators/AddEditModal.vue';
 import RemoveModal from '@/components/Translators/RemoveModal.vue';
 import api from '@/helpers/Api';
 
-const defaultFilterStatus = {
+const defaultFilterState = {
   deleted: { label: 'Показывать удаленных', value: 1 },
   blocked: { label: 'Показывать заблокированных', value: 1 },
+};
+
+const defaultSortingState = {
+  col: undefined,
+  dir: 'ASC',
 };
 
 export default {
@@ -99,7 +112,8 @@ export default {
   },
   data() {
     return {
-      filter: cloneDeep(defaultFilterStatus),
+      filter: cloneDeep(defaultFilterState),
+      sorting: cloneDeep(defaultSortingState),
       translators: [],
     };
   },
@@ -142,16 +156,40 @@ export default {
       return arr ? arr.filter(x => showDeleted(x) && showBlocked(x)) : [];
     },
     clearFilter() {
-      this.filter = cloneDeep(defaultFilterStatus);
+      this.filter = cloneDeep(defaultFilterState);
     },
     applySorting(arr) {
-      return this.sortById(arr);
-    },
-    sortById(arr) {
-      return arr ? arr.slice().sort((a, b) => b.ID - a.ID) : [];
+      const { col, dir } = this.sorting;
+
+      const sortingRules = () => {
+        // sort by FirstName
+        if (col === 'name') {
+          if (dir === 'DESC') {
+            return sortBy(arr, x => x.FirstName).reverse();
+          }
+          return sortBy(arr, x => x.FirstName);
+        }
+        // sort by LadiesCount
+        if (col === 'count') {
+          if (dir === 'DESC') {
+            return sortBy(arr, x => x.LadiesCount).reverse();
+          }
+          return sortBy(arr, x => x.LadiesCount);
+        }
+
+        // default sort by id
+        return sortBy(arr, x => x.ID).reverse();
+      };
+
+      return arr ? sortingRules() : [];
     },
     sortTable(name) {
-      console.log('sorting table', name);
+      // double click change direction
+      if (this.sorting.col === name) {
+        this.sorting.dir = this.sorting.dir === 'ASC' ? 'DESC' : 'ASC';
+      }
+
+      this.sorting.col = name;
     },
   },
 };
@@ -179,7 +217,7 @@ export default {
     flex: 0 0 auto;
     display: flex;
     align-items: center;
-    padding: 16px 12px;
+    padding: 8px 12px 16px;
     border-bottom: 1px solid rgba(#d1cfda, 0.8);
   }
   &__cell {
@@ -189,7 +227,11 @@ export default {
       display: inline-block;
     }
     .svg-icon {
-      fill: rgba(#1e1e1e, 0.5);
+      fill: rgba($fontColor, 0.5);
+      transition: fill .25s ease;
+    }
+    &--sortable{
+      cursor: pointer;
     }
     &--translator {
       flex: 0 0 25%;
@@ -211,6 +253,11 @@ export default {
     &--block {
       flex: 0 0 130px;
       margin-left: 35px;
+    }
+    &.is-sorting-active{
+      .svg-icon {
+        fill: $colorPrimary;
+      }
     }
   }
   &__content {
