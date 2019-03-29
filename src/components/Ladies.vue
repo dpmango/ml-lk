@@ -39,6 +39,7 @@
           line-fg-color="#5aa6ff"
         />
       </div>
+      <AttachTranslatorModal/>
     </div>
   </Panel>
 </template>
@@ -54,6 +55,7 @@ import UiInput from '@/components/Shared/UI/Input.vue';
 import UiCheckbox from '@/components/Shared/UI/Checkbox.vue';
 import Multiselect from 'vue-multiselect';
 import Lady from '@/components/Ladies/Lady.vue';
+import AttachTranslatorModal from '@/components/Ladies/AttachTranslatorModal.vue';
 import api from '@/helpers/Api';
 
 const defaultFilterState = {
@@ -74,6 +76,7 @@ export default {
     UiInput,
     UiCheckbox,
     Multiselect,
+    AttachTranslatorModal,
   },
   data() {
     return {

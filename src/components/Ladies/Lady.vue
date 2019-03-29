@@ -33,12 +33,12 @@
     </template>
     <template v-if="!type">
       <div class="lady__translator">
-        <span v-if="lady.Translator">
+        <span v-if="lady.Translator" @click="handleAttachClick">
           {{lady.Translator.FirstName}}
           <br>
           {{lady.Translator.LastName}}
         </span>
-        <span v-else class="lady__attach">
+        <span v-else class="lady__attach" @click="handleAttachClick">
           <span>Прикрепить к переводчику</span>
         </span>
       </div>
@@ -109,11 +109,16 @@ export default {
         this.$emit('selectAttach', this.lady.ID);
       }
     },
+    handleAttachClick() {
+      this.$modal.show('attach-translator', {
+        lady: this.lady,
+      });
+    },
     handleDetachClick() {
       this.$emit('detachClick', this.lady.ID);
     },
     handleEditClick() {
-      console.log('edit click');
+      console.log('TBD - edit lady');
     },
   },
 };

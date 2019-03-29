@@ -135,8 +135,6 @@ export default {
     beforeOpen(event) {
       this.name = event.params.name;
       this.id = event.params.id;
-      // this.removalDate = event.params.removalDate;
-      // this.removalReason = event.params.removalReason;
       this.fetchAttached();
       this.fetchAvailable();
     },
@@ -231,7 +229,6 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/theme/utils.scss';
-
 
 .modal {
   &__grid{

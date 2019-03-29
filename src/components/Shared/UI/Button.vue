@@ -1,7 +1,7 @@
 <template>
   <button
     class="btn"
-    :class="{ 'btn--primary': primary, 'btn--orange': orange }"
+    :class="{ 'btn--primary': primary, 'btn--orange': orange, 'btn--block': block }"
     :type="type"
     @click="$emit('click')"
   >
@@ -16,6 +16,7 @@ export default {
     primary: Boolean,
     orange: Boolean,
     type: String,
+    block: Boolean,
   },
 };
 </script>
@@ -53,6 +54,11 @@ export default {
       color: white;
       background-color: $colorOrange;
     }
+  }
+  &--block{
+    display: block;
+    width: 100%;
+    text-align: center;
   }
 }
 </style>
