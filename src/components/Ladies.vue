@@ -79,6 +79,7 @@ export default {
     return {
       scrollFetch: {
         isLoading: false,
+        moreResultsAvailable: true,
       },
       filter: cloneDeep(defaultFilterState),
       ladies: null,
@@ -143,14 +144,14 @@ export default {
     handleListScroll() {
       const listDOM = this.$refs.list;
       const scrollRemaining = listDOM.scrollHeight - listDOM.scrollTop - listDOM.offsetHeight;
-      if (scrollRemaining <= 150 && !this.scrollFetch.isLoading) {
+      if (scrollRemaining <= 150 && !this.scrollFetch.isLoading && this.scrollFetch.moreResultsAvailable) {
         const lastId = this.ladies[this.ladies.length - 1].ID;
         this.scrollFetch.isLoading = true;
 
         api.get(`ladies?last_id=${lastId}`).then((res) => {
           this.ladies = this.ladies.concat(res.data);
           this.scrollFetch.isLoading = false;
-          console.log(this.ladies);
+          this.scrollFetch.moreResultsAvailable = res.data.length === 21;
         });
       }
     },
