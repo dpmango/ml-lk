@@ -137,10 +137,10 @@ export default {
         });
     },
     contactResults(arr) {
+      this.translators = [];
       this.translators = this.translators.concat(arr);
     },
     updateComponenet() {
-      this.translators = []; // TODO - concat
       this.fetchApi();
     },
     applyFilters(arr, filter) {

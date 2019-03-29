@@ -160,7 +160,7 @@ export default {
     font-size: 11px;
     line-height: 1.57;
     margin-left: auto;
-    margin-right: auto;
+    margin-right: 0;
     &--actions{
       flex-basis: 145px;
       margin-right: 0;
@@ -186,7 +186,8 @@ export default {
     }
   }
   &__actions {
-    padding-left: 35px;
+    padding-left: 15px;
+    padding-right: 20px;
   }
   &__edit {
     color: #a5a5a5;

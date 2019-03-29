@@ -122,6 +122,7 @@ export default {
   min-height: 48px;
   display: flex;
   align-items: center;
+
   &__name {
     // 220px
     flex: 0 0 25%;
@@ -143,6 +144,7 @@ export default {
     align-items: center;
     padding-left: 5px;
     padding-right: 5px;
+    font-size: 14px;
     .svg-icon {
       flex: 0 0 auto;
       margin-right: 5px;
@@ -157,6 +159,7 @@ export default {
     margin-left: auto;
     padding-left: 12px;
     padding-right: 12px;
+    font-size: 14px;
     text-align: center;
     cursor: pointer;
     span{
@@ -217,8 +220,16 @@ export default {
   // modifiers
   &.is-removed{
     .translator{
+      &__name, &__activities, &__block{
+        pointer-events: none;
+      }
       &__name, &__activities, &__count{
         opacity: 0.5;
+      }
+      &__block{
+        opacity: 0.5;
+        pointer-events: none;
+        filter: grayscale(1)
       }
     }
   }
@@ -226,6 +237,70 @@ export default {
   .stats-space{
     display: inline-block;
     min-width: 15px;
+  }
+}
+
+@include r($md) {
+  .translator{
+    flex-wrap: wrap;
+    min-height: auto;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(#d1cfda, 0.8);
+    &:last-child{
+      border-bottom: 0;
+    }
+    &__name {
+      // 220px
+      order: 1;
+      font-weight: 500;
+      flex: 0 0 160px;
+    }
+    &__activities {
+      order: 5;
+      margin-top: 5px;
+      flex-basis: 100%;
+      justify-content: flex-start;
+    }
+    &__activity{
+      margin-right: 25px;
+    }
+    &__count {
+      order: 2;
+      flex: 0 0 75px;
+    }
+    &__block {
+      order: 3;
+      flex: 0 0 75px;
+      margin-left: 0;
+    }
+    &__actions {
+      order: 4;
+      flex: 0 0 55px;
+    }
+  }
+}
+@include r($smx){
+  .translator{
+    &__name{
+      flex-basis: 100%;
+      padding-right: 0;
+    }
+    &__activities{
+      order: 2;
+      margin-top: 10px;
+      margin-bottom: 3px;
+    }
+    &__count{
+      margin-left: 0;
+      padding-left: 0;
+      flex-basis: 50px;
+      text-align: left;
+    }
+    &__block{
+      flex-basis: 34px;
+      margin-right: 30px;
+      margin-left: auto;
+    }
   }
 }
 </style>

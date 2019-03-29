@@ -28,7 +28,7 @@
     <div class="table">
       <div class="table__head">
         <div class="table__cell table__cell--name">Девушки</div>
-        <div class="table__cell table__cell--name">Переводчик</div>
+        <div class="table__cell table__cell--translators">Переводчик</div>
       </div>
       <div class="table__content" ref="list">
         <Lady v-for="(lady, idx) in ladiesResults" :key="idx" :lady="lady"/>
@@ -191,14 +191,19 @@ export default {
     flex: 0 0 auto;
     display: flex;
     align-items: center;
-    padding: 8px 12px 16px;
+    padding: 8px 20px 16px;
     border-bottom: 1px solid rgba(#d1cfda, 0.8);
   }
   &__cell {
     font-size: 13px;
     font-weight: 500;
     &--name {
-      flex: 0 1 50%;
+      flex: 0 0 245px;
+    }
+    &--translators{
+      flex: 0 0 168px;
+      padding-left: 20px;
+      margin-left: auto;
     }
   }
   &__content {

@@ -31,7 +31,6 @@ export default {
 
 .grid {
   display: flex;
-  flex-wrap: wrap;
   margin-left: -5px;
   margin-right: -5px;
 }
@@ -44,15 +43,20 @@ export default {
   padding-left: 5px;
   padding-right: 5px;
   &--translators {
+    flex-shrink: 1;
     flex-basis: 64%;
     max-width: 64%;
   }
   &--girls {
-    flex-basis: 36%;
-    max-width: 36%;
+    flex-basis: 500px;
+    max-width: 500px;
   }
 }
-@include r($lg) {
+@include r($xl) {
+  .grid{
+    flex-wrap: wrap;
+    padding-bottom: 40px;
+  }
   .col {
     &--translators {
       flex-basis: 100%;
@@ -63,6 +67,12 @@ export default {
       flex-basis: 100%;
       max-width: 100%;
     }
+  }
+}
+@include r($sm) {
+  .grid{
+    margin-left: -25px;
+    margin-right: -25px;
   }
 }
 </style>

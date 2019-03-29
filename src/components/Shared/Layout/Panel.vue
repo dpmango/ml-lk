@@ -97,4 +97,23 @@ export default {
     }
   }
 }
+
+@include r($xl) {
+  .panel{
+    height: auto;
+    max-height: calc(100vh - 80px - 40px);
+  }
+}
+@include r($sm) {
+  .panel-head {
+    flex-wrap: wrap;
+    &__icon{
+      flex-basis: auto;
+    }
+    &__name{
+      padding-left: 20px;
+      text-align: left;
+    }
+  }
+}
 </style>
