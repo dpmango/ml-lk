@@ -19,7 +19,9 @@
         <span>{{translator.Stat31}}/{{translator.Stat32}}/{{translator.Stat33}}</span>
       </div>
     </div>
-    <div class="translator__count">{{translator.LadiesCount}}</div>
+    <div class="translator__count" @click="handleLadiesClick">
+      <span>{{translator.LadiesCount}}</span>
+    </div>
     <div class="translator__block">
       <ui-switch @click="handleBlockClick" :active="isBlocked"/>
     </div>
@@ -103,6 +105,12 @@ export default {
         removalReason: this.translator.RemovalReason,
       });
     },
+    handleLadiesClick() {
+      this.$modal.show('attach-ladies-translator', {
+        name: this.fullName,
+        id: this.translator.ID,
+      });
+    },
   },
 };
 </script>
@@ -150,6 +158,31 @@ export default {
     padding-left: 12px;
     padding-right: 12px;
     text-align: center;
+    cursor: pointer;
+    span{
+      display: inline-block;
+      position: relative;
+      transition: color .25s ease-in-out;
+      &::after{
+        display: inline-block;
+        content: ' ';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: $fontColor;
+        transition: right .25s ease-in-out;
+      }
+    }
+    &:hover{
+      span{
+        color: $colorPrimary;
+        &::after{
+          right: 100%;
+        }
+      }
+    }
   }
   &__block {
     flex: 0 0 75px;

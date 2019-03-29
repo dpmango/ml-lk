@@ -1,5 +1,10 @@
 <template>
-  <div class="lady" :data-id="lady.ID">
+  <div
+    class="lady"
+    :class="{'is-selectable': type === 'select'}"
+    :data-id="lady.ID"
+    @click="handleClick"
+  >
     <div class="lady__avatar">
       <img :src="lady.Thumbnail" :alt="lady.RealName">
     </div>
@@ -16,21 +21,33 @@
       <div class="lady-details__nickname">{{lady.NickName}}</div>
       <div class="lady-details__registered">Зарегистрирована: {{registration}}</div>
     </div>
-    <div class="lady__translator">
-      <span v-if="lady.Translator">
-        {{lady.Translator.FirstName}}
-        <br>
-        {{lady.Translator.LastName}}
-      </span>
-      <span class="lady__attach" v-else>
-        <span>Прикрепить к переводчику</span>
-      </span>
-    </div>
-    <div class="lady__actions">
-      <div @click="handleEditClick" class="lady__edit">
-        <svg-icon name="edit" width="14" height="14"/>
+    <template v-if="type === 'attached'">
+      <div class="lady__translator lady__translator--actions">
+        <span class="lady__attach">
+          <span>Изменить переводчика</span>
+        </span>
+        <span class="lady__attach" @click="handleDetachClick">
+          <span>Удалить переводчика</span>
+        </span>
       </div>
-    </div>
+    </template>
+    <template v-if="!type">
+      <div class="lady__translator">
+        <span v-if="lady.Translator">
+          {{lady.Translator.FirstName}}
+          <br>
+          {{lady.Translator.LastName}}
+        </span>
+        <span v-else class="lady__attach">
+          <span>Прикрепить к переводчику</span>
+        </span>
+      </div>
+      <div class="lady__actions">
+        <div @click="handleEditClick" class="lady__edit">
+          <svg-icon name="edit" width="14" height="14"/>
+        </div>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -45,6 +62,7 @@ export default {
     SvgIcon,
   },
   props: {
+    type: String,
     lady: {
       ID: String,
       NickName: String,
@@ -86,6 +104,14 @@ export default {
     },
   },
   methods: {
+    handleClick() {
+      if (this.type === 'select') {
+        this.$emit('selectAttach', this.lady.ID);
+      }
+    },
+    handleDetachClick() {
+      this.$emit('detachClick', this.lady.ID);
+    },
     handleEditClick() {
       console.log('edit click');
     },
@@ -130,6 +156,16 @@ export default {
     line-height: 1.57;
     margin-left: auto;
     margin-right: auto;
+    &--actions{
+      flex-basis: 145px;
+      margin-right: 0;
+      .lady__attach{
+        margin-bottom: 1em;
+        &:last-child{
+          margin-bottom: 0;
+        }
+      }
+    }
   }
   &__attach {
     display: inline-block;
@@ -154,6 +190,17 @@ export default {
     transition: color 0.25s ease-in-out;
     &:hover {
       color: $colorPrimary;
+    }
+  }
+  &.is-selectable{
+    margin-left: -20px;
+    margin-right: -20px;
+    padding: 10px 20px;
+    margin-bottom: 0;
+    cursor: pointer;
+    transition: background .25s ease-in-out;
+    &:hover{
+      background: rgba(#190F44, .1);
     }
   }
 }

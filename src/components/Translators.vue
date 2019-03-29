@@ -71,6 +71,7 @@
         <AddEditModal @sucessCallback="updateComponenet"/>
         <BlockModal @sucessCallback="updateComponenet"/>
         <RemoveModal @sucessCallback="updateComponenet"/>
+        <AttachLadiesModal @sucessCallback="updateComponenet"/>
       </div>
     </div>
   </Panel>
@@ -87,6 +88,7 @@ import Translator from '@/components/Translators/Translator.vue';
 import BlockModal from '@/components/Translators/BlockModal.vue';
 import AddEditModal from '@/components/Translators/AddEditModal.vue';
 import RemoveModal from '@/components/Translators/RemoveModal.vue';
+import AttachLadiesModal from '@/components/Translators/AttachLadiesModal.vue';
 import api from '@/helpers/Api';
 
 const defaultFilterState = {
@@ -109,6 +111,7 @@ export default {
     BlockModal,
     RemoveModal,
     AddEditModal,
+    AttachLadiesModal,
   },
   data() {
     return {
