@@ -106,22 +106,54 @@ export default {
         });
     },
     handleTranslatorClick(id) {
-      console.log(`translator ${id} clicked`);
-      console.log(`attaching ${this.lady.ID} to translator ${id}`);
-      api.post(`translators/${id}/ladies`, {
-        ladies: this.lady.ID,
-      }).then((res) => {
-        const apiData = res.data[0];
-        if (apiData.success) {
-          this.attachedTranslatorID = id;
-          this.fetchTranslators();
-          this.errorMessage = '';
-          // this.$emit('sucessCallback');
-          // this.closeModal();
-        } else {
-          this.errorMessage = apiData.message;
-        }
-      });
+      const attach = (translatorId) => {
+        api.post(`translators/${translatorId}/ladies`, {
+          ladies: this.lady.ID,
+        }).then((res) => {
+          const apiData = res.data[0];
+          if (apiData.success) {
+            this.attachedTranslatorID = translatorId;
+            this.fetchTranslators();
+            this.errorMessage = '';
+          } else {
+            this.errorMessage = apiData.message;
+          }
+        });
+      };
+
+      const detach = (translatorId, reatach) => {
+        // if reatached - first remove current and attach target clicked
+        const aID = reatach ? this.attachedTranslatorID : translatorId;
+
+        api.delete(`translators/${aID}/ladies`, {
+          data: {
+            ladies: this.lady.ID,
+          },
+        }).then((res) => {
+          const apiData = res.data[0];
+          if (apiData.success) {
+            this.attachedTranslatorID = '';
+            this.fetchTranslators();
+            this.errorMessage = '';
+            if (reatach) {
+              attach(translatorId);
+            }
+          } else {
+            this.errorMessage = apiData.message;
+          }
+        });
+      };
+
+      if (this.attachedTranslatorID === id) {
+        // detach by clicking active
+        detach(id);
+      } else if (this.attachedTranslatorID) {
+        // detach and attached clicked if any is attached
+        detach(id, true);
+      } else {
+        // attach if noboddy attached
+        attach(id);
+      }
     },
   },
 };
