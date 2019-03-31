@@ -25,6 +25,7 @@
               <ui-input group v-model="form.phone" type="tel" placeholder="Телефон"/>
               <ui-input group v-model="form.skype" placeholder="Skype"/>
               <ui-input group v-model="form.passport" placeholder="Номер и серия паспорта"/>
+              <img v-if="form.file" :src="form.file">
               <vue-dropzone
                 :include-styling="true"
                 ref="DropzoneRef"
@@ -239,7 +240,7 @@ export default {
               // this.form.password: apiData,
               this.form.bankCredentials = apiData.BankAccount;
               this.form.notes = apiData.Notes;
-              // this.form.file: apiData.Scan,
+              this.form.file = apiData.Scan;
               this.form.prices.price_1 = apiData.Price_1;
               this.form.prices.price_2 = apiData.Price_2;
               this.form.prices.price_3 = apiData.Price_3;
@@ -297,20 +298,20 @@ export default {
           .post('translators', postObject)
           .then(res => this.handleResponce(res))
           .catch((error) => {
-            console.log(error);
+            this.errorMessage = error;
           });
       }
       if (this.type === 'edit') {
         api
-          .patch(`translators/${this.id}`, postObject)
+          .put(`translators/${this.id}`, postObject)
           .then(res => this.handleResponce(res))
           .catch((error) => {
-            console.log(error);
+            this.errorMessage = error;
           });
       }
     },
     handleResponce(res) {
-      console.log('addEditModal responce', res);
+      console.log(`addEditModal responce - type ${this.type}`, res);
       if (res.data[0].success) {
         this.form = cloneDeep(defaultFormState);
         this.errorMessage = '';
@@ -326,7 +327,8 @@ export default {
     handleDropzoneError(file, message, xhr) {
       console.log('error', file, message, xhr);
     },
-    handleDropzoneRemove(file, error, xhr) {
+    handleDropzoneRemove(file) {
+      // params error, xhr
       if (file.accepted) {
         api
           .delete('translators/files', {
