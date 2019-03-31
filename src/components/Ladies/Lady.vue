@@ -236,4 +236,27 @@ export default {
     font-size: 10px;
   }
 }
+
+@include r(460) {
+  .lady:not(.is-selectable){
+    flex-wrap: wrap;
+    border-bottom: 1px solid rgba(#d1cfda, 0.8);
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+    &__translator{
+      flex-basis: calc(100% - 70px);
+      margin-left: 0;
+      padding-left: 0;
+      margin-top: 15px;
+    }
+    &__actions{
+      padding-right: 0;
+      margin-left: auto;
+      margin-top: 10px;
+    }
+    &__attach{
+      margin-right: 15px;
+    }
+  }
+}
 </style>

@@ -441,4 +441,14 @@ export default {
     font-size: 14px;
   }
 }
+
+@include r($sm) {
+  .modal{
+    &__col-50{
+      flex-basis: 100%;
+      max-width: 100%;
+      margin-bottom: 20px;
+    }
+  }
+}
 </style>

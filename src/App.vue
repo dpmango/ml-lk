@@ -29,7 +29,19 @@ export default {
 
 @import '@/theme/vendor/tooltip.scss';
 @import '@/theme/vendor/select.scss';
-.v--modal-overlay .v--modal-box {
-  overflow: visible;
+.v--modal-overlay {
+  *{
+    -webkit-overflow-scrolling: touch;
+  }
+  .v--modal-box {
+    overflow: visible;
+    margin-top: 25px;
+    margin-bottom: 25px;
+  }
+  &.scrollable{
+    .v--modal-box {
+      margin-bottom: 25px;
+    }
+  }
 }
 </style>

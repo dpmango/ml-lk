@@ -169,15 +169,15 @@ export default {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  padding: 10px 12px;
+  padding: 15px 10px;
   .ui-group{
-    margin: 10px;
+    margin: 5px 10px;
   }
   .ui-checkbox{
-    margin: 10px;
+    margin: 5px 10px;
   }
   .multiselect{
-    margin: 10px;
+    margin: 5px 10px;
     max-width: 235px;
   }
 }
@@ -214,6 +214,16 @@ export default {
   }
   &__loader{
     margin: 30px 0 0px;
+  }
+}
+@include r(460) {
+  .table{
+    &__head{
+      padding: 0;
+    }
+    &__cell{
+      display: none;
+    }
   }
 }
 </style>

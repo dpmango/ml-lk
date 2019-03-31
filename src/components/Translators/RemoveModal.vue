@@ -219,4 +219,11 @@ export default {
     }
   }
 }
+@include r(375) {
+  .modal__cta{
+    .btn {
+      min-width: 135px;
+    }
+  }
+}
 </style>

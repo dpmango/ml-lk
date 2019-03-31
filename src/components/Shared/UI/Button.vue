@@ -61,4 +61,10 @@ export default {
     text-align: center;
   }
 }
+@include r($sm) {
+  .btn {
+    font-size: 13px;
+    padding: 8px 22px;
+  }
+}
 </style>

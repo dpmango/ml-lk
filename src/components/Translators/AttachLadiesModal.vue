@@ -4,6 +4,7 @@
     :adaptive="true"
     width="760"
     height="auto"
+    :scrollable="true"
     @before-open="beforeOpen"
     @opened="opened"
     @before-close="beforeClose"
@@ -321,6 +322,28 @@ export default {
     margin-top: 20px;
     margin-bottom: 0;
   }
+}
+
+@include r($md) {
+.modal {
+  &__grid{
+    flex-wrap: wrap;
+  }
+  &__col{
+    height: auto;
+    max-height: calc(100vh - 120px);
+    &--left{
+      flex-basis: 100%;
+      max-width: 100%;
+      border-right: 0;
+      border-bottom: 1px solid #D1CFDA;
+    }
+    &--right{
+      flex-basis: 100%;
+      max-width: 100%;
+    }
+  }
+}
 }
 
 </style>

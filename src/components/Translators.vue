@@ -198,9 +198,11 @@ export default {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  padding: 10px 12px;
+  padding: 15px 12px;
+  margin-left: -10px;
+  margin-right: -10px;
   .multiselect{
-    margin: 10px;
+    margin: 5px 10px;
     max-width: 240px;
   }
 }
@@ -228,6 +230,10 @@ export default {
     }
     &--sortable{
       cursor: pointer;
+      transition: color .25s ease-in-out;
+      &:hover{
+        color: $colorPrimary;
+      }
     }
     &--translator {
       flex: 0 0 25%;
@@ -261,6 +267,34 @@ export default {
     max-height: 100%;
     overflow-y: scroll;
     padding: 12px;
+  }
+}
+@include r($md) {
+  .table{
+    &__head{
+      flex-direction: column;
+      align-items: flex-start;
+      padding-top: 0;
+      padding-bottom: 8px;
+    }
+    &__content{
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+    &__cell{
+      flex: 0 0 auto;
+      display: none;
+      padding: 8px 0;
+      &--sortable{
+        display: block;
+      }
+      &--count{
+        margin-left: 0;
+        span{
+          max-width: 100%;
+        }
+      }
+    }
   }
 }
 </style>
