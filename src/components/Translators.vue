@@ -14,10 +14,7 @@
         ]"
       >
         <template slot="caret">
-          <div
-            @mousedown.prevent.stop="toggle()"
-            class="multiselect__select multiselect__select--svg"
-          >
+          <div class="multiselect__select multiselect__select--svg">
             <svg-icon name="down-arrow" width="10" height="6"/>
           </div>
         </template>
@@ -35,7 +32,7 @@
         ]"
       >
         <template slot="caret">
-          <div @click="toggle()" class="multiselect__select multiselect__select--svg">
+          <div class="multiselect__select multiselect__select--svg">
             <svg-icon name="down-arrow" width="10" height="6"/>
           </div>
         </template>
@@ -62,9 +59,9 @@
         </div>
         <div class="table__cell table__cell--block">Блокировка</div>
       </div>
-      <div class="table__content" v-if="translators.length">
+      <div class="table__content">
         <Translator
-          v-for="(translator, idx) in translatorsResults"
+          v-for="(translator, idx) in translatorsList"
           :key="idx"
           :translator="translator"
         />
@@ -124,8 +121,8 @@ export default {
     this.fetchApi();
   },
   computed: {
-    translatorsResults() {
-      return this.applySorting(this.applyFilters(this.translators, this.filter));
+    translatorsList() {
+      return this.applySorting(this.applyFilters(this.$store.state.translators, this.filter));
     },
   },
   methods: {
@@ -133,12 +130,8 @@ export default {
       api
         .get('translators')
         .then((res) => {
-          this.contactResults(res.data);
+          this.$store.commit('updateTranslators', res.data);
         });
-    },
-    contactResults(arr) {
-      this.translators = [];
-      this.translators = this.translators.concat(arr);
     },
     updateComponenet() {
       this.fetchApi();

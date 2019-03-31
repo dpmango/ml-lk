@@ -66,7 +66,6 @@ export default {
     return {
       attachedTranslatorID: '',
       lady: '',
-      translators: [],
       errorMessage: '',
     };
   },
@@ -75,7 +74,7 @@ export default {
       return dateToAge(this.lady.DateOfBirth);
     },
     translatorsResults() {
-      return this.translators ? this.translators.map(t => ({
+      return this.$store.state.translators ? this.$store.state.translators.map(t => ({
         id: t.ID,
         name: `${t.FirstName} ${t.LastName}`,
         count: t.LadiesCount,
@@ -87,7 +86,6 @@ export default {
     beforeOpen(event) {
       this.lady = event.params.lady;
       this.attachedTranslatorID = event.params.lady.Translator.ID;
-      this.fetchTranslators();
     },
     beforeClose() {
       this.resetState();
@@ -102,7 +100,7 @@ export default {
       api
         .get('translators')
         .then((res) => {
-          this.translators = res.data;
+          this.$store.commit('updateTranslators', res.data);
         });
     },
     handleTranslatorClick(id) {

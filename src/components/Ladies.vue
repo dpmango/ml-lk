@@ -18,7 +18,7 @@
         ]"
       >
         <template slot="caret">
-          <div @click="toggle()" class="multiselect__select multiselect__select--svg">
+          <div class="multiselect__select multiselect__select--svg">
             <svg-icon name="down-arrow" width="10" height="6"/>
           </div>
         </template>
