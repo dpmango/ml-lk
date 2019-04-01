@@ -41,16 +41,16 @@
           </span>
         </div>
       </div>
-      <div class="modal__cta">
+      <!-- <div class="modal__cta">
         <Button orange block @click="closeModal">Выбрать</Button>
-      </div>
+      </div>-->
     </div>
   </modal>
 </template>
 
 <script>
 import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
-import Button from '@/components/Shared/UI/Button.vue';
+// import Button from '@/components/Shared/UI/Button.vue';
 import Notification from '@/components/Shared/UI/Notification.vue';
 import { dateToAge } from '@/helpers/Dates';
 import api from '@/helpers/Api';
@@ -59,7 +59,7 @@ export default {
   name: 'AttachTranslatorModal',
   components: {
     SvgIcon,
-    Button,
+    // Button,
     Notification,
   },
   data() {
@@ -74,7 +74,8 @@ export default {
       return dateToAge(this.lady.DateOfBirth);
     },
     translatorsResults() {
-      return this.$store.state.translators ? this.$store.state.translators.map(t => ({
+      console.log(this.$store.getters.activeTranslators);
+      return this.$store.getters.activeTranslators ? this.$store.getters.activeTranslators.map(t => ({
         id: t.ID,
         name: `${t.FirstName} ${t.LastName}`,
         count: t.LadiesCount,
@@ -232,25 +233,10 @@ export default {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    padding-right: 15px;
   }
   &__count{
     margin-left: auto;
-    span{
-      display: inline-block;
-      position: relative;
-      transition: color .25s ease-in-out;
-      &::after{
-        display: inline-block;
-        content: ' ';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 1px;
-        background: $fontColor;
-        transition: right .25s ease-in-out;
-      }
-    }
   }
   &:hover, &.is-current{
     background: rgba(#190F44, .1);

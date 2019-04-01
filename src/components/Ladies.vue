@@ -119,9 +119,9 @@ export default {
       const lastname = filter.lastname.trim();
       const status = filter.status ? filter.status.value : undefined;
 
-      const filterById = x => (id ? x.ID.indexOf(id) !== -1 : true);
-      const filterByNickname = x => (nickname ? x.NickName.toLowerCase().indexOf(nickname.toLowerCase()) !== -1 : true);
-      const filterByLastName = x => (lastname ? x.LastName.toLowerCase().indexOf(lastname.toLowerCase()) !== -1 : true);
+      const filterById = x => (id ? x.ID.startsWith(id) : true);
+      const filterByNickname = x => (nickname ? x.NickName.toLowerCase().startsWith(nickname.toLowerCase()) : true);
+      const filterByLastName = x => (lastname ? x.LastName.toLowerCase().startsWith(lastname.toLowerCase()) : true);
       const filterByStatus = x => (status ? x.Status === status : true);
       const filterByTranslator = x => (filter.noTranslator ? !x.Translator : true);
 

@@ -10,11 +10,11 @@
           {{translator.Stat13}}/{{translator.Stat14}}
         </span>
       </div>
-      <div class="translator__activity" v-tooltip.bottom-start="'Подарки'">
+      <div class="translator__activity" v-tooltip.bottom-start="'Чаты'">
         <svg-icon name="chat" width="19" height="16"/>
         <span>{{translator.Stat21}}/{{translator.Stat22}}</span>
       </div>
-      <div class="translator__activity" v-tooltip.bottom-start="'Чаты'">
+      <div class="translator__activity" v-tooltip.bottom-start="'Подарки'">
         <svg-icon name="gift" width="16" height="16"/>
         <span>{{translator.Stat31}}/{{translator.Stat32}}/{{translator.Stat33}}</span>
       </div>
@@ -30,7 +30,12 @@
         <svg-icon name="edit" width="14" height="14"/>
       </div>
       <div @click="handleRemoveClick" class="translator__remove">
-        <svg-icon name="close" width="14" height="14"/>
+        <template v-if="isRemoved">
+          <svg-icon name="restore" width="16" height="16"/>
+        </template>
+        <template v-else>
+          <svg-icon name="close" width="14" height="14"/>
+        </template>
       </div>
     </div>
   </div>
@@ -230,6 +235,10 @@ export default {
         opacity: 0.5;
         pointer-events: none;
         filter: grayscale(1)
+      }
+      &__remove{
+        margin-left: -2px;
+        margin-bottom: -2px;
       }
     }
   }

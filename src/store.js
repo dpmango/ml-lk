@@ -7,6 +7,9 @@ export default new Vuex.Store({
   state: {
     translators: [],
   },
+  getters: {
+    activeTranslators: state => state.translators.filter(x => x.RemovalDate.length <= 1 && x.BlockDate.length <= 1),
+  },
   mutations: {
     updateTranslators(state, arr) {
       // eslint-disable-next-line

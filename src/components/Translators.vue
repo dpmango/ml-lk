@@ -9,8 +9,9 @@
         :searchable="false"
         :allowEmpty="false"
         :options="[
+          {label: 'Все', value: undefined},
           {label: 'Не показывать удаленных', value: 0},
-          {label: 'Показывать удаленных', value: 1}
+          {label: 'Удаленные', value: 1}
         ]"
       >
         <template slot="caret">
@@ -27,8 +28,9 @@
         :searchable="false"
         :allowEmpty="false"
         :options="[
+          {label: 'Все', value: undefined},
           {label: 'Не показывать заблокированных', value: 0},
-          {label: 'Показывать заблокированных', value: 1}
+          {label: 'Заблокированные', value: 1}
         ]"
       >
         <template slot="caret">
@@ -89,8 +91,8 @@ import AttachLadiesModal from '@/components/Translators/AttachLadiesModal.vue';
 import api from '@/helpers/Api';
 
 const defaultFilterState = {
-  deleted: { label: 'Показывать удаленных', value: 1 },
-  blocked: { label: 'Показывать заблокированных', value: 1 },
+  deleted: { label: 'Не показывать удаленных', value: 0 },
+  blocked: { label: 'Не показывать заблокированных', value: 0 },
 };
 
 const defaultSortingState = {
@@ -138,14 +140,20 @@ export default {
     },
     applyFilters(arr, filter) {
       const showDeleted = (x) => {
-        if (filter.deleted.value !== 1) {
-          return x.RemovalDate === '0';
+        if (filter.deleted.value === 0) {
+          return x.RemovalDate.length <= 1;
+        }
+        if (filter.deleted.value === 1) {
+          return x.RemovalDate.length > 1;
         }
         return true;
       };
       const showBlocked = (x) => {
-        if (filter.blocked.value !== 1) {
-          return x.BlockDate === '0';
+        if (filter.blocked.value === 0) {
+          return x.BlockDate.length <= 1;
+        }
+        if (filter.blocked.value === 1) {
+          return x.BlockDate.length > 1;
         }
         return true;
       };

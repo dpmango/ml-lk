@@ -48,10 +48,10 @@
               <ui-input group required v-model="form.login" placeholder="Логин"/>
               <ui-input
                 group
-                required
+                :required="type === 'add'"
                 v-model="form.password"
                 type="password"
-                placeholder="Пароль"
+                :placeholder="passwordPlaceholder"
               />
               <ui-input
                 group
@@ -148,13 +148,13 @@ const defaultFormState = {
   notes: '',
   file: '',
   prices: {
-    price_1: '',
-    price_2: '',
-    price_3: '',
-    price_4: '',
-    price_5: '',
-    price_6: '',
-    price_7: '',
+    price_1: '0.00',
+    price_2: '0.00',
+    price_3: '0.00',
+    price_4: '0.00',
+    price_5: '0.00',
+    price_6: '0.00',
+    price_7: '0.00',
   },
 };
 
@@ -202,6 +202,9 @@ export default {
   computed: {
     actionType() {
       return this.type === 'edit' ? 'Редактирование' : 'Добавление';
+    },
+    passwordPlaceholder() {
+      return this.type === 'edit' ? 'Новый пароль' : 'Пароль';
     },
   },
   methods: {

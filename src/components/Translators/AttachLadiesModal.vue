@@ -161,7 +161,7 @@ export default {
       });
     },
     fetchAvailable() {
-      api.get('ladies').then((res) => {
+      api.get('ladies?free=true').then((res) => {
         this.ladies.available = res.data;
       });
     },
