@@ -306,7 +306,10 @@ export default {
       }
       if (this.type === 'edit') {
         api
-          .put(`translators/${this.id}`, postObject)
+          .put(`translators/${this.id}`, {
+            ...postObject,
+            ...{ type: 'update' },
+          })
           .then(res => this.handleResponce(res))
           .catch((error) => {
             this.errorMessage = error;
