@@ -1,6 +1,6 @@
 <template>
   <div v-if="type === 'textarea'" :class="{ 'ui-group': group }">
-    <template v-if="placeholder">
+    <template v-if="placeholder && !noLabel">
       <label class="ui-placeholder" for="name">{{placeholder}}</label>
     </template>
     <textarea-autosize
@@ -12,11 +12,12 @@
       :min-height="minheight"
       :max-height="maxheight"
       :value="value"
+      :disabled="disabled"
       @input="handleChange"
     />
   </div>
   <div v-else :class="{ 'ui-group': group }">
-    <template v-if="placeholder">
+    <template v-if="placeholder && !noLabel">
       <label class="ui-placeholder" for="name">{{placeholder}}</label>
     </template>
     <input
@@ -29,6 +30,7 @@
       :type="type"
       :value="value"
       :required="required"
+      :disabled="disabled"
       @keydown="handleKeyDown"
       @input="handleChange"
       @click="$emit('click')"
@@ -45,6 +47,7 @@ export default {
     big: Boolean,
     compact: Boolean,
     width: String,
+    noLabel: Boolean,
     // textarea props
     minheight: {
       type: [Number, String],
@@ -58,6 +61,7 @@ export default {
     name: String,
     placeholder: String,
     required: Boolean,
+    disabled: Boolean,
     type: {
       type: String,
       default: 'text',
@@ -132,6 +136,9 @@ export default {
     padding-right: 5px;
     text-align: center;
     max-width: 40px;
+  }
+  &[disabled]{
+    background: rgba(0, 0, 0, 0.1);
   }
 }
 </style>

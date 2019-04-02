@@ -155,7 +155,12 @@ export default {
       this.$modal.hide('attach-ladies-translator');
     },
     resetState() {
+      this.name = '';
+      this.id = '';
       this.errorMessage = '';
+      this.ladies.attached = [];
+      this.ladies.available = [];
+      this.selectedLadies = [];
     },
     fetchAttached() {
       api.get(`translators/${this.id}/ladies`).then((res) => {
@@ -193,7 +198,11 @@ export default {
       }
     },
     handleAttachClick(ladyId) {
-      this.selectedLadies = this.selectedLadies.concat(ladyId);
+      if (this.selectedLadies.indexOf(ladyId) !== -1) {
+        this.selectedLadies = this.selectedLadies.filter(x => x !== ladyId);
+      } else {
+        this.selectedLadies = this.selectedLadies.concat(ladyId);
+      }
     },
     attachLadies() {
       api.post(`translators/${this.id}/ladies`, {

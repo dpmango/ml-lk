@@ -41,6 +41,7 @@
             <ui-input
               v-if="shouldShowInput"
               group
+              noLabel
               type="textarea"
               v-model="form.reasonInput"
               placeholder="Причина"

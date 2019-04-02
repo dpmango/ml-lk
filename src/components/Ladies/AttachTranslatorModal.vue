@@ -113,6 +113,7 @@ export default {
             this.attachedTranslatorID = translatorId;
             this.fetchTranslators();
             this.errorMessage = '';
+            this.$emit('sucessCallback');
           } else {
             this.errorMessage = apiData.message;
           }
@@ -135,6 +136,8 @@ export default {
             this.errorMessage = '';
             if (reatach) {
               attach(translatorId);
+            } else {
+              this.$emit('sucessCallback');
             }
           } else {
             this.errorMessage = apiData.message;
