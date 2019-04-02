@@ -34,7 +34,7 @@ export default {
     -webkit-overflow-scrolling: touch;
   }
   .v--modal-box {
-    overflow: visible;
+    overflow: visible !important;
     margin-top: 25px;
     margin-bottom: 25px;
   }

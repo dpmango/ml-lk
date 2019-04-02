@@ -74,7 +74,6 @@ export default {
       return dateToAge(this.lady.DateOfBirth);
     },
     translatorsResults() {
-      console.log(this.$store.getters.activeTranslators);
       return this.$store.getters.activeTranslators ? this.$store.getters.activeTranslators.map(t => ({
         id: t.ID,
         name: `${t.FirstName} ${t.LastName}`,

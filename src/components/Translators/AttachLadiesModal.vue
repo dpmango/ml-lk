@@ -41,10 +41,6 @@
                 line-fg-color="#5aa6ff"
               />
             </div>
-            <div class="list__cta">
-              <Button orange type="submit">Сохранить</Button>
-              <Button type="button" @click="closeModal">Отмена</Button>
-            </div>
           </div>
         </div>
         <div class="modal__col modal__col--right">
@@ -57,6 +53,7 @@
                 v-for="(lady, idx) in availableLadiesForSelect"
                 :key="idx"
                 :lady="lady"
+                :selectedLadies="selectedLadies"
                 type="select"
                 @selectAttach="handleAttachClick"
               />
@@ -68,7 +65,7 @@
               />
             </div>
             <div class="list__cta">
-              <Button primary type="submit">Прикрепить переводчика</Button>
+              <Button primary type="button" @click="attachLadies">Прикрепить переводчика</Button>
             </div>
           </div>
         </div>
@@ -100,11 +97,13 @@ export default {
     return {
       name: '',
       id: '',
+      counterAttached: 0,
       errorMessage: '',
       ladies: {
         attached: [],
         available: [],
       },
+      selectedLadies: [],
       scrollFetch: {
         left: {
           isLoading: false,
@@ -123,8 +122,9 @@ export default {
   },
   computed: {
     countLadiesAttached() {
-      const { length } = this.ladies.attached;
-      return `${length} ${Plurize(length, 'девушка', 'дувушки', 'девушек')}`;
+      // const { length } = this.ladies.attached;
+      if (this.counterAttached === 0) return '';
+      return `${this.counterAttached} ${Plurize(this.counterAttached, 'девушка', 'девушки', 'девушек')}`;
     },
     availableLadiesForSelect() {
       // filter out attached ladies
@@ -136,6 +136,7 @@ export default {
     beforeOpen(event) {
       this.name = event.params.name;
       this.id = event.params.id;
+      this.counterAttached = parseInt(event.params.count, 10);
       this.fetchAttached();
       this.fetchAvailable();
     },
@@ -191,15 +192,18 @@ export default {
       }
     },
     handleAttachClick(ladyId) {
-      console.log(`attaching ${ladyId} to translator ${this.id}`);
+      this.selectedLadies = this.selectedLadies.concat(ladyId);
+    },
+    attachLadies() {
       api.post(`translators/${this.id}/ladies`, {
-        ladies: ladyId,
+        ladies: this.selectedLadies.join(','),
       }).then((res) => {
         const apiData = res.data[0];
         if (apiData.success) {
           this.fetchAttached();
           this.errorMessage = '';
-          // this.$emit('sucessCallback');
+          this.counterAttached = this.counterAttached + this.selectedLadies.length;
+          this.$emit('sucessCallback');
           // this.closeModal();
         } else {
           this.errorMessage = apiData.message;

@@ -1,7 +1,7 @@
 <template>
   <div
     class="lady"
-    :class="{'is-selectable': type === 'select'}"
+    :class="{'is-selectable': type === 'select', 'highlight': shouldHighlight}"
     :data-id="lady.ID"
     @click="handleClick"
   >
@@ -63,6 +63,7 @@ export default {
   },
   props: {
     type: String,
+    selectedLadies: Array,
     lady: {
       ID: String,
       NickName: String,
@@ -101,6 +102,9 @@ export default {
         default:
           return '';
       }
+    },
+    shouldHighlight() {
+      return this.selectedLadies ? this.selectedLadies.indexOf(this.lady.ID) !== -1 : false;
     },
   },
   methods: {
@@ -207,6 +211,12 @@ export default {
     transition: background .25s ease-in-out;
     &:hover{
       background: rgba(#190F44, .1);
+    }
+    &.highlight{
+      background: rgba(#190F44, .1);
+      &:hover{
+        background: rgba($colorRed, 0.05);
+      }
     }
   }
 }

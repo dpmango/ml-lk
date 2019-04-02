@@ -1,6 +1,18 @@
 <template>
   <div class="translator" :class="{'is-removed': isRemoved}" :data-id="translator.ID">
-    <div class="translator__name">{{fullName}}</div>
+    <div class="translator__name">
+      <span>
+        {{fullName}}
+        <template v-if="translator.Notes">
+          <div
+            class="translator__info"
+            v-tooltip.right-start="{ content: translator.Notes, classes: 'text-tooltip' }"
+          >
+            <svg-icon name="infomark" width="12" height="12"/>
+          </div>
+        </template>
+      </span>
+    </div>
     <div class="translator__activities">
       <div class="translator__activity" v-tooltip.bottom-start="'Письма'">
         <svg-icon name="mail" width="16" height="12"/>
@@ -114,6 +126,7 @@ export default {
       this.$modal.show('attach-ladies-translator', {
         name: this.fullName,
         id: this.translator.ID,
+        count: this.translator.LadiesCount,
       });
     },
   },
@@ -134,6 +147,14 @@ export default {
     padding-right: 12px;
     color: rgba($fontColor, 0.8);
     font-size: 14px;
+    > span{
+      position: relative;
+    }
+  }
+  &__info{
+    position: absolute;
+    top: 0;
+    right: -20px;
   }
   &__activities {
     // 290px

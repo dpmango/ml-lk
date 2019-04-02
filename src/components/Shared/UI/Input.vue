@@ -1,5 +1,8 @@
 <template>
   <div v-if="type === 'textarea'" :class="{ 'ui-group': group }">
+    <template v-if="placeholder">
+      <label class="ui-placeholder" for="name">{{placeholder}}</label>
+    </template>
     <textarea-autosize
       class="ui-input"
       :style="{ maxWidth: width + 'px' }"
@@ -13,6 +16,9 @@
     />
   </div>
   <div v-else :class="{ 'ui-group': group }">
+    <template v-if="placeholder">
+      <label class="ui-placeholder" for="name">{{placeholder}}</label>
+    </template>
     <input
       class="ui-input"
       :class="{ 'ui-input--big': big, 'ui-input--compact': compact }"
@@ -96,6 +102,12 @@ export default {
   margin-bottom: 20px;
 }
 
+.ui-placeholder{
+  display: inline-block;
+  font-size: 12px;
+  margin-bottom: 5px;
+  color: rgba($fontColor, .8);
+}
 .ui-input {
   -webkit-appearance: none;
   display: block;

@@ -116,7 +116,7 @@
           <div class="modal__cta">
             <Button orange type="submit">
               <template v-if="type === 'add'">Добавить переводчика</template>
-              <template v-if="type === 'edit'">Сохранить изминения</template>
+              <template v-if="type === 'edit'">Сохранить изменения</template>
             </Button>
           </div>
         </form>
