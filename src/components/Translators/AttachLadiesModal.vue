@@ -220,7 +220,9 @@ export default {
         const apiData = res.data[0];
         if (apiData.success) {
           this.fetchAttached();
+          this.fetchAvailable();
           this.errorMessage = '';
+          this.counterAttached = this.counterAttached - 1;
           // this.$emit('sucessCallback');
           // this.closeModal();
         } else {
