@@ -151,6 +151,7 @@ export default {
       this.resetState();
     },
     closeModal() {
+      this.$emit('sucessCallback');
       this.$modal.hide('attach-ladies-translator');
     },
     resetState() {
@@ -203,7 +204,6 @@ export default {
           this.fetchAttached();
           this.errorMessage = '';
           this.counterAttached = this.counterAttached + this.selectedLadies.length;
-          this.$emit('sucessCallback');
           // this.closeModal();
         } else {
           this.errorMessage = apiData.message;
@@ -223,7 +223,6 @@ export default {
           this.fetchAvailable();
           this.errorMessage = '';
           this.counterAttached = this.counterAttached - 1;
-          // this.$emit('sucessCallback');
           // this.closeModal();
         } else {
           this.errorMessage = apiData.message;
