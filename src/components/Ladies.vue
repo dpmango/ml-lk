@@ -2,7 +2,6 @@
   <Panel name="Девушки" @clearFilter="clearFilter">
     <form class="filter">
       <ui-input
-        disabled
         group
         noLabel
         @input="filterWithDebounce"
@@ -148,13 +147,13 @@ export default {
       this.applyFilters();
     },
     filterToParams() {
-      // const id = this.filter.id.trim();
+      const id = this.filter.id.trim();
       const nickname = this.filter.nickname.trim();
       const lastname = this.filter.lastname.trim();
       const status = this.filter.status ? this.filter.status.value : undefined;
       const freeOnly = this.filter.noTranslator ? 1 : undefined;
       let filters = {
-        // id,
+        id,
         nick: nickname,
         name: lastname,
       };

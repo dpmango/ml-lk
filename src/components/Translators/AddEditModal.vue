@@ -25,22 +25,31 @@
               <ui-input group v-model="form.phone" type="tel" placeholder="Телефон"/>
               <ui-input group v-model="form.skype" placeholder="Skype"/>
               <ui-input group v-model="form.passport" placeholder="Номер и серия паспорта"/>
-              <img v-if="form.file" :src="form.file">
-              <vue-dropzone
-                :include-styling="true"
-                ref="DropzoneRef"
-                id="dropzone-translators-add"
-                :options="dropzoneOptions"
-                :useCustomSlot="true"
-                @vdropzone-success="handleDropzoneSucess"
-                @vdropzone-error="handleDropzoneError"
-                @vdropzone-removed-file="handleDropzoneRemove"
-              >
-                <div class="dropzone-custom-message">
-                  <svg-icon name="attach" width="16" height="16"/>
-                  <span>Прикрепить скан паспорта</span>
+              <div class="ui-file" v-if="type === 'edit' && form.fileBase64">
+                <div class="ui-file__preview">
+                  <img :src="form.fileBase64">
                 </div>
-              </vue-dropzone>
+                <div class="ui-file__remove" @click="handleFileRemove">
+                  <svg-icon name="close" width="8" height="8"/>
+                </div>
+              </div>
+              <template v-else>
+                <vue-dropzone
+                  :include-styling="true"
+                  ref="DropzoneRef"
+                  id="dropzone-translators-add"
+                  :options="dropzoneOptions"
+                  :useCustomSlot="true"
+                  @vdropzone-success="handleDropzoneSucess"
+                  @vdropzone-error="handleDropzoneError"
+                  @vdropzone-removed-file="handleDropzoneRemove"
+                >
+                  <div class="dropzone-custom-message">
+                    <svg-icon name="attach" width="16" height="16"/>
+                    <span>Прикрепить скан паспорта</span>
+                  </div>
+                </vue-dropzone>
+              </template>
             </div>
             <div class="modal__col-50">
               <ui-input group required v-model="form.email" type="email" placeholder="Email"/>
@@ -147,6 +156,7 @@ const defaultFormState = {
   bankCredentials: '',
   notes: '',
   file: '',
+  fileBase64: '',
   prices: {
     price_1: '0.00',
     price_2: '0.00',
@@ -243,7 +253,6 @@ export default {
               // this.form.password: apiData,
               this.form.bankCredentials = apiData.BankAccount;
               this.form.notes = apiData.Notes;
-              this.form.file = apiData.Scan;
               this.form.prices.price_1 = apiData.Price_1;
               this.form.prices.price_2 = apiData.Price_2;
               this.form.prices.price_3 = apiData.Price_3;
@@ -251,6 +260,10 @@ export default {
               this.form.prices.price_5 = apiData.Price_5;
               this.form.prices.price_6 = apiData.Price_6;
               this.form.prices.price_7 = apiData.Price_7;
+
+              if (apiData.Scan) {
+                this.getScanFileApi(apiData.Scan);
+              }
             }
           })
           .catch((error) => {
@@ -262,8 +275,23 @@ export default {
         this.resetState();
       }
     },
+    getScanFileApi(url) {
+      api
+        .get(url, {
+          responseType: 'arraybuffer',
+        })
+        .then((res) => {
+          const imgToBase64 = Buffer.from(res.data, 'binary').toString('base64');
+          this.form.fileBase64 = `data:image/png;base64, ${imgToBase64}`;
+        })
+        .catch((err) => {
+          this.errorMessage = `File: ${err}`;
+        });
+    },
     resetState() {
       this.id = null;
+      this.type = '';
+      this.errorMessage = '';
       this.form = cloneDeep(defaultFormState);
     },
     getCommission(priceId) {
@@ -286,7 +314,7 @@ export default {
         password: this.form.password, // пароль (обязательно)
         bank: this.form.bankCredentials, // реквизиты
         notes: this.form.notes, // комментарии
-        file: this.form.file, // TODO send multiple ? - имя загруженного файла
+        file: this.routeFileAction(), // - имя загруженного файла или «delete»
         price_1: this.form.prices.price_1, // фин.показатели 1..7
         price_2: this.form.prices.price_2,
         price_3: this.form.prices.price_3,
@@ -326,6 +354,19 @@ export default {
       } else {
         this.errorMessage = res.data[0].message;
       }
+    },
+    routeFileAction() {
+      if (this.type === 'add') {
+        return this.form.file;
+      } if (this.type === 'edit') {
+        return !this.form.fileBase64 && !this.form.file ? 'delete' : this.form.file;
+      }
+      return '';
+    },
+    handleFileRemove() {
+      // when editing
+      this.form.fileBase64 = '';
+      // this will send file = remove to server on submit
     },
     handleDropzoneSucess(file, res) {
       this.form.file = res[0].File;
@@ -458,6 +499,32 @@ export default {
       max-width: 100%;
       margin-bottom: 20px;
     }
+  }
+}
+
+.ui-file{
+  position: relative;
+  display: flex;
+  width: 60px;
+  &__preview{
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    width: 40px;
+    height: 45px;
+    img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  &__remove{
+    position: absolute;
+    right: 0px;
+    top: 0;
+    font-size: 0;
+    cursor: pointer;
+    color: rgba($fontColor, .4);
   }
 }
 </style>
