@@ -290,7 +290,6 @@ export default {
     },
     resetState() {
       this.id = null;
-      this.type = '';
       this.errorMessage = '';
       this.form = cloneDeep(defaultFormState);
     },
