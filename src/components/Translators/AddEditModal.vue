@@ -43,6 +43,7 @@
                   @vdropzone-success="handleDropzoneSucess"
                   @vdropzone-error="handleDropzoneError"
                   @vdropzone-removed-file="handleDropzoneRemove"
+                  @vdropzone-files-added="handleDropzoneFileAdd"
                 >
                   <div class="dropzone-custom-message">
                     <svg-icon name="attach" width="16" height="16"/>
@@ -374,6 +375,7 @@ export default {
       console.log('error', file, message, xhr);
     },
     handleDropzoneRemove(file) {
+      console.log('remove');
       // params error, xhr
       if (file.accepted) {
         api
@@ -391,6 +393,13 @@ export default {
             console.log(err);
           });
       }
+    },
+    handleDropzoneFileAdd(file) {
+      // if (file.length > 1) {
+
+      // }
+
+      this.$refs.DropzoneRef.removeFile(file);
     },
 
   },

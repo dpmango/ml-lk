@@ -190,8 +190,7 @@ export default {
         this.scrollFetch[listPos].isLoading = true;
 
         api.get(url).then((res) => {
-          console.log(`get ${url} - l ${res.data.length}`);
-          this.ladies[ladiesArr] = this.ladies[ladiesArr].concat(res.data);
+          this.ladies[ladiesArr] = this.ladies[ladiesArr].concat(res.data.slice(1));
           this.scrollFetch[listPos].isLoading = false;
           this.scrollFetch[listPos].moreResultsAvailable = res.data.length === 21;
         });

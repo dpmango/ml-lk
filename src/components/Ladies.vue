@@ -205,13 +205,13 @@ export default {
       const listDOM = this.$refs.list;
       const scrollRemaining = listDOM.scrollHeight - listDOM.scrollTop - listDOM.offsetHeight;
       if (scrollRemaining <= 150 && !this.scrollFetch.isLoading && this.scrollFetch.moreResultsAvailable) {
-        const lastId = this.ladies[this.ladies.length - 1].ID;
+        const lastId = this.ladies[this.ladies.length - 2].ID;
         this.scrollFetch.isLoading = true;
 
         api.get(`ladies?last_id=${lastId}`, {
           params: this.filterToParams(),
         }).then((res) => {
-          this.ladies = this.ladies.concat(res.data);
+          this.ladies = this.ladies.concat(res.data.slice(1));
           this.scrollFetch.isLoading = false;
           this.scrollFetch.moreResultsAvailable = res.data.length === 21;
         });
