@@ -8,6 +8,9 @@
     <div class="lady__avatar">
       <img :src="lady.Thumbnail" :alt="lady.RealName">
     </div>
+    <div class="lady__checkmark">
+      <svg-icon name="checkmark-circle" width="15" height="14"/>
+    </div>
     <div class="lady__details lady-details">
       <div class="lady-details__top">
         <div class="lady-details__id">ID: {{lady.ID}}</div>
@@ -132,6 +135,7 @@ export default {
 @import '@/theme/utils.scss';
 
 .lady {
+  position: relative;
   display: flex;
   align-items: center;
   margin-bottom: 20px;
@@ -202,6 +206,25 @@ export default {
       color: $colorPrimary;
     }
   }
+  &__checkmark{
+    position: absolute;
+    left: 44px;
+    bottom: 2px;
+    width: 22px;
+    height: 22px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity .25s ease;
+    svg{
+      margin-top: -1px;
+    }
+  }
   &.is-selectable{
     margin-left: -20px;
     margin-right: -20px;
@@ -213,9 +236,16 @@ export default {
       background: rgba(#190F44, .1);
     }
     &.highlight{
-      background: rgba(#190F44, .1);
+      .lady{
+        &__avatar{
+          border: 2px solid $colorGreen;
+        }
+        &__checkmark{
+          opacity: 1;
+        }
+      }
       &:hover{
-        background: rgba($colorRed, 0.05);
+        // background: transparent;
       }
     }
   }
