@@ -43,7 +43,6 @@
                   @vdropzone-success="handleDropzoneSucess"
                   @vdropzone-error="handleDropzoneError"
                   @vdropzone-removed-file="handleDropzoneRemove"
-                  @vdropzone-files-added="handleDropzoneFileAdd"
                 >
                   <div class="dropzone-custom-message">
                     <svg-icon name="attach" width="16" height="16"/>
@@ -394,13 +393,9 @@ export default {
           });
       }
     },
-    handleDropzoneFileAdd(file) {
-      // if (file.length > 1) {
-
-      // }
-
-      this.$refs.DropzoneRef.removeFile(file);
-    },
+    // handleDropzoneFileAdd(file) {
+    //   this.$refs.DropzoneRef.removeFile(file);
+    // },
 
   },
 };
@@ -427,7 +422,15 @@ export default {
 }
 
 </style>
+<style lang="scss">
+  .dz-preview{
 
+    &:not(.dz-sucess):nth-child(1n + 3){
+      display: none;
+    }
+
+  }
+</style>
 <style lang="scss" scoped>
 @import '@/theme/utils.scss';
 
