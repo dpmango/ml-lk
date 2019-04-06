@@ -210,6 +210,7 @@ export default {
         const apiData = res.data[0];
         if (apiData.success) {
           this.fetchAttached();
+          this.$emit('sucessCallback');
           this.errorMessage = '';
           this.counterAttached = this.counterAttached + this.selectedLadies.length;
           // this.closeModal();
@@ -229,6 +230,7 @@ export default {
         if (apiData.success) {
           this.fetchAttached();
           this.fetchAvailable();
+          this.$emit('sucessCallback');
           this.errorMessage = '';
           this.counterAttached = this.counterAttached - 1;
           // this.closeModal();

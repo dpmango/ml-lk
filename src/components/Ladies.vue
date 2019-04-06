@@ -86,6 +86,7 @@ import Notification from '@/components/Shared/UI/Notification.vue';
 import Lady from '@/components/Ladies/Lady.vue';
 import AttachTranslatorModal from '@/components/Ladies/AttachTranslatorModal.vue';
 import api from '@/helpers/Api';
+import EventBus from '@/event-bus';
 
 const defaultFilterState = {
   id: '',
@@ -94,6 +95,7 @@ const defaultFilterState = {
   status: undefined,
   noTranslator: false,
 };
+
 
 export default {
   name: 'Ladies',
@@ -125,6 +127,9 @@ export default {
   created() {
     this.filterWithDebounce = debounce(this.applyFilters, 600);
     this.scrollWithThrottle = throttle(this.handleListScroll, 100);
+    EventBus.$on('should-update-ladies', () => {
+      this.fetchApi();
+    });
   },
   mounted() {
     this.fetchApi();
@@ -145,6 +150,7 @@ export default {
     },
     updateComponenet() {
       this.applyFilters();
+      EventBus.$emit('should-update-translators');
     },
     filterToParams() {
       const id = this.filter.id.trim();

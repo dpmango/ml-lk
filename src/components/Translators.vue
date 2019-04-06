@@ -70,7 +70,7 @@
         <AddEditModal @sucessCallback="updateComponenet"/>
         <BlockModal @sucessCallback="updateComponenet"/>
         <RemoveModal @sucessCallback="updateComponenet"/>
-        <AttachLadiesModal @sucessCallback="updateComponenet"/>
+        <AttachLadiesModal @sucessCallback="updateComponenetWithLadies"/>
       </div>
     </div>
   </Panel>
@@ -89,6 +89,7 @@ import AddEditModal from '@/components/Translators/AddEditModal.vue';
 import RemoveModal from '@/components/Translators/RemoveModal.vue';
 import AttachLadiesModal from '@/components/Translators/AttachLadiesModal.vue';
 import api from '@/helpers/Api';
+import EventBus from '@/event-bus';
 
 const defaultFilterState = {
   deleted: { label: 'Не показывать удаленных', value: 0 },
@@ -119,6 +120,11 @@ export default {
       translators: [],
     };
   },
+  created() {
+    EventBus.$on('should-update-translators', () => {
+      this.fetchApi();
+    });
+  },
   mounted() {
     this.fetchApi();
   },
@@ -137,6 +143,10 @@ export default {
     },
     updateComponenet() {
       this.fetchApi();
+    },
+    updateComponenetWithLadies() {
+      this.fetchApi();
+      EventBus.$emit('should-update-ladies');
     },
     applyFilters(arr, filter) {
       const showDeleted = (x) => {
