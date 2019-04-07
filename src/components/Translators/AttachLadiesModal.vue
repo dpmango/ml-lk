@@ -213,6 +213,7 @@ export default {
           this.$emit('sucessCallback');
           this.errorMessage = '';
           this.counterAttached = this.counterAttached + this.selectedLadies.length;
+          this.selectedLadies = [];
           // this.closeModal();
         } else {
           this.errorMessage = apiData.message;
