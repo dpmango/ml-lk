@@ -314,6 +314,20 @@ export default {
     max-height: 100%;
     padding: 20px 20px 0px;
     overflow-y: scroll;
+    &::-webkit-scrollbar {
+      width: 20px;
+      margin-top: 10px;
+    }
+
+    &::-webkit-scrollbar-track {
+      border-left: 3px solid rgba(black, .2);
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-left: 3px solid $colorOrange;
+    }
     &--pad{
       padding-top: 10px;
     }

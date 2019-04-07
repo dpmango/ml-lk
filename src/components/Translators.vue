@@ -186,9 +186,9 @@ export default {
         // sort by LadiesCount
         if (col === 'count') {
           if (dir === 'DESC') {
-            return sortBy(arr, x => x.LadiesCount).reverse();
+            return sortBy(arr, x => parseInt(x.LadiesCount, 10)).reverse();
           }
-          return sortBy(arr, x => x.LadiesCount);
+          return sortBy(arr, x => parseInt(x.LadiesCount, 10));
         }
 
         // default sort by id
@@ -285,6 +285,20 @@ export default {
     max-height: 100%;
     overflow-y: scroll;
     padding: 12px;
+    &::-webkit-scrollbar {
+      width: 25px;
+      margin-top: 10px;
+    }
+
+    &::-webkit-scrollbar-track {
+      border-left: 3px solid rgba(black, .2);
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-left: 3px solid $colorOrange;
+    }
   }
 }
 @include r($md) {

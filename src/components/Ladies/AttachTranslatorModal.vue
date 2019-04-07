@@ -6,6 +6,7 @@
     height="auto"
     @before-open="beforeOpen"
     @before-close="beforeClose"
+    :pivotX="pivotX"
   >
     <div class="modal">
       <div class="modal__close" @click="closeModal">
@@ -64,6 +65,7 @@ export default {
   },
   data() {
     return {
+      pivotX: 0.5,
       attachedTranslatorID: '',
       lady: '',
       errorMessage: '',
@@ -86,6 +88,7 @@ export default {
     beforeOpen(event) {
       this.lady = event.params.lady;
       this.attachedTranslatorID = event.params.lady.Translator.ID;
+      this.pivotX = event.params.pivotX;
     },
     beforeClose() {
       this.resetState();

@@ -4,6 +4,7 @@
     :class="{'is-selectable': type === 'select', 'highlight': shouldHighlight}"
     :data-id="lady.ID"
     @click="handleClick"
+    ref="containerRef"
   >
     <div class="lady__avatar">
       <img :src="lady.Thumbnail" :alt="lady.RealName">
@@ -58,6 +59,7 @@
 <script>
 import { timestampToDate, dateToAge } from '@/helpers/Dates';
 import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
+import normalize from '@/helpers/Math';
 
 export default {
   name: 'Lady',
@@ -119,7 +121,17 @@ export default {
     handleAttachClick() {
       this.$modal.show('attach-translator', {
         lady: this.lady,
+        pivotX: this.getModalPosition(),
       });
+    },
+    getModalPosition() {
+      const wWidth = window.innerWidth;
+      const containerBounds = this.$refs.containerRef.getBoundingClientRect();
+      const containerCenter = containerBounds.left + (containerBounds.width / 2);
+      const modalWidth = 225 / 2;
+      const pivotX = normalize(containerCenter + modalWidth, 0, wWidth, 0, 1);
+
+      return pivotX;
     },
     handleDetachClick() {
       this.$emit('detachClick', this.lady.ID);
