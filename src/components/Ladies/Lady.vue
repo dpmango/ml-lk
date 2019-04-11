@@ -27,7 +27,7 @@
     </div>
     <template v-if="type === 'attached'">
       <div class="lady__translator lady__translator--actions">
-        <span class="lady__attach">
+        <span class="lady__attach" @click="handleChangeClick">
           <span>Изменить переводчика</span>
         </span>
         <span class="lady__attach" @click="handleDetachClick">
@@ -134,7 +134,10 @@ export default {
       return pivotX;
     },
     handleDetachClick() {
-      this.$emit('detachClick', this.lady.ID);
+      this.$emit('detachClick', this.lady);
+    },
+    handleChangeClick() {
+      this.$emit('changeClick', this.lady);
     },
     handleEditClick() {
       console.log('TBD - edit lady');

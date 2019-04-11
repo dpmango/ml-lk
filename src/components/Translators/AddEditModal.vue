@@ -27,7 +27,7 @@
               <ui-input group v-model="form.passport" placeholder="Номер и серия паспорта"/>
               <div class="ui-file" v-if="type === 'edit' && form.fileBase64">
                 <div class="ui-file__preview">
-                  <img :src="form.fileBase64">
+                  <img v-img :src="form.fileBase64">
                 </div>
                 <div class="ui-file__remove" @click="handleFileRemove">
                   <svg-icon name="close" width="8" height="8"/>
@@ -374,7 +374,6 @@ export default {
       console.log('error', file, message, xhr);
     },
     handleDropzoneRemove(file) {
-      console.log('remove');
       // params error, xhr
       if (file.accepted) {
         api

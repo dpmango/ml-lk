@@ -87,7 +87,7 @@ export default {
   methods: {
     beforeOpen(event) {
       this.lady = event.params.lady;
-      this.attachedTranslatorID = event.params.lady.Translator.ID;
+      this.attachedTranslatorID = event.params.lady.Translator ? event.params.lady.Translator.ID : event.params.translatorID;
       this.pivotX = event.params.pivotX;
     },
     beforeClose() {

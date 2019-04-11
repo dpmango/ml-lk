@@ -33,7 +33,9 @@
                 :lady="lady"
                 type="attached"
                 @detachClick="handleDetachClick"
+                @changeClick="handleChangeClick"
               />
+              <DetachConfirmModal @sucessCallback="detachConfirmedCallback"/>
               <spinner
                 class="list__loader"
                 v-if="scrollFetch.left.isLoading"
@@ -81,6 +83,7 @@ import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import Button from '@/components/Shared/UI/Button.vue';
 import Notification from '@/components/Shared/UI/Notification.vue';
 import Lady from '@/components/Ladies/Lady.vue';
+import DetachConfirmModal from '@/components/Ladies/DetachConfirmModal.vue';
 import Plurize from '@/helpers/Plurize';
 import api from '@/helpers/Api';
 
@@ -91,6 +94,7 @@ export default {
     SvgIcon,
     Button,
     Notification,
+    DetachConfirmModal,
     Lady,
   },
   data() {
@@ -162,6 +166,12 @@ export default {
       this.ladies.available = [];
       this.selectedLadies = [];
     },
+    detachConfirmedCallback() {
+      this.fetchAttached();
+      this.fetchAvailable();
+      this.$emit('sucessCallback');
+      this.counterAttached = this.counterAttached - 1;
+    },
     fetchAttached() {
       api.get(`translators/${this.id}/ladies`).then((res) => {
         this.ladies.attached = res.data;
@@ -220,24 +230,24 @@ export default {
         }
       });
     },
-    handleDetachClick(ladyId) {
-      console.log(`detaching ${ladyId} from translator ${this.id}`);
-      api.delete(`translators/${this.id}/ladies`, {
-        data: {
-          ladies: ladyId,
+    handleDetachClick(lady) {
+      console.log('detach clicked');
+      this.$modal.show('detach-translator-confirmation', {
+        lady: {
+          name: `${lady.RealName} ${lady.LastName}`,
+          id: lady.ID,
         },
-      }).then((res) => {
-        const apiData = res.data[0];
-        if (apiData.success) {
-          this.fetchAttached();
-          this.fetchAvailable();
-          this.$emit('sucessCallback');
-          this.errorMessage = '';
-          this.counterAttached = this.counterAttached - 1;
-          // this.closeModal();
-        } else {
-          this.errorMessage = apiData.message;
-        }
+        translator: {
+          name: this.name,
+          id: this.id,
+        },
+      });
+    },
+    handleChangeClick(lady) {
+      this.$modal.show('attach-translator', {
+        lady,
+        translatorID: this.id,
+        pivotX: 0.5,
       });
     },
   },
