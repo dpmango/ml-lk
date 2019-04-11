@@ -37,10 +37,12 @@
     </template>
     <template v-if="!type">
       <div class="lady__translator">
-        <span v-if="lady.Translator" @click="handleAttachClick">
-          {{lady.Translator.FirstName}}
-          <br>
-          {{lady.Translator.LastName}}
+        <span class="lady__attach" v-if="lady.Translator" @click="handleAttachClick">
+          <span>
+            {{lady.Translator.FirstName}}
+            <br>
+            {{lady.Translator.LastName}}
+          </span>
         </span>
         <span v-else class="lady__attach" @click="handleAttachClick">
           <span>Прикрепить к переводчику</span>

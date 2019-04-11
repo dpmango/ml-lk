@@ -117,6 +117,7 @@ export default {
             this.fetchTranslators();
             this.errorMessage = '';
             this.$emit('sucessCallback');
+            this.closeModal();
           } else {
             this.errorMessage = apiData.message;
           }
@@ -141,6 +142,7 @@ export default {
               attach(translatorId);
             } else {
               this.$emit('sucessCallback');
+              this.closeModal();
             }
           } else {
             this.errorMessage = apiData.message;
