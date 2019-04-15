@@ -52,7 +52,7 @@
               </template>
             </div>
             <div class="modal__col-50">
-              <ui-input group required v-model="form.email" type="email" placeholder="Email"/>
+              <ui-input group v-model="form.email" type="email" placeholder="Email"/>
               <ui-input group v-model="form.adress" placeholder="Адрес"/>
               <ui-input group required v-model="form.login" placeholder="Логин"/>
               <ui-input

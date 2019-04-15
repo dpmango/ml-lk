@@ -1,14 +1,14 @@
 <template>
   <div v-if="type === 'textarea'" :class="{ 'ui-group': group }">
     <template v-if="placeholder && !noLabel">
-      <label class="ui-placeholder" for="name">{{placeholder}}</label>
+      <label class="ui-placeholder" for="name">{{requiredLabel}}</label>
     </template>
     <textarea-autosize
       class="ui-input"
       :style="{ maxWidth: width + 'px' }"
       :name="name"
       :required="required"
-      :placeholder="requiredPlaceholder"
+      :placeholder="placeholder"
       :min-height="minheight"
       :max-height="maxheight"
       :value="value"
@@ -18,7 +18,7 @@
   </div>
   <div v-else :class="{ 'ui-group': group }">
     <template v-if="placeholder && !noLabel">
-      <label class="ui-placeholder" for="name">{{placeholder}}</label>
+      <label class="ui-placeholder" for="name">{{requiredLabel}}</label>
     </template>
     <input
       class="ui-input"
@@ -26,7 +26,7 @@
       :style="{ maxWidth: width + 'px' }"
       :name="name"
       :id="name"
-      :placeholder="requiredPlaceholder"
+      :placeholder="placeholder"
       :type="type"
       :value="value"
       :required="required"
@@ -75,7 +75,7 @@ export default {
     event: 'input',
   },
   computed: {
-    requiredPlaceholder() {
+    requiredLabel() {
       if (!this.placeholder) {
         return '';
       }

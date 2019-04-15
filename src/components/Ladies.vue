@@ -33,6 +33,7 @@
         :searchable="false"
         @input="filterWithDebounce"
         :options="[
+          {label: 'Все', value: undefined},
           {label: 'Активна', value: 1},
           {label: 'На проверке', value: 2},
           {label: 'Отклонена', value: 3},
