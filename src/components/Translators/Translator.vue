@@ -148,13 +148,15 @@ export default {
     color: rgba($fontColor, 0.8);
     font-size: 14px;
     > span{
+      padding-right: 12px;
       position: relative;
+      display: inline-block;
     }
   }
   &__info{
     position: absolute;
     top: 0;
-    right: -20px;
+    right: -5px;
   }
   &__activities {
     // 290px
