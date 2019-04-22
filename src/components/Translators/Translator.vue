@@ -257,7 +257,8 @@ export default {
   // modifiers
   &.is-removed{
     .translator{
-      &__activities, &__block{
+      // &__block
+      &__activities{
         pointer-events: none;
       }
       &__name, &__activities, &__count{

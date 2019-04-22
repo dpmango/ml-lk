@@ -68,7 +68,7 @@
           :key="translator.ID"
           :translator="translator"
         />
-        <AddEditModal @sucessCallback="updateComponenet"/>
+        <AddEditModal @sucessCallback="updateComponenetWithLadies"/>
         <BlockModal @sucessCallback="updateComponenet"/>
         <RemoveModal @sucessCallback="updateComponenet"/>
         <AttachLadiesModal @sucessCallback="updateComponenetWithLadies"/>
