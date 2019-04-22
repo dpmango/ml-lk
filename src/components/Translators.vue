@@ -64,7 +64,7 @@
       </div>
       <div class="table__content">
         <Translator
-          v-for="(translator, idx) in translatorsList"
+          v-for="(translator) in translatorsList"
           :key="translator.ID"
           :translator="translator"
         />

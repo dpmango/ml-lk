@@ -38,7 +38,7 @@
         >
           <span class="translator-row__name">{{translator.name}}</span>
           <span class="translator-row__count">
-            <span>{{translator.count}}</span>
+            <span>{{translator.count.join('/')}}</span>
           </span>
         </div>
       </div>
@@ -114,7 +114,7 @@ export default {
           const apiData = res.data[0];
           if (apiData.success) {
             this.attachedTranslatorID = translatorId;
-            this.fetchTranslators();
+            // this.fetchTranslators();
             this.errorMessage = '';
             this.$emit('sucessCallback');
             this.closeModal();
@@ -124,11 +124,8 @@ export default {
         });
       };
 
-      const detach = (translatorId, reatach) => {
-        // if reatached - first remove current and attach target clicked
-        const aID = reatach ? this.attachedTranslatorID : translatorId;
-
-        api.delete(`translators/${aID}/ladies`, {
+      const detach = (translatorId) => {
+        api.delete(`translators/${translatorId}/ladies`, {
           data: {
             ladies: this.lady.ID,
           },
@@ -136,28 +133,33 @@ export default {
           const apiData = res.data[0];
           if (apiData.success) {
             this.attachedTranslatorID = '';
-            this.fetchTranslators();
+            // this.fetchTranslators();
             this.errorMessage = '';
-            if (reatach) {
-              attach(translatorId);
-            } else {
-              this.$emit('sucessCallback');
-              this.closeModal();
-            }
+            this.$emit('sucessCallback');
+            this.closeModal();
           } else {
             this.errorMessage = apiData.message;
           }
         });
       };
 
+      // if (this.attachedTranslatorID === id) {
+      //   // detach by clicking active
+      //   detach(id);
+      // } else if (this.attachedTranslatorID) {
+      //   // detach and attached clicked if any is attached
+      //   detach(id, true);
+      // } else {
+      //   // attach if noboddy attached
+      //   attach(id);
+      // }
+
+      // new API - reatach should works
       if (this.attachedTranslatorID === id) {
         // detach by clicking active
         detach(id);
-      } else if (this.attachedTranslatorID) {
-        // detach and attached clicked if any is attached
-        detach(id, true);
       } else {
-        // attach if noboddy attached
+        // attach or reatach
         attach(id);
       }
     },
