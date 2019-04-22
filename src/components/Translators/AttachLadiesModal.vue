@@ -50,7 +50,11 @@
             <div class="list__head">
               <div class="modal__title">Новые девушки</div>
             </div>
-            <div class="list__scroller list__scroller--pad" ref="listRight">
+            <div
+              v-if="newLadiesAvailable"
+              class="list__scroller list__scroller--pad"
+              ref="listRight"
+            >
               <Lady
                 v-for="(lady, idx) in availableLadiesForSelect"
                 :key="idx"
@@ -66,8 +70,11 @@
                 line-fg-color="#5aa6ff"
               />
             </div>
-            <div class="list__cta">
+            <div v-if="newLadiesAvailable" class="list__cta">
               <Button primary type="button" @click="attachLadies">Прикрепить переводчика</Button>
+            </div>
+            <div v-if="!newLadiesAvailable" class="list__blank-message list__blank-message--pad">
+              <strong>{{name}}</strong> заблокирован или удален
             </div>
           </div>
         </div>
@@ -102,6 +109,7 @@ export default {
       name: '',
       id: '',
       counterAttached: 0,
+      newLadiesAvailable: true,
       errorMessage: '',
       ladies: {
         attached: [],
@@ -141,16 +149,25 @@ export default {
       this.name = event.params.name;
       this.id = event.params.id;
       this.counterAttached = parseInt(event.params.count, 10);
+      this.newLadiesAvailable = !event.params.isBlockedOrRemoved;
       this.fetchAttached();
       this.fetchAvailable();
     },
     opened() {
-      this.$refs.listLeft.addEventListener('scroll', this.scrollWithThrottleLeft, false);
-      this.$refs.listRight.addEventListener('scroll', this.scrollWithThrottleRight, false);
+      if (this.$refs.listRight) {
+        this.$refs.listLeft.addEventListener('scroll', this.scrollWithThrottleLeft, false);
+      }
+      if (this.$refs.listRight) {
+        this.$refs.listRight.addEventListener('scroll', this.scrollWithThrottleRight, false);
+      }
     },
     beforeClose() {
-      this.$refs.listLeft.removeEventListener('scroll', this.scrollWithThrottleLeft, false);
-      this.$refs.listRight.removeEventListener('scroll', this.scrollWithThrottleRight, false);
+      if (this.$refs.listRight) {
+        this.$refs.listLeft.removeEventListener('scroll', this.scrollWithThrottleLeft, false);
+      }
+      if (this.$refs.listRight) {
+        this.$refs.listRight.removeEventListener('scroll', this.scrollWithThrottleRight, false);
+      }
 
       this.resetState();
     },
@@ -357,6 +374,9 @@ export default {
   &__blank-message{
     margin: 20px 0;
     font-size: 13px;
+    &--pad{
+      padding-left: 20px;
+    }
   }
   &__loader{
     margin-top: 20px;

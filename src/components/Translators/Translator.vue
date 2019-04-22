@@ -135,6 +135,7 @@ export default {
         name: this.fullName,
         id: this.translator.ID,
         count: this.translator.LadiesCount,
+        isBlockedOrRemoved: this.translator.blockDate !== '0' && this.translator.RemovalDate !== '0',
       });
     },
   },
