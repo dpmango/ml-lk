@@ -31,9 +31,14 @@
         <span>{{translator.Stat31}}/{{translator.Stat32}}/{{translator.Stat33}}</span>
       </div>
     </div>
-    <div class="translator__count" @click="handleLadiesClick">
-      <span>{{translator.LadiesCount}}</span>
+    <div
+      class="translator__count"
+      @click="handleLadiesClick"
+      v-tooltip.bottom-start="'Активны/На проверке/Отклонены/Удалены'"
+    >
+      <span>{{renderLadiesCount}}</span>
     </div>
+
     <div class="translator__block">
       <ui-switch @click="handleBlockClick" :active="isBlocked"/>
     </div>
@@ -97,6 +102,9 @@ export default {
     },
     isRemoved() {
       return this.translator.RemovalDate !== '0';
+    },
+    renderLadiesCount() {
+      return this.translator.LadiesCount.join('/');
     },
   },
   methods: {

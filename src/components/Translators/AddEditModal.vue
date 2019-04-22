@@ -16,7 +16,6 @@
         </div>
       </div>
       <div class="modal__content">
-        <Notification v-if="errorMessage" type="danger">{{ errorMessage }}</Notification>
         <form @submit="handleSubmit">
           <div class="modal__inputs">
             <div class="modal__col-50">
@@ -122,7 +121,7 @@
               />
             </div>
           </div>
-
+          <Notification v-if="errorMessage" type="danger">{{ errorMessage }}</Notification>
           <div class="modal__cta">
             <Button orange type="submit">
               <template v-if="type === 'add'">Добавить переводчика</template>
