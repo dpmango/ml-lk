@@ -57,6 +57,7 @@
               <ui-input group required v-model="form.login" placeholder="Логин"/>
               <ui-input
                 group
+                passwordEye
                 :required="type === 'add'"
                 v-model="form.password"
                 type="password"

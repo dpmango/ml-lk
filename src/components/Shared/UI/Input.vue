@@ -27,7 +27,7 @@
       :name="name"
       :id="name"
       :placeholder="placeholder"
-      :type="type"
+      :type="renderType"
       :value="value"
       :required="required"
       :disabled="disabled"
@@ -35,12 +35,30 @@
       @input="handleChange"
       @click="$emit('click')"
     >
+    <div v-if="passwordEye" class="ui-input__eye" @click="togglePasswordVisibility">
+      <template v-if="showPassword">
+        <svg-icon name="eye-open" width="16" height="16"/>
+      </template>
+      <template v-else>
+        <svg-icon name="eye-closed" width="16" height="16"/>
+      </template>
+    </div>
   </div>
 </template>
 
 <script>
+import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
+
 export default {
   name: 'UiInput',
+  components: {
+    SvgIcon,
+  },
+  data() {
+    return {
+      showPassword: false,
+    };
+  },
   props: {
     // layout modifiers
     group: Boolean,
@@ -69,12 +87,19 @@ export default {
     value: String,
     min: String,
     max: String,
+    passwordEye: Boolean,
   },
   model: {
     prop: 'value',
     event: 'input',
   },
   computed: {
+    renderType() {
+      if (this.type === 'password' && this.showPassword) {
+        return 'text';
+      }
+      return this.type;
+    },
     requiredLabel() {
       if (!this.placeholder) {
         return '';
@@ -83,6 +108,9 @@ export default {
     },
   },
   methods: {
+    togglePasswordVisibility() {
+      this.showPassword = !this.showPassword;
+    },
     handleKeyDown() {
       if (this.min && this.max) {
         // assume that its a mask
@@ -139,6 +167,13 @@ export default {
   }
   &[disabled]{
     background: rgba(0, 0, 0, 0.1);
+  }
+  &__eye{
+    position: absolute;
+    bottom: 1px;
+    right: 10px;
+    padding: 5px;
+    cursor: pointer;
   }
 }
 </style>
