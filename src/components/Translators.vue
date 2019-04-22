@@ -39,6 +39,7 @@
           </div>
         </template>
       </multiselect>
+      <ui-input group noLabel v-model="filter.surname" width="155" placeholder="Фамилия"/>
     </div>
     <div class="table">
       <div class="table__head">
@@ -83,6 +84,7 @@ import sortBy from 'lodash/sortBy';
 import Panel from '@/components/Shared/Layout/Panel.vue';
 import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import Multiselect from 'vue-multiselect';
+import UiInput from '@/components/Shared/UI/Input.vue';
 import Translator from '@/components/Translators/Translator.vue';
 import BlockModal from '@/components/Translators/BlockModal.vue';
 import AddEditModal from '@/components/Translators/AddEditModal.vue';
@@ -94,6 +96,7 @@ import EventBus from '@/event-bus';
 const defaultFilterState = {
   deleted: { label: 'Не показывать удаленных', value: 0 },
   blocked: { label: 'Не показывать заблокированных', value: 0 },
+  surname: '',
 };
 
 const defaultSortingState = {
@@ -107,6 +110,7 @@ export default {
     Panel,
     SvgIcon,
     Multiselect,
+    UiInput,
     Translator,
     BlockModal,
     RemoveModal,
@@ -167,7 +171,12 @@ export default {
         }
         return true;
       };
-      return arr ? arr.filter(x => showDeleted(x) && showBlocked(x)) : [];
+      const filterSurname = (x) => {
+        const filterName = filter.surname.trim();
+        return filterName ? x.LastName.toLowerCase().startsWith(filterName.toLowerCase()) : true;
+      };
+
+      return arr ? arr.filter(x => showDeleted(x) && showBlocked(x) && filterSurname(x)) : [];
     },
     clearFilter() {
       this.filter = cloneDeep(defaultFilterState);
@@ -222,6 +231,9 @@ export default {
   .multiselect{
     margin: 5px 10px;
     max-width: 240px;
+  }
+  .ui-group{
+    margin: 5px 10px;
   }
 }
 .table {
