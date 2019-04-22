@@ -31,6 +31,7 @@ export default {
 
   computed: {
     iconPath() {
+      // return `/img/icons.svg#${this.name}`;
       return require(`@/assets/icons/${this.name}.svg`).default.url;
     },
 

@@ -15,6 +15,7 @@
     "lodash": "^4.17.11",
     "moment": "^2.24.0",
     "normalize-scss": "^7.0.1",
+    "svg4everybody": "^2.1.9",
     "v-img": "^0.2.0",
     "v-tooltip": "^2.0.0-rc.33",
     "vue": "^2.6.6",

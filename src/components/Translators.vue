@@ -65,7 +65,7 @@
       <div class="table__content">
         <Translator
           v-for="(translator, idx) in translatorsList"
-          :key="idx"
+          :key="translator.ID"
           :translator="translator"
         />
         <AddEditModal @sucessCallback="updateComponenet"/>
@@ -341,4 +341,5 @@ export default {
     }
   }
 }
+
 </style>
