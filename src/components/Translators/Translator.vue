@@ -2,15 +2,18 @@
   <div class="translator" :class="{'is-removed': isRemoved}" :data-id="translator.ID">
     <div class="translator__name">
       <span>
-        {{fullName}}
-        <template v-if="translator.Notes">
-          <div
-            class="translator__info"
-            v-tooltip.right-start="{ content: translator.Notes, classes: 'text-tooltip' }"
-          >
-            <svg-icon name="infomark" width="12" height="12"/>
-          </div>
-        </template>
+        {{this.translator.FirstName}}
+        <span class="translator__lastname">
+          {{this.translator.LastName}}
+          <template v-if="translator.Notes">
+            <div
+              class="translator__info"
+              v-tooltip.right-start="{ content: translator.Notes, classes: 'text-tooltip' }"
+            >
+              <svg-icon name="infomark" width="12" height="12"/>
+            </div>
+          </template>
+        </span>
       </span>
     </div>
     <div class="translator__activities">
@@ -153,14 +156,13 @@ export default {
   &__name {
     // 220px
     flex: 0 0 25%;
-    padding-right: 12px;
     color: rgba($fontColor, 0.8);
     font-size: 14px;
-    > span{
-      padding-right: 12px;
-      position: relative;
-      display: inline-block;
-    }
+  }
+  &__lastname{
+    padding-right: 12px;
+    display: inline-block;
+    position: relative;
   }
   &__info{
     position: absolute;

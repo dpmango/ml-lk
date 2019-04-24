@@ -131,7 +131,7 @@ export default {
       this.form = cloneDeep(defaultFormState);
     },
     getReason() {
-      return this.reason !== 'Другое' ? this.form.reason : this.form.reasonInput;
+      return this.form.reason !== 'Другое' ? this.form.reason : this.form.reasonInput;
     },
     handleSubmit(e) {
       e.preventDefault();
