@@ -3,7 +3,11 @@
     <Header/>
     <div class="page__content">
       <Container>
-        <div class="grid">Homepage</div>
+        <div class="grid">
+          <div class="col col--left">
+            <NotificationsList/>
+          </div>
+        </div>
       </Container>
     </div>
   </div>
@@ -12,12 +16,14 @@
 <script>
 import Header from '@/components/Shared/Header.vue';
 import Container from '@/components/Shared/Layout/Container.vue';
+import NotificationsList from '@/components/NotificationsList.vue';
 
 export default {
   name: 'Home',
   components: {
     Header,
     Container,
+    NotificationsList,
   },
 };
 </script>
@@ -38,6 +44,10 @@ export default {
   min-height: 0;
   padding-left: 5px;
   padding-right: 5px;
+  &--left {
+    flex: 0 1 400px;
+    max-width: 400px;
+  }
 }
 @include r($xl) {
   .grid {

@@ -1,15 +1,17 @@
 <template>
   <div class="panel">
-    <div class="panel__head panel-head">
+    <div class="panel__head panel-head" :class="{'panel-head--no-clear' : noClearButton}">
       <div class="panel-head__icon">
         <div class="icon-circle">
           <svg-icon name="filter" width="13" height="15"/>
         </div>
       </div>
       <div class="panel-head__name">{{name}}</div>
-      <div class="panel-head__action" @click="$emit('clearFilter')">
-        <span>Очистить фильтр</span>
-      </div>
+      <template v-if="!noClearButton">
+        <div class="panel-head__action" @click="$emit('clearFilter')">
+          <span>Очистить фильтр</span>
+        </div>
+      </template>
     </div>
     <slot></slot>
   </div>
@@ -25,6 +27,7 @@ export default {
   },
   props: {
     name: String,
+    noClearButton: Boolean,
   },
 };
 </script>
@@ -87,19 +90,30 @@ export default {
         right: 0;
         height: 1px;
         background: currentColor;
-        transition: right .25s ease;
+        transition: right 0.25s ease;
       }
     }
-    &:hover{
-      span::after{
+    &:hover {
+      span::after {
         right: 100%;
+      }
+    }
+  }
+  &--no-clear {
+    .panel-head {
+      &__icon {
+        flex-basis: 30px;
+        max-width: 30px;
+      }
+      &__name{
+        padding-right: 30px;
       }
     }
   }
 }
 
 @include r($xl) {
-  .panel{
+  .panel {
     height: auto;
     max-height: calc(100vh - 80px - 40px);
   }
@@ -107,10 +121,10 @@ export default {
 @include r($sm) {
   .panel-head {
     flex-wrap: wrap;
-    &__icon{
+    &__icon {
       flex-basis: auto;
     }
-    &__name{
+    &__name {
       padding-left: 20px;
       text-align: left;
     }
