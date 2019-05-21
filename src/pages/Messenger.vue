@@ -1,17 +1,23 @@
 <template>
-  <Container>
-    <div class="grid">
-      <div class="col col--translators">
-        <Translators/>
-      </div>
-      <div class="col col--girls">
-        <Ladies/>
-      </div>
+  <div class="page">
+    <Header modifier="attach"/>
+    <div class="page__content">
+      <Container>
+        <div class="grid">
+          <div class="col col--translators">
+            <Translators/>
+          </div>
+          <div class="col col--girls">
+            <Ladies/>
+          </div>
+        </div>
+      </Container>
     </div>
-  </Container>
+  </div>
 </template>
 
 <script>
+import Header from '@/components/Shared/Header.vue';
 import Container from '@/components/Shared/Layout/Container.vue';
 import Translators from '@/components/Translators.vue';
 import Ladies from '@/components/Ladies.vue';
@@ -19,6 +25,7 @@ import Ladies from '@/components/Ladies.vue';
 export default {
   name: 'Messenger',
   components: {
+    Header,
     Container,
     Translators,
     Ladies,
