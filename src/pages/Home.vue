@@ -1,16 +1,9 @@
 <template>
   <div class="page">
-    <Header modifier="attach"/>
+    <Header/>
     <div class="page__content">
       <Container>
-        <div class="grid">
-          <div class="col col--translators">
-            <Translators/>
-          </div>
-          <div class="col col--girls">
-            <Ladies/>
-          </div>
-        </div>
+        <div class="grid">Homepage</div>
       </Container>
     </div>
   </div>
@@ -19,16 +12,12 @@
 <script>
 import Header from '@/components/Shared/Header.vue';
 import Container from '@/components/Shared/Layout/Container.vue';
-import Translators from '@/components/Translators.vue';
-import Ladies from '@/components/Ladies.vue';
 
 export default {
-  name: 'Messenger',
+  name: 'Home',
   components: {
     Header,
     Container,
-    Translators,
-    Ladies,
   },
 };
 </script>
@@ -49,35 +38,17 @@ export default {
   min-height: 0;
   padding-left: 5px;
   padding-right: 5px;
-  &--translators {
-    flex-shrink: 1;
-    flex-basis: 64%;
-    max-width: 64%;
-  }
-  &--girls {
-    flex-basis: 500px;
-    max-width: 500px;
-  }
 }
 @include r($xl) {
-  .grid{
+  .grid {
     flex-wrap: wrap;
     padding-bottom: 40px;
   }
   .col {
-    &--translators {
-      flex-basis: 100%;
-      max-width: 100%;
-      margin-bottom: 20px;
-    }
-    &--girls {
-      flex-basis: 100%;
-      max-width: 100%;
-    }
   }
 }
 @include r($sm) {
-  .grid{
+  .grid {
     margin-left: -25px;
     margin-right: -25px;
   }

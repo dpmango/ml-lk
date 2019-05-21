@@ -1,19 +1,15 @@
 <template>
   <div id="app">
-    <Messenger/>
+    <router-view/>
   </div>
 </template>
 
 <script>
-import Messenger from '@/pages/Messenger.vue';
-
 export default {
   name: 'app',
-  components: {
-    Messenger,
-  },
 };
 </script>
+
 
 <style lang="scss">
 @import 'normalize-scss';
@@ -23,7 +19,7 @@ export default {
 @import '@/theme/vendor/tooltip.scss';
 @import '@/theme/vendor/select.scss';
 .v--modal-overlay {
-  *{
+  * {
     -webkit-overflow-scrolling: touch;
   }
   .v--modal-box {
@@ -31,7 +27,7 @@ export default {
     margin-top: 25px;
     margin-bottom: 25px;
   }
-  &.scrollable{
+  &.scrollable {
     .v--modal-box {
       margin-bottom: 25px;
     }

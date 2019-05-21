@@ -105,7 +105,7 @@ const defaultSortingState = {
 };
 
 export default {
-  name: 'Translators',
+  name: 'TranslatorsList',
   components: {
     Panel,
     SvgIcon,
@@ -139,11 +139,9 @@ export default {
   },
   methods: {
     fetchApi() {
-      api
-        .get('translators')
-        .then((res) => {
-          this.$store.commit('updateTranslators', res.data);
-        });
+      api.get('translators').then(res => {
+        this.$store.commit('updateTranslators', res.data);
+      });
     },
     updateComponenet() {
       this.fetchApi();
@@ -153,7 +151,7 @@ export default {
       EventBus.$emit('should-update-ladies');
     },
     applyFilters(arr, filter) {
-      const showDeleted = (x) => {
+      const showDeleted = x => {
         if (filter.deleted.value === 0) {
           return x.RemovalDate.length <= 1;
         }
@@ -162,7 +160,7 @@ export default {
         }
         return true;
       };
-      const showBlocked = (x) => {
+      const showBlocked = x => {
         if (filter.blocked.value === 0) {
           return x.BlockDate.length <= 1;
         }
@@ -171,7 +169,7 @@ export default {
         }
         return true;
       };
-      const filterSurname = (x) => {
+      const filterSurname = x => {
         const filterName = filter.surname.trim();
         return filterName ? x.LastName.toLowerCase().startsWith(filterName.toLowerCase()) : true;
       };
@@ -221,18 +219,18 @@ export default {
 <style lang="scss" scoped>
 @import '@/theme/utils.scss';
 
-.filter{
+.filter {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   padding: 15px 12px;
   margin-left: -10px;
   margin-right: -10px;
-  .multiselect{
+  .multiselect {
     margin: 5px 10px;
     max-width: 240px;
   }
-  .ui-group{
+  .ui-group {
     margin: 5px 10px;
   }
 }
@@ -256,12 +254,12 @@ export default {
     }
     .svg-icon {
       fill: rgba($fontColor, 0.5);
-      transition: fill .25s ease;
+      transition: fill 0.25s ease;
     }
-    &--sortable{
+    &--sortable {
       cursor: pointer;
-      transition: color .25s ease-in-out;
-      &:hover{
+      transition: color 0.25s ease-in-out;
+      &:hover {
         color: $colorPrimary;
       }
     }
@@ -286,7 +284,7 @@ export default {
       flex: 0 0 130px;
       margin-left: 35px;
     }
-    &.is-sorting-active{
+    &.is-sorting-active {
       .svg-icon {
         fill: $colorPrimary;
       }
@@ -303,7 +301,7 @@ export default {
     }
 
     &::-webkit-scrollbar-track {
-      border-left: 3px solid rgba(black, .2);
+      border-left: 3px solid rgba(black, 0.2);
       margin-top: 20px;
       margin-bottom: 20px;
     }
@@ -314,32 +312,31 @@ export default {
   }
 }
 @include r($md) {
-  .table{
-    &__head{
+  .table {
+    &__head {
       flex-direction: column;
       align-items: flex-start;
       padding-top: 0;
       padding-bottom: 8px;
     }
-    &__content{
+    &__content {
       padding-left: 20px;
       padding-right: 20px;
     }
-    &__cell{
+    &__cell {
       flex: 0 0 auto;
       display: none;
       padding: 8px 0;
-      &--sortable{
+      &--sortable {
         display: block;
       }
-      &--count{
+      &--count {
         margin-left: 0;
-        span{
+        span {
           max-width: 100%;
         }
       }
     }
   }
 }
-
 </style>
