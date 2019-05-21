@@ -97,9 +97,8 @@ const defaultFilterState = {
   noTranslator: false,
 };
 
-
 export default {
-  name: 'Ladies',
+  name: 'LadiesList',
   components: {
     Spinner,
     Panel,
@@ -122,9 +121,7 @@ export default {
       errorMessage: '',
     };
   },
-  computed: {
-
-  },
+  computed: {},
   created() {
     this.filterWithDebounce = debounce(this.applyFilters, 600);
     this.scrollWithThrottle = throttle(this.handleListScroll, 100);
@@ -180,11 +177,11 @@ export default {
         .get('ladies', {
           params: this.filterToParams(),
         })
-        .then((res) => {
+        .then(res => {
           this.errorMessage = '';
           this.ladies = res.data;
         })
-        .catch((err) => {
+        .catch(err => {
           this.errorMessage = err;
         });
 
@@ -211,17 +208,23 @@ export default {
     handleListScroll() {
       const listDOM = this.$refs.list;
       const scrollRemaining = listDOM.scrollHeight - listDOM.scrollTop - listDOM.offsetHeight;
-      if (scrollRemaining <= 150 && !this.scrollFetch.isLoading && this.scrollFetch.moreResultsAvailable) {
+      if (
+        scrollRemaining <= 150 &&
+        !this.scrollFetch.isLoading &&
+        this.scrollFetch.moreResultsAvailable
+      ) {
         const lastId = this.ladies[this.ladies.length - 2].ID;
         this.scrollFetch.isLoading = true;
 
-        api.get(`ladies?last_id=${lastId}`, {
-          params: this.filterToParams(),
-        }).then((res) => {
-          this.ladies = this.ladies.concat(res.data.slice(1));
-          this.scrollFetch.isLoading = false;
-          this.scrollFetch.moreResultsAvailable = res.data.length === 21;
-        });
+        api
+          .get(`ladies?last_id=${lastId}`, {
+            params: this.filterToParams(),
+          })
+          .then(res => {
+            this.ladies = this.ladies.concat(res.data.slice(1));
+            this.scrollFetch.isLoading = false;
+            this.scrollFetch.moreResultsAvailable = res.data.length === 21;
+          });
       }
     },
   },
@@ -231,18 +234,18 @@ export default {
 <style lang="scss" scoped>
 @import '@/theme/utils.scss';
 
-.filter{
+.filter {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   padding: 15px 10px;
-  .ui-group{
+  .ui-group {
     margin: 5px 10px;
   }
-  .ui-checkbox{
+  .ui-checkbox {
     margin: 5px 10px;
   }
-  .multiselect{
+  .multiselect {
     margin: 5px 10px;
     max-width: 235px;
   }
@@ -266,7 +269,7 @@ export default {
     &--name {
       flex: 0 0 245px;
     }
-    &--translators{
+    &--translators {
       flex: 0 0 168px;
       padding-left: 20px;
       margin-left: auto;
@@ -283,7 +286,7 @@ export default {
     }
 
     &::-webkit-scrollbar-track {
-      border-left: 3px solid rgba(black, .2);
+      border-left: 3px solid rgba(black, 0.2);
       margin-top: 20px;
       margin-bottom: 20px;
     }
@@ -292,16 +295,16 @@ export default {
       border-left: 3px solid $colorOrange;
     }
   }
-  &__loader{
+  &__loader {
     margin: 30px 0 0px;
   }
 }
 @include r(460) {
-  .table{
-    &__head{
+  .table {
+    &__head {
       padding: 0;
     }
-    &__cell{
+    &__cell {
       display: none;
     }
   }

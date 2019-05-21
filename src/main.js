@@ -6,6 +6,7 @@ import VueImg from 'v-img';
 import svg4everybody from 'svg4everybody';
 import App from './App.vue';
 import store from './store';
+import router from './router';
 
 Vue.config.productionTip = false;
 
@@ -18,5 +19,6 @@ svg4everybody();
 
 new Vue({
   store,
+  router,
   render: h => h(App),
 }).$mount('#app');
