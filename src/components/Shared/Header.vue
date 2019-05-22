@@ -131,12 +131,12 @@ export default {
   &__logo {
     margin-left: auto;
     margin-right: auto;
-    padding-right: calc(225px + 30px + 40px - 10px);
+    padding-right: calc(235px + 10px + 130px + 30px + 40px - 10px);
   }
   &--attach {
     .header__logo {
       // centrify logo by hamburger + cta
-      padding-right: calc(235px + 10px + 130px + 30px + 40px - 10px);
+      padding-right: calc(225px + 30px + 40px - 10px);
     }
   }
 }

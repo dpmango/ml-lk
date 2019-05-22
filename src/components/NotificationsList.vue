@@ -12,6 +12,9 @@
       <div class="table__content" ref="list">
         <Notification v-if="errorMessage" type="danger">{{errorMessage}}</Notification>
         <!-- вывести список (Lady удалить) -->
+        <div v-for="(test, idx) in notifications" :key="idx">
+          <span>{{test.id}} {{test.name}} {{test.foo}}</span>
+        </div>
         <!-- <Lady v-for="(lady, idx) in notifications" :key="idx" :lady="lady"/> -->
         <spinner
           class="table__loader"
@@ -20,7 +23,6 @@
           line-fg-color="#5aa6ff"
         />
       </div>
-      <AttachTranslatorModal @sucessCallback="updateComponenet"/>
     </div>
   </Panel>
 </template>
@@ -31,10 +33,10 @@ import throttle from 'lodash/throttle';
 import cloneDeep from 'lodash/cloneDeep';
 import Spinner from 'vue-simple-spinner';
 import Panel from '@/components/Shared/Layout/Panel.vue';
-import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
+// import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import UiCheckbox from '@/components/Shared/UI/Checkbox.vue';
 import Notification from '@/components/Shared/UI/Notification.vue';
-import api from '@/helpers/Api';
+// import api from '@/helpers/Api';
 
 const defaultFilterState = {
   noTranslator: false,
@@ -45,13 +47,14 @@ export default {
   components: {
     Spinner,
     Panel,
-    SvgIcon,
+    // SvgIcon,
     UiCheckbox,
     Notification,
   },
   data() {
     return {
-      notifications: null,
+      // notifications: null,
+      notifications: [{ id: 1, name: 'test', foo: 'bar' }, { id: 2, name: 'test', foo: 'bar' }],
       errorMessage: '',
       scrollFetch: {
         isLoading: false,
@@ -76,32 +79,29 @@ export default {
     fetchApi() {
       this.applyFilters();
     },
-    updateComponenet() {
-      this.applyFilters();
-    },
-    filterToParams() {
-      const freeOnly = this.filter.noTranslator ? 1 : undefined;
-      let filters = {};
+    // filterToParams() {
+    //   const freeOnly = this.filter.noTranslator ? 1 : undefined;
+    //   let filters = {};
 
-      if (freeOnly) {
-        filters = { ...filters, ...{ free: freeOnly } };
-      }
+    //   if (freeOnly) {
+    //     filters = { ...filters, ...{ free: freeOnly } };
+    //   }
 
-      return filters;
-    },
+    //   return filters;
+    // },
     applyFilters() {
-      // BE filer
-      api
-        .get('notifications', {
-          params: this.filterToParams(),
-        })
-        .then(res => {
-          this.errorMessage = '';
-          this.notifications = res.data;
-        })
-        .catch(err => {
-          this.errorMessage = err;
-        });
+      // api
+      //   .get('notifications', {
+      //     // filter: this.filterToParams(),
+      //   })
+      //   .then(res => {
+      //     this.errorMessage = '';
+      //     this.notifications = res.data;
+      //     console.log(res);
+      //   })
+      //   .catch(err => {
+      //     this.errorMessage = err;
+      //   });
     },
     clearFilter() {
       this.filter = cloneDeep(defaultFilterState);
