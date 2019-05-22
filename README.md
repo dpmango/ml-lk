@@ -27,6 +27,8 @@ yarn run lint
 ## API DOCS
 
 TOKEN BqxKJPW-BrOQA3YbNwp54gFaNcpnO9Iv
+TOKEN BqxKJPW-BrOQA3YbNwp54gFaNcpnO9I
+
 **1.Общие положения**
 Формат ответа по умолчанию – json
 Для изменения формата ответа на xml необходимо при запросе отправить заголовок

@@ -195,7 +195,7 @@ export default {
         // https://www.dropzonejs.com/#configuration-options
         url: 'https://api-m.marmeladies.com/v1/translators/files',
         method: 'POST',
-        headers: { Authorization: 'Bearer BqxKJPW-BrOQA3YbNwp54gFaNcpnO9Iv' },
+        headers: { Authorization: 'Bearer BqxKJPW-BrOQA3YbNwp54gFaNcpnO9I' },
         thumbnailWidth: 80,
         thumbnailHeight: 90,
         maxFilesize: 5,
@@ -223,7 +223,7 @@ export default {
       this.$modal.hide('add-translator');
     },
     getRates() {
-      api.get('translators/prices').then((res) => {
+      api.get('translators/prices').then(res => {
         [this.rates] = res.data;
       });
     },
@@ -233,7 +233,7 @@ export default {
         this.id = event.params.translatorID;
         api
           .get(`translators/${event.params.translatorID}`)
-          .then((res) => {
+          .then(res => {
             const apiData = res.data[0];
             if (apiData) {
               this.status.type = apiData.Status;
@@ -266,7 +266,7 @@ export default {
               }
             }
           })
-          .catch((error) => {
+          .catch(error => {
             console.log(error);
           });
       }
@@ -280,11 +280,11 @@ export default {
         .get(url, {
           responseType: 'arraybuffer',
         })
-        .then((res) => {
+        .then(res => {
           const imgToBase64 = Buffer.from(res.data, 'binary').toString('base64');
           this.form.fileBase64 = `data:image/png;base64, ${imgToBase64}`;
         })
-        .catch((err) => {
+        .catch(err => {
           this.errorMessage = `File: ${err}`;
         });
     },
@@ -297,7 +297,9 @@ export default {
       const priceName = `Price_${priceId}`;
       const rate = this.rates[priceName];
       const commision = this.form.prices[priceName.toLowerCase()] / 100;
-      return `${parseFloat(rate * commision).toFixed(2).toString()} y.e`;
+      return `${parseFloat(rate * commision)
+        .toFixed(2)
+        .toString()} y.e`;
     },
     handleSubmit(e) {
       e.preventDefault();
@@ -327,7 +329,7 @@ export default {
         api
           .post('translators', postObject)
           .then(res => this.handleResponce(res))
-          .catch((error) => {
+          .catch(error => {
             this.errorMessage = error;
           });
       }
@@ -338,7 +340,7 @@ export default {
             ...{ type: 'update' },
           })
           .then(res => this.handleResponce(res))
-          .catch((error) => {
+          .catch(error => {
             this.errorMessage = error;
           });
       }
@@ -357,7 +359,8 @@ export default {
     routeFileAction() {
       if (this.type === 'add') {
         return this.form.file;
-      } if (this.type === 'edit') {
+      }
+      if (this.type === 'edit') {
         return !this.form.fileBase64 && !this.form.file ? 'delete' : this.form.file;
       }
       return '';
@@ -382,12 +385,12 @@ export default {
               file: this.form.file,
             },
           })
-          .then((res) => {
+          .then(res => {
             if (res.data[0].success) {
               this.form.file = '';
             }
           })
-          .catch((err) => {
+          .catch(err => {
             console.log(err);
           });
       }
@@ -395,7 +398,6 @@ export default {
     // handleDropzoneFileAdd(file) {
     //   this.$refs.DropzoneRef.removeFile(file);
     // },
-
   },
 };
 </script>
@@ -404,31 +406,30 @@ export default {
 @import '@/theme/utils.scss';
 @import '@/theme/vendor/dropzone.scss';
 
-.dropzone-custom-message{
+.dropzone-custom-message {
   display: flex;
   align-items: center;
-  span{
+  span {
     display: inline-block;
     margin-left: 8px;
     font-size: 11px;
-    color: rgba($fontColor, .6);
-    border-bottom: 1px dashed rgba($fontColor, .6)
+    color: rgba($fontColor, 0.6);
+    border-bottom: 1px dashed rgba($fontColor, 0.6);
   }
 }
 
-.dz-details, .dz-size, .dz-filename{
+.dz-details,
+.dz-size,
+.dz-filename {
   display: none;
 }
-
 </style>
 <style lang="scss">
-  .dz-preview{
-
-    &:not(.dz-sucess):nth-child(1n + 3){
-      display: none;
-    }
-
+.dz-preview {
+  &:not(.dz-sucess):nth-child(1n + 3) {
+    display: none;
   }
+}
 </style>
 <style lang="scss" scoped>
 @import '@/theme/utils.scss';
@@ -442,7 +443,7 @@ export default {
   &__title {
     font-weight: 500;
     font-size: 14px;
-    &--section{
+    &--section {
       margin: 15px 0;
     }
   }
@@ -503,8 +504,8 @@ export default {
 }
 
 @include r($sm) {
-  .modal{
-    &__col-50{
+  .modal {
+    &__col-50 {
       flex-basis: 100%;
       max-width: 100%;
       margin-bottom: 20px;
@@ -512,29 +513,29 @@ export default {
   }
 }
 
-.ui-file{
+.ui-file {
   position: relative;
   display: flex;
   width: 60px;
-  &__preview{
+  &__preview {
     position: relative;
     z-index: 1;
     overflow: hidden;
     width: 40px;
     height: 45px;
-    img{
+    img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
   }
-  &__remove{
+  &__remove {
     position: absolute;
     right: 0px;
     top: 0;
     font-size: 0;
     cursor: pointer;
-    color: rgba($fontColor, .4);
+    color: rgba($fontColor, 0.4);
   }
 }
 </style>
