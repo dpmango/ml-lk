@@ -1,7 +1,7 @@
 <template>
   <div class="ui-checkbox" :class="{'is-active': value}">
     <input type="checkbox" :name="name" :id="name" :value="value" @change="handleChange">
-    <label :for="name">{{label}}</label>
+    <label :class="{'is-big-font': big_font}" :for="name">{{label}}</label>
   </div>
 </template>
 
@@ -12,6 +12,7 @@ export default {
     name: String,
     label: String,
     value: Boolean,
+    big_font: String,
   },
   methods: {
     handleChange() {
@@ -24,10 +25,10 @@ export default {
 <style lang="scss" scoped>
 @import '@/theme/utils.scss';
 
-.ui-checkbox{
+.ui-checkbox {
   position: relative;
   cursor: pointer;
-  input[type="checkbox"]{
+  input[type='checkbox'] {
     display: block;
     position: absolute;
     top: 0;
@@ -36,15 +37,15 @@ export default {
     height: 0.1px;
     opacity: 0;
   }
-  label{
+  label {
     display: flex;
     align-items: center;
     padding-left: 28px;
     min-height: 30px;
     font-size: 11px;
-    color: rgba($fontColor ,.6);
+    color: rgba($fontColor, 0.6);
     cursor: pointer;
-    &::after{
+    &::after {
       display: block;
       content: ' ';
       position: absolute;
@@ -53,11 +54,11 @@ export default {
       width: 18px;
       height: 18px;
       transform: translateY(-50%);
-      border: 2px solid rgba(#473F69, .5);
+      border: 2px solid rgba(#473f69, 0.5);
       border-radius: 4px;
-      transition: border .25s ease-in-out;
+      transition: border 0.25s ease-in-out;
     }
-    &::before{
+    &::before {
       display: inline-block;
       content: '';
       position: absolute;
@@ -69,15 +70,20 @@ export default {
       background: $colorPrimary;
       opacity: 0;
       transform: translateY(-50%);
-      transition: opacity .25s ease-in-out;
+      transition: opacity 0.25s ease-in-out;
     }
   }
-  &.is-active{
-    label{
-      &::after{
-        border-color: $colorPrimary
+  .is-big-font {
+    font-size: 14px;
+    padding-left: 33px;
+    color: $fontColor;
+  }
+  &.is-active {
+    label {
+      &::after {
+        border-color: $colorPrimary;
       }
-      &::before{
+      &::before {
         opacity: 1;
       }
     }
