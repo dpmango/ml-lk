@@ -1,17 +1,47 @@
 <template>
   <Panel name="Уведомления" noClearButton>
-    <form class="filter">
-      <ui-checkbox
-        @input="filterWithDebounce"
-        v-model="filter.noTranslator"
-        name="noTranslator"
-        label="Без переводчика"
-      />
+    <form class="filter botom-line">
+      <button class="filter__clear">Очистить</button>
+      <UiSpoiler title="Тип уведомления">
+        <ul class="list">
+          <li>
+            <ui-checkbox
+              @input="filterWithDebounce"
+              v-model="filter.marked"
+              name="marked"
+              label="Отмеченные"
+              big_font="true"
+            />
+          </li>
+          <li>
+            <ui-checkbox
+              @input="filterWithDebounce"
+              v-model="filter.new"
+              name="new"
+              label="Новые"
+              big_font="true"
+            />
+          </li>
+          <li>
+            <ui-checkbox
+              @input="filterWithDebounce"
+              v-model="filter.maleOnline"
+              name="maleOnline"
+              label="Мужчина онлайн"
+              big_font="true"
+            />
+          </li>
+        </ul>
+      </UiSpoiler>
+      <button class="choose-profile">Выбрать профиль</button>
     </form>
     <div class="table">
       <div class="table__content" ref="list">
         <Notification v-if="errorMessage" type="danger">{{errorMessage}}</Notification>
         <!-- вывести список (Lady удалить) -->
+        <div v-for="(test, idx) in notifications" :key="idx">
+          <span>{{test.id}} {{test.name}} {{test.foo}}</span>
+        </div>
         <!-- <Lady v-for="(lady, idx) in notifications" :key="idx" :lady="lady"/> -->
         <spinner
           class="table__loader"
@@ -20,7 +50,6 @@
           line-fg-color="#5aa6ff"
         />
       </div>
-      <AttachTranslatorModal @sucessCallback="updateComponenet"/>
     </div>
   </Panel>
 </template>
@@ -31,10 +60,11 @@ import throttle from 'lodash/throttle';
 import cloneDeep from 'lodash/cloneDeep';
 import Spinner from 'vue-simple-spinner';
 import Panel from '@/components/Shared/Layout/Panel.vue';
-import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
+// import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import UiCheckbox from '@/components/Shared/UI/Checkbox.vue';
 import Notification from '@/components/Shared/UI/Notification.vue';
-import api from '@/helpers/Api';
+import UiSpoiler from '@/components/Shared/UI/Spoiler.vue';
+// import api from '@/helpers/Api';
 
 const defaultFilterState = {
   noTranslator: false,
@@ -45,13 +75,15 @@ export default {
   components: {
     Spinner,
     Panel,
-    SvgIcon,
+    // SvgIcon,
     UiCheckbox,
     Notification,
+    UiSpoiler,
   },
   data() {
     return {
-      notifications: null,
+      // notifications: null,
+      notifications: [{ id: 1, name: 'test', foo: 'bar' }, { id: 2, name: 'test', foo: 'bar' }],
       errorMessage: '',
       scrollFetch: {
         isLoading: false,
@@ -76,32 +108,29 @@ export default {
     fetchApi() {
       this.applyFilters();
     },
-    updateComponenet() {
-      this.applyFilters();
-    },
-    filterToParams() {
-      const freeOnly = this.filter.noTranslator ? 1 : undefined;
-      let filters = {};
+    // filterToParams() {
+    //   const freeOnly = this.filter.noTranslator ? 1 : undefined;
+    //   let filters = {};
 
-      if (freeOnly) {
-        filters = { ...filters, ...{ free: freeOnly } };
-      }
+    //   if (freeOnly) {
+    //     filters = { ...filters, ...{ free: freeOnly } };
+    //   }
 
-      return filters;
-    },
+    //   return filters;
+    // },
     applyFilters() {
-      // BE filer
-      api
-        .get('notifications', {
-          params: this.filterToParams(),
-        })
-        .then(res => {
-          this.errorMessage = '';
-          this.notifications = res.data;
-        })
-        .catch(err => {
-          this.errorMessage = err;
-        });
+      // api
+      //   .get('notifications', {
+      //     // filter: this.filterToParams(),
+      //   })
+      //   .then(res => {
+      //     this.errorMessage = '';
+      //     this.notifications = res.data;
+      //     console.log(res);
+      //   })
+      //   .catch(err => {
+      //     this.errorMessage = err;
+      //   });
     },
     clearFilter() {
       this.filter = cloneDeep(defaultFilterState);
@@ -135,7 +164,30 @@ export default {
 <style lang="scss" scoped>
 @import '@/theme/utils.scss';
 
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  li {
+    width: 100%;
+  }
+}
+
+.choose-profile {
+  margin-left: 43px;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 20px;
+  cursor: pointer;
+  padding: 0;
+  border: none;
+  border-bottom: 1px dashed #1e1e1e;
+  background: none;
+}
+
 .filter {
+  position: relative;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -150,6 +202,24 @@ export default {
     margin: 5px 10px;
     max-width: 235px;
   }
+  &__clear {
+    position: absolute;
+    top: 15px;
+    right: 13px;
+    cursor: pointer;
+    text-decoration: underline;
+    color: rgba(#1e1e1e, 0.5);
+    font-size: 13px;
+    line-height: normal;
+    font-weight: 500;
+    padding: 0;
+    border: none;
+    background: none;
+  }
+}
+
+.botom-line {
+  border-bottom: 1px solid rgba(#d1cfda, 0.4);
 }
 
 .table {
