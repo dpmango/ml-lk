@@ -10,6 +10,7 @@ module.exports = {
     'global-require': 0,
     'max-len': 0,
     'arrow-parens': 0,
+    'no-param-reassign': ['error', { props: false }],
   },
   parserOptions: {
     parser: 'babel-eslint',

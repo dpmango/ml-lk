@@ -7,6 +7,9 @@
           <div class="col col--left">
             <NotificationsList/>
           </div>
+          <div class="col col--chat">
+            <Chat/>
+          </div>
         </div>
       </Container>
     </div>
@@ -17,6 +20,7 @@
 import Header from '@/components/Shared/Header.vue';
 import Container from '@/components/Shared/Layout/Container.vue';
 import NotificationsList from '@/components/NotificationsList.vue';
+import Chat from '@/components/Chat.vue';
 
 export default {
   name: 'Home',
@@ -24,6 +28,7 @@ export default {
     Header,
     Container,
     NotificationsList,
+    Chat,
   },
 };
 </script>
@@ -47,6 +52,10 @@ export default {
   &--left {
     flex: 0 1 400px;
     max-width: 400px;
+  }
+  &--chat {
+    flex: 1 1 auto;
+    max-width: 100%;
   }
 }
 @include r($xl) {

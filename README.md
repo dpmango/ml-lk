@@ -180,3 +180,29 @@ ladies – список ID девушек (через запятую)
 [{&quot;success&quot;:true}]
 или
 [{&quot;success&quot;:false,&quot;message&quot;:&quot;Email address \&quot;test@test.com\&quot; used by another member&quot;}]
+
+### Чат сокет
+
+1. Сервер http://socketo.me/
+2. Подключаемся к wss://marmeladies.com/ws/
+3. Подписываемся на топик «токен»
+4. Парсим полученное сообщение:
+   a. from – id отправителя
+   b. from_name – имя отправителя
+   c. msg – текст
+   d. time – время написания сообщения
+   e. country – страна отправителя
+   f. city – город отправителя
+   g. age – возраст отправителя
+   h. avatar – фото отправителя
+   i. favorite – отправитель в favorites у получателя
+   j. id – id сообщения
+5. Типы msg
+   a. typing_notification – собеседник вводит текст
+   b. chat_finish_1_notification – собеседник закрыл чат, выводим сообщение «from_name have left the conversation»
+   c. chat_finish_2_notification – автоматическое закрытие чата, выводим сообщение «from_name missed your invite. Please try again. A lot of other ladies are online and available to Chat Now (ссылка на девушек онлайн)»
+   d. chat_finish_5_notification – автоматическое закрытие чата, выводим сообщение «You have left the conversation. To resume chat please send another message»,
+   e. chat_start_notification – старт чата, показываем кнопки «finish_chat» и «attach»
+   f. delete_chat_message – удаляем сообщение id из ленты
+   g. chat_page_open_notification – у мужчин не обрабатываем
+   h. иначе – текст сообщение, выводим в чат, если открыт экран чата с отправителем или в уведомления
