@@ -39,8 +39,8 @@
       <div class="table__content" ref="list">
         <Notification v-if="errorMessage" type="danger">{{errorMessage}}</Notification>
         <!-- вывести список (Lady удалить) -->
-        <div v-for="(test, idx) in notifications" :key="idx">
-          <span>{{test.id}} {{test.name}} {{test.foo}}</span>
+        <div v-for="(ntf, idx) in notifications" :key="idx">
+          <span>{{ntf.ID}} {{ntf.Man}} {{ntf.Lady}}</span>
         </div>
         <!-- <Lady v-for="(lady, idx) in notifications" :key="idx" :lady="lady"/> -->
         <spinner
@@ -64,7 +64,7 @@ import Panel from '@/components/Shared/Layout/Panel.vue';
 import UiCheckbox from '@/components/Shared/UI/Checkbox.vue';
 import Notification from '@/components/Shared/UI/Notification.vue';
 import UiSpoiler from '@/components/Shared/UI/Spoiler.vue';
-// import api from '@/helpers/Api';
+import api from '@/helpers/Api';
 
 const defaultFilterState = {
   noTranslator: false,
@@ -119,18 +119,18 @@ export default {
     //   return filters;
     // },
     applyFilters() {
-      // api
-      //   .get('notifications', {
-      //     // filter: this.filterToParams(),
-      //   })
-      //   .then(res => {
-      //     this.errorMessage = '';
-      //     this.notifications = res.data;
-      //     console.log(res);
-      //   })
-      //   .catch(err => {
-      //     this.errorMessage = err;
-      //   });
+      api
+        .get('notifications', {
+          // filter: this.filterToParams(),
+        })
+        .then(res => {
+          this.errorMessage = '';
+          this.notifications = res.data;
+          console.log('GET notifications responce', res);
+        })
+        .catch(err => {
+          this.errorMessage = err;
+        });
     },
     clearFilter() {
       this.filter = cloneDeep(defaultFilterState);
