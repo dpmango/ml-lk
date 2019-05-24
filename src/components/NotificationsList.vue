@@ -1,12 +1,39 @@
 <template>
   <Panel name="Уведомления" noClearButton>
-    <form class="filter">
-      <ui-checkbox
-        @input="filterWithDebounce"
-        v-model="filter.noTranslator"
-        name="noTranslator"
-        label="Без переводчика"
-      />
+    <form class="filter botom-line">
+      <button class="filter__clear">Очистить</button>
+      <UiSpoiler title="Тип уведомления">
+        <ul class="list">
+          <li>
+            <ui-checkbox
+              @input="filterWithDebounce"
+              v-model="filter.marked"
+              name="marked"
+              label="Отмеченные"
+              big_font="true"
+            />
+          </li>
+          <li>
+            <ui-checkbox
+              @input="filterWithDebounce"
+              v-model="filter.new"
+              name="new"
+              label="Новые"
+              big_font="true"
+            />
+          </li>
+          <li>
+            <ui-checkbox
+              @input="filterWithDebounce"
+              v-model="filter.maleOnline"
+              name="maleOnline"
+              label="Мужчина онлайн"
+              big_font="true"
+            />
+          </li>
+        </ul>
+      </UiSpoiler>
+      <button class="choose-profile">Выбрать профиль</button>
     </form>
     <div class="table">
       <div class="table__content" ref="list">
@@ -36,6 +63,7 @@ import Panel from '@/components/Shared/Layout/Panel.vue';
 // import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import UiCheckbox from '@/components/Shared/UI/Checkbox.vue';
 import Notification from '@/components/Shared/UI/Notification.vue';
+import UiSpoiler from '@/components/Shared/UI/Spoiler.vue';
 // import api from '@/helpers/Api';
 
 const defaultFilterState = {
@@ -50,6 +78,7 @@ export default {
     // SvgIcon,
     UiCheckbox,
     Notification,
+    UiSpoiler,
   },
   data() {
     return {
@@ -135,7 +164,30 @@ export default {
 <style lang="scss" scoped>
 @import '@/theme/utils.scss';
 
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  li {
+    width: 100%;
+  }
+}
+
+.choose-profile {
+  margin-left: 43px;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 20px;
+  cursor: pointer;
+  padding: 0;
+  border: none;
+  border-bottom: 1px dashed #1e1e1e;
+  background: none;
+}
+
 .filter {
+  position: relative;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -150,6 +202,24 @@ export default {
     margin: 5px 10px;
     max-width: 235px;
   }
+  &__clear {
+    position: absolute;
+    top: 15px;
+    right: 13px;
+    cursor: pointer;
+    text-decoration: underline;
+    color: rgba(#1e1e1e, 0.5);
+    font-size: 13px;
+    line-height: normal;
+    font-weight: 500;
+    padding: 0;
+    border: none;
+    background: none;
+  }
+}
+
+.botom-line {
+  border-bottom: 1px solid rgba(#d1cfda, 0.4);
 }
 
 .table {
