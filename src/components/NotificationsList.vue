@@ -38,7 +38,7 @@
     <div class="table">
       <div class="table__content" ref="list">
         <UiNotification v-if="errorMessage" type="danger">{{errorMessage}}</UiNotification>
-        <Relation v-for="(notification, idx) in notifications" :key="idx" :data="notification"/>
+        <Relation v-for="(notification, idx) in notificationsList" :key="idx" :data="notification"/>
         <spinner
           class="table__loader"
           v-if="scrollFetch.isLoading"
@@ -80,7 +80,6 @@ export default {
   },
   data() {
     return {
-      notifications: [],
       errorMessage: '',
       scrollFetch: {
         isLoading: false,
@@ -89,7 +88,6 @@ export default {
       filter: cloneDeep(defaultFilterState),
     };
   },
-  computed: {},
   created() {
     this.filterWithDebounce = debounce(this.applyFilters, 600);
     this.scrollWithThrottle = throttle(this.handleListScroll, 100);
@@ -100,6 +98,11 @@ export default {
   },
   beforeDestroy() {
     this.$refs.list.removeEventListener('scroll', this.scrollWithThrottle, false);
+  },
+  computed: {
+    notificationsList() {
+      return this.$store.state.notifications;
+    },
   },
   methods: {
     fetchApi() {
@@ -122,8 +125,7 @@ export default {
         })
         .then(res => {
           this.errorMessage = '';
-          this.notifications = res.data;
-          console.log('GET notifications responce', res);
+          this.$store.commit('setNotifications', res.data);
         })
         .catch(err => {
           this.errorMessage = err;
@@ -234,7 +236,7 @@ export default {
     overflow-y: scroll;
     padding: 20px 0 20px 0px;
     &::-webkit-scrollbar {
-      width: 25px;
+      width: 3px;
       margin-top: 10px;
     }
 

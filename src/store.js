@@ -6,6 +6,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     translators: [],
+    notifications: [],
     socket: {
       isConnected: false,
       message: '',
@@ -20,6 +21,12 @@ export default new Vuex.Store({
     updateTranslators(state, arr) {
       state.translators = arr;
       // Vue.set(state, 'translators', [...arr]);
+    },
+    setNotifications(state, arr) {
+      state.notifications = arr;
+    },
+    removeNotification(state, removeId) {
+      state.notifications = state.notifications.filter(x => x.ID !== removeId);
     },
     SOCKET_ONOPEN(state, event) {
       Vue.prototype.$socket = event.currentTarget;

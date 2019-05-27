@@ -33,7 +33,7 @@
       <div class="relation__mark" :class="{'is-active': data.Marked ==='1'}">
         <svg-icon name="starmark" width="16" height="15"/>
       </div>
-      <div class="relation__remove">
+      <div class="relation__remove" @click="removeNotification">
         <svg-icon name="close" width="12" height="12"/>
       </div>
     </div>
@@ -82,6 +82,11 @@ export default {
     },
     timeStamp() {
       return timestampToTime(this.data.LastMessageDate);
+    },
+  },
+  methods: {
+    removeNotification() {
+      this.$store.commit('removeNotification', this.data.ID);
     },
   },
 };
