@@ -29,6 +29,14 @@
       <div class="relation__message">{{data.Message}}</div>
       <div class="relation__new">{{isNew}}</div>
     </div>
+    <div class="relation__actions">
+      <div class="relation__mark" :class="{'is-active': data.Marked ==='1'}">
+        <svg-icon name="starmark" width="16" height="15"/>
+      </div>
+      <div class="relation__remove">
+        <svg-icon name="close" width="12" height="12"/>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -84,6 +92,7 @@ export default {
 @import '@/theme/utils.scss';
 
 .relation {
+  position: relative;
   transition: background 0.25s ease-in-out;
   padding: 13px 10px;
   &__wrapper {
@@ -131,8 +140,43 @@ export default {
     text-align: right;
     color: #ff5722;
   }
+  &__actions {
+    position: absolute;
+    z-index: 3;
+    top: 18px;
+    right: 5px;
+    display: flex;
+    align-items: center;
+    font-size: 0;
+    transition: opacity 0.25s ease;
+    opacity: 0;
+    pointer-events: none;
+  }
+  &__mark {
+    padding: 3px;
+    cursor: pointer;
+    color: #a5a5a5;
+    transition: color 0.25s ease;
+    &.is-active,
+    &:hover {
+      color: $colorOrange;
+    }
+  }
+  &__remove {
+    padding: 3px;
+    cursor: pointer;
+    color: #a5a5a5;
+    transition: color 0.25s ease;
+    &:hover {
+      color: $colorRed;
+    }
+  }
   &:hover {
     background: $colorBg;
+    .relation__actions {
+      opacity: 1;
+      pointer-events: all;
+    }
   }
 }
 </style>
