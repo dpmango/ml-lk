@@ -44,6 +44,7 @@
 import { timestampToTime } from '@/helpers/Dates';
 import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import UserRelation from '@/components/Users/UserRelation.vue';
+import api from '@/helpers/Api';
 
 export default {
   name: 'Relation',
@@ -86,7 +87,26 @@ export default {
   },
   methods: {
     removeNotification() {
-      this.$store.commit('removeNotification', this.data.ID);
+      api
+        .delete(`notifications/${this.data.ID}`)
+        .then(res => {
+          console.log('delete notifications', res, res.data[0]);
+          const apiData = res.data[0];
+          if (apiData.success) {
+            this.$store.commit('removeNotification', this.data.ID);
+          } else {
+            this.showDeleteError({ message: apiData.message });
+          }
+        })
+        .catch(error => {
+          this.showDeleteError({ message: error });
+        });
+    },
+  },
+  notifications: {
+    showDeleteError: {
+      title: 'Ошибка при удалении',
+      type: 'error',
     },
   },
 };
