@@ -1,5 +1,5 @@
 <template>
-  <div class="relation" :data-id="data.ID">
+  <div class="relation" :data-id="data.ID" @click="readNotification">
     <div class="relation__wrapper">
       <div class="relation__user relation__user--left">
         <user-relation
@@ -30,7 +30,11 @@
       <div class="relation__new">{{isNew}}</div>
     </div>
     <div class="relation__actions">
-      <div class="relation__mark" :class="{'is-active': data.Marked ==='1'}">
+      <div
+        class="relation__mark"
+        :class="{'is-active': data.Marked ==='1'}"
+        @click="markClickRouter"
+      >
         <svg-icon name="starmark" width="16" height="15"/>
       </div>
       <div class="relation__remove" @click="removeNotification">
@@ -86,11 +90,25 @@ export default {
     },
   },
   methods: {
+    readNotification() {
+      api
+        .delete(`notifications/${this.data.ID}/read`)
+        .then(res => {
+          const apiData = res.data[0];
+          if (apiData.success) {
+            this.$store.commit('readNotification', this.data.ID);
+          } else {
+            this.showReadError({ message: apiData.message });
+          }
+        })
+        .catch(error => {
+          this.showReadError({ message: error });
+        });
+    },
     removeNotification() {
       api
         .delete(`notifications/${this.data.ID}`)
         .then(res => {
-          console.log('delete notifications', res, res.data[0]);
           const apiData = res.data[0];
           if (apiData.success) {
             this.$store.commit('removeNotification', this.data.ID);
@@ -102,10 +120,61 @@ export default {
           this.showDeleteError({ message: error });
         });
     },
+    markClickRouter(e) {
+      e.stopPropagation();
+
+      if (this.data.Marked === '0') {
+        this.markNotification();
+      } else if (this.data.Marked === '1') {
+        this.unmarkNotification();
+      }
+    },
+    markNotification() {
+      api
+        .delete(`notifications/${this.data.ID}/mark`)
+        .then(res => {
+          const apiData = res.data[0];
+          if (apiData.success) {
+            this.$store.commit('markNotification', this.data.ID);
+          } else {
+            this.showMarkError({ message: apiData.message });
+          }
+        })
+        .catch(error => {
+          this.showMarkError({ message: error });
+        });
+    },
+    unmarkNotification() {
+      api
+        .delete(`notifications/${this.data.ID}/unmark`)
+        .then(res => {
+          const apiData = res.data[0];
+          if (apiData.success) {
+            this.$store.commit('unmarkNotification', this.data.ID);
+          } else {
+            this.showUnmarkError({ message: apiData.message });
+          }
+        })
+        .catch(error => {
+          this.showUnmarkError({ message: error });
+        });
+    },
   },
   notifications: {
     showDeleteError: {
       title: 'Ошибка при удалении',
+      type: 'error',
+    },
+    showReadError: {
+      title: 'Ошибка при прочтении',
+      type: 'error',
+    },
+    showMarkError: {
+      title: 'Ошибка при отметке',
+      type: 'error',
+    },
+    showUnmarkError: {
+      title: 'Ошибка при снятии отметки',
       type: 'error',
     },
   },
