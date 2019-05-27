@@ -3,15 +3,9 @@ import Vuex from 'vuex';
 
 Vue.use(Vuex);
 
-export default new Vuex.Store({
+const Translators = {
   state: {
     translators: [],
-    notifications: [],
-    socket: {
-      isConnected: false,
-      message: '',
-      reconnectError: false,
-    },
   },
   getters: {
     activeTranslators: state =>
@@ -22,12 +16,32 @@ export default new Vuex.Store({
       state.translators = arr;
       // Vue.set(state, 'translators', [...arr]);
     },
+  },
+};
+
+const Notifications = {
+  state: {
+    notifications: [],
+  },
+  mutations: {
     setNotifications(state, arr) {
       state.notifications = arr;
     },
     removeNotification(state, removeId) {
       state.notifications = state.notifications.filter(x => x.ID !== removeId);
     },
+  },
+};
+
+const Chat = {
+  state: {
+    socket: {
+      isConnected: false,
+      message: '',
+      reconnectError: false,
+    },
+  },
+  mutations: {
     SOCKET_ONOPEN(state, event) {
       Vue.prototype.$socket = event.currentTarget;
       state.socket.isConnected = true;
@@ -57,5 +71,13 @@ export default new Vuex.Store({
     //   Vue.prototype.$socket.send(message);
     //   // .....
     // },
+  },
+};
+
+export default new Vuex.Store({
+  modules: {
+    translators: Translators,
+    notifications: Notifications,
+    chat: Chat,
   },
 });

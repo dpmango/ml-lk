@@ -101,7 +101,7 @@ export default {
   },
   computed: {
     notificationsList() {
-      return this.$store.state.notifications;
+      return this.$store.state.notifications.notifications;
     },
   },
   methods: {

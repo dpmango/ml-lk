@@ -134,7 +134,9 @@ export default {
   },
   computed: {
     translatorsList() {
-      return this.applySorting(this.applyFilters(this.$store.state.translators, this.filter));
+      return this.applySorting(
+        this.applyFilters(this.$store.state.translators.translators, this.filter),
+      );
     },
   },
   methods: {

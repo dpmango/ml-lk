@@ -14,13 +14,8 @@
 </template>
 
 <script>
-import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
-
 export default {
   name: 'Relation',
-  components: {
-    SvgIcon,
-  },
   props: {
     ID: String,
     RealName: String,
