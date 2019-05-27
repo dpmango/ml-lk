@@ -37,12 +37,8 @@
     </form>
     <div class="table">
       <div class="table__content" ref="list">
-        <Notification v-if="errorMessage" type="danger">{{errorMessage}}</Notification>
-        <!-- вывести список (Lady удалить) -->
-        <div v-for="(ntf, idx) in notifications" :key="idx">
-          <span>{{ntf.ID}} {{ntf.Man}} {{ntf.Lady}}</span>
-        </div>
-        <!-- <Lady v-for="(lady, idx) in notifications" :key="idx" :lady="lady"/> -->
+        <UiNotification v-if="errorMessage" type="danger">{{errorMessage}}</UiNotification>
+        <Relation v-for="(notification, idx) in notifications" :key="idx" :data="notification"/>
         <spinner
           class="table__loader"
           v-if="scrollFetch.isLoading"
@@ -62,8 +58,9 @@ import Spinner from 'vue-simple-spinner';
 import Panel from '@/components/Shared/Layout/Panel.vue';
 // import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import UiCheckbox from '@/components/Shared/UI/Checkbox.vue';
-import Notification from '@/components/Shared/UI/Notification.vue';
+import UiNotification from '@/components/Shared/UI/Notification.vue';
 import UiSpoiler from '@/components/Shared/UI/Spoiler.vue';
+import Relation from '@/components/Users/Relation.vue';
 import api from '@/helpers/Api';
 
 const defaultFilterState = {
@@ -77,13 +74,13 @@ export default {
     Panel,
     // SvgIcon,
     UiCheckbox,
-    Notification,
+    UiNotification,
     UiSpoiler,
+    Relation,
   },
   data() {
     return {
-      // notifications: null,
-      notifications: [{ id: 1, name: 'test', foo: 'bar' }, { id: 2, name: 'test', foo: 'bar' }],
+      notifications: [],
       errorMessage: '',
       scrollFetch: {
         isLoading: false,
@@ -235,7 +232,7 @@ export default {
     flex: 1 1 auto;
     max-height: 100%;
     overflow-y: scroll;
-    padding: 20px 0 20px 20px;
+    padding: 20px 0 20px 0px;
     &::-webkit-scrollbar {
       width: 25px;
       margin-top: 10px;

@@ -50,12 +50,12 @@ export default {
   padding-left: 5px;
   padding-right: 5px;
   &--left {
-    flex: 0 1 400px;
-    max-width: 400px;
+    flex: 0 1 380px;
+    max-width: 380px;
   }
   &--chat {
-    flex: 1 1 auto;
-    max-width: 100%;
+    flex: 1 1 calc(100% - 380px);
+    max-width: calc(100% - 380px);
   }
 }
 @include r($xl) {
