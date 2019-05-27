@@ -269,6 +269,7 @@ DELETE https://api-m.marmeladies.com/v1/notifications/123456/read
 
 ### Отметить
 
+cors error
 DELETE https://api-m.marmeladies.com/v1/notifications/123456/mark
 где 123456 – ID уведомления
 Возвращает
@@ -278,6 +279,7 @@ DELETE https://api-m.marmeladies.com/v1/notifications/123456/mark
 
 ### Снять отметку
 
+cors error
 DELETE https://api-m.marmeladies.com/v1/notifications/123456/unmark
 где 123456 – ID уведомления
 Возвращает

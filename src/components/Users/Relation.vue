@@ -90,36 +90,6 @@ export default {
     },
   },
   methods: {
-    readNotification() {
-      api
-        .delete(`notifications/${this.data.ID}/read`)
-        .then(res => {
-          const apiData = res.data[0];
-          if (apiData.success) {
-            this.$store.commit('readNotification', this.data.ID);
-          } else {
-            this.showReadError({ message: apiData.message });
-          }
-        })
-        .catch(error => {
-          this.showReadError({ message: error });
-        });
-    },
-    removeNotification() {
-      api
-        .delete(`notifications/${this.data.ID}`)
-        .then(res => {
-          const apiData = res.data[0];
-          if (apiData.success) {
-            this.$store.commit('removeNotification', this.data.ID);
-          } else {
-            this.showDeleteError({ message: apiData.message });
-          }
-        })
-        .catch(error => {
-          this.showDeleteError({ message: error });
-        });
-    },
     markClickRouter(e) {
       e.stopPropagation();
 
@@ -129,52 +99,55 @@ export default {
         this.unmarkNotification();
       }
     },
+    removeNotification(e) {
+      e.stopPropagation();
+
+      this.pingApi({
+        urlSuffix: '',
+        commitAction: 'removeNotification',
+        errTitle: 'Ошибка при удалении',
+      });
+    },
+    readNotification() {
+      this.pingApi({
+        urlSuffix: '/read',
+        commitAction: 'readNotification',
+        errTitle: 'Ошибка при прочтении',
+      });
+    },
     markNotification() {
-      api
-        .delete(`notifications/${this.data.ID}/mark`)
-        .then(res => {
-          const apiData = res.data[0];
-          if (apiData.success) {
-            this.$store.commit('markNotification', this.data.ID);
-          } else {
-            this.showMarkError({ message: apiData.message });
-          }
-        })
-        .catch(error => {
-          this.showMarkError({ message: error });
-        });
+      this.pingApi({
+        urlSuffix: `/mark`,
+        commitAction: 'markNotification',
+        errTitle: 'Ошибка при отметке',
+      });
     },
     unmarkNotification() {
+      this.pingApi({
+        urlSuffix: `/unmark`,
+        commitAction: 'unmarkNotification',
+        errTitle: 'Ошибка при снятии отметки',
+      });
+    },
+    pingApi(options) {
       api
-        .delete(`notifications/${this.data.ID}/unmark`)
+        .delete(`notifications/${this.data.ID}/${options.urlSuffix}`)
         .then(res => {
           const apiData = res.data[0];
           if (apiData.success) {
-            this.$store.commit('unmarkNotification', this.data.ID);
+            this.$store.commit(options.commitAction, this.data.ID);
           } else {
-            this.showUnmarkError({ message: apiData.message });
+            this.showNotification({ title: options.errTitle, message: apiData.message });
           }
         })
         .catch(error => {
-          this.showUnmarkError({ message: error });
+          this.showNotification({ title: options.errTitle, message: error });
         });
     },
   },
   notifications: {
-    showDeleteError: {
-      title: 'Ошибка при удалении',
-      type: 'error',
-    },
-    showReadError: {
-      title: 'Ошибка при прочтении',
-      type: 'error',
-    },
-    showMarkError: {
-      title: 'Ошибка при отметке',
-      type: 'error',
-    },
-    showUnmarkError: {
-      title: 'Ошибка при снятии отметки',
+    showNotification: {
+      title: 'Ошибка',
       type: 'error',
     },
   },
