@@ -233,12 +233,14 @@ DELETE https://api-m.marmeladies.com/v1/contacts/123456/unmark
 
 ## 5. Уведомления
 
-### Список
+### + Список
 
-GET https://api-m.marmeladies.com/v1/notifications
-Принимает
-filter – 1: Отмеченные; 2:Новые; 3:Мужчина онлайн
-ladies – список ID девушек (через запятую)
+- не работает filter=1
+- не работает совмещение фильтра, например filter=2,3
+  GET https://api-m.marmeladies.com/v1/notifications
+  Принимает
+  filter – 1: Отмеченные; 2:Новые; 3:Мужчина онлайн
+  ladies – список ID девушек (через запятую)
 
 ### Пагинация
 
@@ -267,7 +269,7 @@ DELETE https://api-m.marmeladies.com/v1/notifications/123456/read
 или
 [{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
 
-### Отметить
+### - Отметить
 
 cors error
 DELETE https://api-m.marmeladies.com/v1/notifications/123456/mark
@@ -277,7 +279,7 @@ DELETE https://api-m.marmeladies.com/v1/notifications/123456/mark
 или
 [{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
 
-### Снять отметку
+### - Снять отметку
 
 cors error
 DELETE https://api-m.marmeladies.com/v1/notifications/123456/unmark

@@ -1,7 +1,7 @@
 <template>
   <Panel name="Уведомления" noClearButton>
     <form class="filter botom-line">
-      <button class="filter__clear">Очистить</button>
+      <button class="filter__clear" @click="clearFilter">Очистить</button>
       <UiSpoiler title="Тип уведомления">
         <ul class="list">
           <li>
@@ -64,7 +64,9 @@ import Relation from '@/components/Users/Relation.vue';
 import api from '@/helpers/Api';
 
 const defaultFilterState = {
-  noTranslator: false,
+  marked: false,
+  new: false,
+  maleOnline: false,
 };
 
 export default {
@@ -89,7 +91,7 @@ export default {
     };
   },
   created() {
-    this.filterWithDebounce = debounce(this.applyFilters, 600);
+    this.filterWithDebounce = debounce(this.fetchWithFilter, 600);
     this.scrollWithThrottle = throttle(this.handleListScroll, 100);
   },
   mounted() {
@@ -106,24 +108,31 @@ export default {
   },
   methods: {
     fetchApi() {
-      this.applyFilters();
+      this.fetchWithFilter();
     },
-    // filterToParams() {
-    //   const freeOnly = this.filter.noTranslator ? 1 : undefined;
-    //   let filters = {};
+    filterToParams() {
+      let filterString = '';
+      if (this.filter.marked) {
+        filterString = '1';
+      }
+      if (this.filter.new) {
+        filterString = filterString.length > 0 ? `${filterString},2` : '2';
+      }
+      if (this.filter.maleOnline) {
+        filterString = filterString.length > 0 ? `${filterString},3` : '3';
+      }
 
-    //   if (freeOnly) {
-    //     filters = { ...filters, ...{ free: freeOnly } };
-    //   }
-
-    //   return filters;
-    // },
-    applyFilters() {
+      return {
+        filter: filterString,
+      };
+    },
+    fetchWithFilter() {
       api
         .get('notifications', {
-          // filter: this.filterToParams(),
+          params: this.filterToParams(),
         })
         .then(res => {
+          console.log('res', res.data);
           this.errorMessage = '';
           this.$store.commit('setNotifications', res.data);
         })
@@ -133,7 +142,7 @@ export default {
     },
     clearFilter() {
       this.filter = cloneDeep(defaultFilterState);
-      this.applyFilters();
+      this.fetchWithFilter();
     },
     handleListScroll() {
       // const listDOM = this.$refs.list;
