@@ -205,6 +205,7 @@ export default {
 }
 
 .filter {
+  flex: 0 0 auto;
   position: relative;
   display: flex;
   align-items: center;

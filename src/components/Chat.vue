@@ -1,6 +1,8 @@
 <template>
   <div class="chat">
-    <div class="chat__head head-chat">head</div>
+    <div class="chat__head">
+      <chat-head/>
+    </div>
     <div class="chat__messenger">
       <div class="messenger">
         <div class="messenger__list">
@@ -15,12 +17,14 @@
 </template>
 
 <script>
+import ChatHead from '@/components/Chat/ChatHead.vue';
 import Message from '@/components/Chat/Message.vue';
 import AddMessage from '@/components/Chat/AddMessage.vue';
 
 export default {
   name: 'Chat',
   components: {
+    ChatHead,
     Message,
     AddMessage,
   },
