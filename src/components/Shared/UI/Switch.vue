@@ -1,5 +1,9 @@
 <template>
-  <div class="ui-switch" :class="{'is-active': active}" @click="$emit('click')">
+  <div
+    class="ui-switch"
+    :class="{'is-active': active, 'is-green': isGreen}"
+    @click="$emit('click')"
+  >
     <span class="ui-switch__toggle"></span>
   </div>
 </template>
@@ -9,6 +13,7 @@ export default {
   name: 'UiSwitch',
   props: {
     active: Boolean,
+    isGreen: Boolean,
   },
 };
 </script>
@@ -46,6 +51,14 @@ export default {
       transform: translate3d(20px, -50%, 0);
       background: $colorRed;
       box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.237602), 0px 0px 1px rgba(0, 0, 0, 0.12);
+    }
+  }
+  &.is-green {
+    &.is-active {
+      background: rgba($colorGreen, 0.5);
+      .ui-switch__toggle {
+        background: $colorGreen;
+      }
     }
   }
 }
