@@ -134,11 +134,11 @@ export default {
   margin-bottom: 20px;
 }
 
-.ui-placeholder{
+.ui-placeholder {
   display: inline-block;
   font-size: 12px;
   margin-bottom: 5px;
-  color: rgba($fontColor, .8);
+  color: rgba($fontColor, 0.8);
 }
 .ui-input {
   -webkit-appearance: none;
@@ -150,7 +150,7 @@ export default {
   border-radius: 4px;
   font-size: 14px;
   color: $fontColor;
-  transition: border 0.25s ease-in-out, box-shadow .25s ease-in-out;
+  transition: border 0.25s ease-in-out, box-shadow 0.25s ease-in-out;
   &::placeholder {
     color: rgba($fontColor, 0.4);
   }
@@ -165,10 +165,10 @@ export default {
     text-align: center;
     max-width: 40px;
   }
-  &[disabled]{
+  &[disabled] {
     background: rgba(0, 0, 0, 0.1);
   }
-  &__eye{
+  &__eye {
     position: absolute;
     bottom: 1px;
     right: 10px;

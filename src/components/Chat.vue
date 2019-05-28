@@ -7,7 +7,7 @@
           <message/>
         </div>
         <div class="messenger__add-message">
-          <textarea name id rows="5"></textarea>
+          <add-message @addMessage="sendMessage"/>
         </div>
       </div>
     </div>
@@ -16,11 +16,13 @@
 
 <script>
 import Message from '@/components/Chat/Message.vue';
+import AddMessage from '@/components/Chat/AddMessage.vue';
 
 export default {
   name: 'Chat',
   components: {
     Message,
+    AddMessage,
   },
   mounted() {
     this.$connect(); // ws
@@ -32,6 +34,7 @@ export default {
   },
   methods: {
     sendMessage(val) {
+      console.log(val);
       // this.$socket.sendObj({msg: 'test'})
     },
   },
@@ -61,6 +64,9 @@ export default {
 }
 
 .messenger {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
   &__list {
     flex: 1 1 auto;
   }

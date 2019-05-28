@@ -179,7 +179,7 @@ export default {
 .list {
   display: flex;
   flex-wrap: wrap;
-  margin: 0;
+  margin: 0 0 10px;
   padding: 0;
   li {
     width: 100%;
@@ -208,7 +208,7 @@ export default {
     margin: 5px 10px;
   }
   .ui-checkbox {
-    margin: 5px 10px;
+    margin: 0px 10px;
   }
   .multiselect {
     margin: 5px 10px;

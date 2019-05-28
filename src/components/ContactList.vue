@@ -214,7 +214,7 @@ export default {
     margin: 5px 10px;
   }
   .ui-checkbox {
-    margin: 5px 10px;
+    margin: 0px 10px;
   }
   .multiselect {
     margin: 5px 10px;

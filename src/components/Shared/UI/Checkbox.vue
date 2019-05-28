@@ -51,8 +51,8 @@ export default {
       position: absolute;
       top: 50%;
       left: 0;
-      width: 18px;
-      height: 18px;
+      width: 14px;
+      height: 14px;
       transform: translateY(-50%);
       border: 2px solid rgba(#473f69, 0.5);
       border-radius: 4px;
@@ -62,7 +62,7 @@ export default {
       display: inline-block;
       content: '';
       position: absolute;
-      left: 7px;
+      left: 5px;
       top: 50%;
       width: 8px;
       height: 8px;

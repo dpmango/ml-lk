@@ -1,3 +1,5 @@
+import Vue from 'vue';
+
 const Chat = {
   state: {
     socket: {
