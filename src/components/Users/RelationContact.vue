@@ -21,6 +21,8 @@
           :Age="data.Lady.Age"
           :Online="data.Lady.Online"
           :Thumbnail="data.Lady.Thumbnail"
+          :ChatNew="data.ChatNew"
+          :MsgNew="data.MsgNew"
         />
       </div>
     </div>
