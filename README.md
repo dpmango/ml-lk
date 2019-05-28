@@ -183,7 +183,7 @@ ladies – список ID девушек (через запятую)
 
 ## 4. Контакт-лист
 
-### Список
+### + Список
 
 GET https://api-m.marmeladies.com/v1/contacts
 Принимает
@@ -195,8 +195,9 @@ ladies – список ID девушек (через запятую)
 GET https://api-m.marmeladies.com/v1/contacts?page=2
 Контроль пагинации через заголовки X-Pagination-Total-Count, X-Pagination-Page-Count, X-Pagination-Current-Page, X-Pagination-Per-Page
 
-### Удалить
+### - Удалить
 
+500 error
 DELETE https://api-m.marmeladies.com/v1/contacts/123456
 где 123456 – ID контакта
 Возвращает
@@ -204,8 +205,9 @@ DELETE https://api-m.marmeladies.com/v1/contacts/123456
 или
 [{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
 
-### Прочитать
+### - Прочитать
 
+cors
 DELETE https://api-m.marmeladies.com/v1/contacts/123456/read
 где 123456 – ID контакта
 Возвращает
@@ -213,8 +215,9 @@ DELETE https://api-m.marmeladies.com/v1/contacts/123456/read
 или
 [{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
 
-### Отметить
+### - Отметить
 
+cors
 DELETE https://api-m.marmeladies.com/v1/contacts/123456/mark
 где 123456 – ID контакта
 Возвращает
@@ -222,8 +225,9 @@ DELETE https://api-m.marmeladies.com/v1/contacts/123456/mark
 или
 [{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
 
-### Снять отметку
+### - Снять отметку
 
+cors
 DELETE https://api-m.marmeladies.com/v1/contacts/123456/unmark
 где 123456 – ID контакта
 Возвращает

@@ -51,7 +51,7 @@ import UserRelation from '@/components/Users/UserRelation.vue';
 import api from '@/helpers/Api';
 
 export default {
-  name: 'Relation',
+  name: 'RelationNotification',
   components: {
     SvgIcon,
     UserRelation,
@@ -131,7 +131,7 @@ export default {
     },
     pingApi(options) {
       api
-        .delete(`notifications/${this.data.ID}/${options.urlSuffix}`)
+        .delete(`notifications/${this.data.ID}${options.urlSuffix}`)
         .then(res => {
           const apiData = res.data[0];
           if (apiData.success) {

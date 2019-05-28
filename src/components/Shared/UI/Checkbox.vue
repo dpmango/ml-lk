@@ -1,7 +1,7 @@
 <template>
   <div class="ui-checkbox" :class="{'is-active': value}">
     <input type="checkbox" :name="name" :id="name" :value="value" @change="handleChange">
-    <label :class="{'is-big-font': big_font}" :for="name">{{label}}</label>
+    <label :class="{'is-big-font': bigFont}" :for="name">{{label}}</label>
   </div>
 </template>
 
@@ -12,7 +12,7 @@ export default {
     name: String,
     label: String,
     value: Boolean,
-    big_font: String,
+    bigFont: Boolean,
   },
   methods: {
     handleChange() {

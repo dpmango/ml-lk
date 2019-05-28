@@ -10,6 +10,9 @@
           <div class="col col--chat">
             <Chat/>
           </div>
+          <div class="col col--right">
+            <ContactList/>
+          </div>
         </div>
       </Container>
     </div>
@@ -20,6 +23,7 @@
 import Header from '@/components/Shared/Header.vue';
 import Container from '@/components/Shared/Layout/Container.vue';
 import NotificationsList from '@/components/NotificationsList.vue';
+import ContactList from '@/components/ContactList.vue';
 import Chat from '@/components/Chat.vue';
 
 export default {
@@ -28,6 +32,7 @@ export default {
     Header,
     Container,
     NotificationsList,
+    ContactList,
     Chat,
   },
 };
@@ -53,9 +58,13 @@ export default {
     flex: 0 1 380px;
     max-width: 380px;
   }
+  &--right {
+    flex: 0 1 380px;
+    max-width: 380px;
+  }
   &--chat {
-    flex: 1 1 calc(100% - 380px);
-    max-width: calc(100% - 380px);
+    flex: 1 1 calc(100% - 760px);
+    max-width: calc(100% - 760px);
   }
 }
 @include r($xl) {
