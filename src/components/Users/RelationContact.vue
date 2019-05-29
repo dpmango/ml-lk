@@ -108,6 +108,7 @@ export default {
       e.stopPropagation();
 
       this.pingApi({
+        apiAction: 'delete',
         urlSuffix: '',
         commitAction: 'removeContact',
         errTitle: 'Ошибка при удалении',
@@ -115,6 +116,7 @@ export default {
     },
     readContact() {
       this.pingApi({
+        apiAction: 'post',
         urlSuffix: '/read',
         commitAction: 'readContact',
         errTitle: 'Ошибка при прочтении',
@@ -122,6 +124,7 @@ export default {
     },
     markContact() {
       this.pingApi({
+        apiAction: 'get',
         urlSuffix: `/mark`,
         commitAction: 'markContact',
         errTitle: 'Ошибка при отметке',
@@ -129,14 +132,14 @@ export default {
     },
     unmarkContact() {
       this.pingApi({
+        apiAction: 'get',
         urlSuffix: `/unmark`,
         commitAction: 'unmarkContact',
         errTitle: 'Ошибка при снятии отметки',
       });
     },
     pingApi(options) {
-      api
-        .delete(`contacts/${this.data.ID}${options.urlSuffix}`)
+      api[options.apiAction](`contacts/${this.data.ID}${options.urlSuffix}`)
         .then(res => {
           const apiData = res.data[0];
           if (apiData.success) {

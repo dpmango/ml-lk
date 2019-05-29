@@ -103,6 +103,7 @@ export default {
       e.stopPropagation();
 
       this.pingApi({
+        apiAction: 'delete',
         urlSuffix: '',
         commitAction: 'removeNotification',
         errTitle: 'Ошибка при удалении',
@@ -110,6 +111,7 @@ export default {
     },
     readNotification() {
       this.pingApi({
+        apiAction: 'get',
         urlSuffix: '/read',
         commitAction: 'readNotification',
         errTitle: 'Ошибка при прочтении',
@@ -117,6 +119,7 @@ export default {
     },
     markNotification() {
       this.pingApi({
+        apiAction: 'get',
         urlSuffix: `/mark`,
         commitAction: 'markNotification',
         errTitle: 'Ошибка при отметке',
@@ -124,14 +127,14 @@ export default {
     },
     unmarkNotification() {
       this.pingApi({
+        apiAction: 'get',
         urlSuffix: `/unmark`,
         commitAction: 'unmarkNotification',
         errTitle: 'Ошибка при снятии отметки',
       });
     },
     pingApi(options) {
-      api
-        .delete(`notifications/${this.data.ID}${options.urlSuffix}`)
+      api[options.apiAction](`notifications/${this.data.ID}${options.urlSuffix}`)
         .then(res => {
           const apiData = res.data[0];
           if (apiData.success) {
