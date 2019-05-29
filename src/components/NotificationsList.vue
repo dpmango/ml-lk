@@ -33,7 +33,7 @@
           </li>
         </ul>
       </UiSpoiler>
-      <button class="choose-profile">Выбрать профиль</button>
+      <LadyFilter/>
     </form>
     <div class="table">
       <div class="table__content" ref="list">
@@ -65,6 +65,7 @@ import UiCheckbox from '@/components/Shared/UI/Checkbox.vue';
 import UiNotification from '@/components/Shared/UI/Notification.vue';
 import UiSpoiler from '@/components/Shared/UI/Spoiler.vue';
 import RelationNotification from '@/components/Users/RelationNotification.vue';
+import LadyFilter from '@/components/Ladies/LadyFilter.vue';
 import api from '@/helpers/Api';
 
 const defaultFilterState = {
@@ -83,6 +84,7 @@ export default {
     UiNotification,
     UiSpoiler,
     RelationNotification,
+    LadyFilter,
   },
   data() {
     return {
@@ -186,18 +188,6 @@ export default {
   }
 }
 
-.choose-profile {
-  margin-left: 43px;
-  font-weight: 500;
-  font-size: 13px;
-  line-height: 20px;
-  cursor: pointer;
-  padding: 0;
-  border: none;
-  border-bottom: 1px dashed #1e1e1e;
-  background: none;
-}
-
 .filter {
   flex: 0 0 auto;
   position: relative;
@@ -205,15 +195,8 @@ export default {
   align-items: center;
   flex-wrap: wrap;
   padding: 15px 10px;
-  .ui-group {
-    margin: 5px 10px;
-  }
   .ui-checkbox {
     margin: 0px 10px;
-  }
-  .multiselect {
-    margin: 5px 10px;
-    max-width: 235px;
   }
   &__clear {
     position: absolute;
