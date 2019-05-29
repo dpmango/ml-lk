@@ -1,5 +1,8 @@
 <template>
-  <div class="ui-checkbox" :class="{'is-active': value}">
+  <div
+    class="ui-checkbox"
+    :class="{'is-active': value, 'is-yellow': yellow, 'with-checkmark': withCheckmark}"
+  >
     <input type="checkbox" :name="name" :id="name" :value="value" @change="handleChange">
     <label :class="{'is-big-font': bigFont}" :for="name">{{label}}</label>
   </div>
@@ -13,6 +16,8 @@ export default {
     label: String,
     value: Boolean,
     bigFont: Boolean,
+    yellow: Boolean,
+    withCheckmark: Boolean,
   },
   methods: {
     handleChange() {
@@ -77,6 +82,35 @@ export default {
     font-size: 14px;
     padding-left: 33px;
     color: $fontColor;
+  }
+  &.is-yellow {
+    &.is-active {
+      label {
+        &::after {
+          border-color: $colorOrange;
+        }
+        &::before {
+          background: $colorOrange;
+        }
+      }
+    }
+  }
+  &.with-checkmark {
+    &.is-active {
+      label {
+        &::after {
+          background-color: $colorPrimary;
+        }
+        &::before {
+          // TODO - checkmark icon embeded
+        }
+      }
+      &.is-yellow {
+        label::after {
+          background-color: $colorOrange;
+        }
+      }
+    }
   }
   &.is-active {
     label {

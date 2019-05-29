@@ -1,5 +1,5 @@
 <template>
-  <div class="avatar" :class="{'size-44' : size === 44}">
+  <div class="avatar" :class="{'size-44' : size === 44, 'size-70': size === 70}">
     <div class="avatar__image">
       <img :src="Thumbnail" :alt="RealName">
     </div>
@@ -63,6 +63,21 @@ export default {
       &__image {
         width: 44px;
         height: 44px;
+      }
+    }
+  }
+  &.size-70 {
+    flex-basis: 70px;
+    .avatar {
+      &__image {
+        width: 70px;
+        height: 70px;
+      }
+      &__online {
+        width: 19px;
+        height: 19px;
+        border-width: 3px;
+        bottom: -3px;
       }
     }
   }

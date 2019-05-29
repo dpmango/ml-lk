@@ -23,5 +23,10 @@ export default new Router({
       name: 'Ladies',
       component: () => import('./pages/Ladies.vue'),
     },
+    {
+      path: '/invite',
+      name: 'Invite',
+      component: () => import('./pages/Invite.vue'),
+    },
   ],
 });
