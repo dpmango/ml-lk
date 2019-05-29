@@ -1,23 +1,17 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import Translators from '@/store/Translators';
+import Notifications from '@/store/Notifications';
+import Contacts from '@/store/Contacts';
+import Chat from '@/store/Chat';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  state: {
-    translators: [],
-  },
-  getters: {
-    activeTranslators: state => state.translators.filter(x => x.RemovalDate.length <= 1 && x.BlockDate.length <= 1),
-  },
-  mutations: {
-    updateTranslators(state, arr) {
-      // eslint-disable-next-line
-      state.translators = arr;
-      // Vue.set(state, 'translators', [...arr]);
-    },
-  },
-  actions: {
-
+  modules: {
+    translators: Translators,
+    notifications: Notifications,
+    contacts: Contacts,
+    chat: Chat,
   },
 });

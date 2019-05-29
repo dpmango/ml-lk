@@ -41,7 +41,9 @@
             <Button primary @click="openAddEdit">Добавить переводчика</Button>
           </template>
           <template v-else>
-            <Button primary>Отправить приглашение</Button>
+            <router-link to="/invite">
+              <Button primary>Отправить приглашение</Button>
+            </router-link>
             <router-link to="/ladies">
               <Button primary>Девушки</Button>
             </router-link>
@@ -121,7 +123,9 @@ export default {
     margin-left: 30px;
     display: flex;
     align-items: center;
-    button {
+    a {
+      // router-link instances
+      display: inline-block;
       margin-right: 10px;
       &:last-child {
         margin-right: 0;

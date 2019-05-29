@@ -180,3 +180,314 @@ ladies – список ID девушек (через запятую)
 [{&quot;success&quot;:true}]
 или
 [{&quot;success&quot;:false,&quot;message&quot;:&quot;Email address \&quot;test@test.com\&quot; used by another member&quot;}]
+
+## 4. Контакт-лист
+
+### + Список
+
+GET https://api-m.marmeladies.com/v1/contacts
+Принимает
+filter – 1:Активный чат; 2:Неотвеченные; 3:Отмеченные; 4:Мужчина онлайн
+ladies – список ID девушек (через запятую)
+
+### Пагинация
+
+GET https://api-m.marmeladies.com/v1/contacts?page=2
+Контроль пагинации через заголовки X-Pagination-Total-Count, X-Pagination-Page-Count, X-Pagination-Current-Page, X-Pagination-Per-Page
+
+### - Удалить
+
+500 error
+DELETE https://api-m.marmeladies.com/v1/contacts/123456
+где 123456 – ID контакта
+Возвращает
+[{"success":true}]
+или
+[{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
+
+### - Прочитать
+
+cors
+DELETE https://api-m.marmeladies.com/v1/contacts/123456/read
+где 123456 – ID контакта
+Возвращает
+[{"success":true}]
+или
+[{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
+
+### - Отметить
+
+cors
+DELETE https://api-m.marmeladies.com/v1/contacts/123456/mark
+где 123456 – ID контакта
+Возвращает
+[{"success":true}]
+или
+[{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
+
+### - Снять отметку
+
+cors
+DELETE https://api-m.marmeladies.com/v1/contacts/123456/unmark
+где 123456 – ID контакта
+Возвращает
+[{"success":true}]
+или
+[{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
+
+## 5. Уведомления
+
+### + Список
+
+- не работает filter=1
+- не работает совмещение фильтра, например filter=2,3
+  GET https://api-m.marmeladies.com/v1/notifications
+  Принимает
+  filter – 1: Отмеченные; 2:Новые; 3:Мужчина онлайн
+  ladies – список ID девушек (через запятую)
+
+### Пагинация
+
+GET https://api-m.marmeladies.com/v1/notifications?page=2
+Контроль пагинации через заголовки X-Pagination-Total-Count, X-Pagination-Page-Count, X-Pagination-Current-Page, X-Pagination-Per-Page
+
+### - Удалить
+
+500 error
+
+DELETE https://api-m.marmeladies.com/v1/notifications/123456
+где 123456 – ID уведомления
+Возвращает
+[{"success":true}]
+или
+[{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
+
+### - Прочитать
+
+cors error
+
+DELETE https://api-m.marmeladies.com/v1/notifications/123456/read
+где 123456 – ID уведомления
+Возвращает
+[{"success":true}]
+или
+[{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
+
+### - Отметить
+
+cors error
+DELETE https://api-m.marmeladies.com/v1/notifications/123456/mark
+где 123456 – ID уведомления
+Возвращает
+[{"success":true}]
+или
+[{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
+
+### - Снять отметку
+
+cors error
+DELETE https://api-m.marmeladies.com/v1/notifications/123456/unmark
+где 123456 – ID уведомления
+Возвращает
+[{"success":true}]
+или
+[{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
+
+## 6. Чаты
+
+### Информация о паре
+
+GET https://api-m.marmeladies.com/v1/chats/info
+Принимает
+man – ID мужчины
+lady – ID девушки
+Возвращает
+информацию о мужчине и девушке
+Favorite=true – мужчина в избранном, в попапе «More» показываем ссылку «Удалить из Избранного»
+Favorite=false – мужчина не в избранном, в попапе «More» показываем ссылку «Добавить в Избранное»
+Blocked=true – мужчина в блоклисте, в попапе «More» показываем ссылку «Разблокировать»
+Blocked=false – мужчина не в блоклисте, в попапе «More» показываем ссылку «Заблокировать»
+Chat_enable=true – чат доступен, показываем поле для ввода текста и кнопки(смайлики, картинки, отправить …)
+Chat_enable= false – чат не доступен, не показываем поле для ввода текста и кнопки(смайлики, картинки, отправить …), на их месте выводим текст из Chat_reason.
+
+### Список сообщений в паре
+
+GET https://api-m.marmeladies.com/v1/chats
+Принимает
+man – ID мужчины
+lady – ID девушки
+filter – 1: Отмеченные; 2:Фотографии; 3:За период (дополнительно нужно передать date_1 и date_2 – начало и конец периода, timestamp)
+Подгрузка новых данных аналогично списку девушек (21 запись).
+При выводе заменять смайлики на картинки
+
+### Обновление комментариев
+
+POST https://api-m.marmeladies.com/v1/chats/comments
+Принимает
+man – ID мужчины
+lady – ID девушки
+text – текст
+Для комментариев о паре передаем man, lady и text, для комментариев о мужчине передаем только man и text, для комментариев о девушки передаем только lady и text
+Возвращает
+[{"success":true}]
+или
+[{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
+
+### Написать сообщение в чат
+
+POST https://api-m.marmeladies.com/v1/chats
+Принимает
+man – ID мужчины
+lady – ID девушки
+text - текст
+file – ID фото (необязательное)
+Возвращает
+{"success":true, "ID":xxxxxx}, где xxxxxx – ID сообщения
+или
+{"success":false,"message":"Email address \"test@test.com\" used by another member"}
+
+### Загрузка фото
+
+POST https://api-m.marmeladies.com/v1/chats/photos
+Принимает
+man – ID мужчины
+lady – ID девушки
+file – файл
+Возвращает
+{"success":true, "ID":xxxxxx, "Url_1":xxxxxx, "Url_2":xxxxxx}, где xxxxxx – ID загруженного фото, Url_1 – адрес превью, Url_2 – адрес самого фото
+или
+{"success":false,"message":"Email address \"test@test.com\" used by another member"}
+
+### Список фото
+
+GET https://api-m.marmeladies.com/v1/chats/photos
+Принимает
+man – ID мужчины
+lady – ID девушки
+Фильтрация на фронтенде (SendDate/ ReadDate)
+
+### Завершить чат
+
+GET https://api-m.marmeladies.com/v1/chats/finish
+Принимает
+man – ID мужчины
+lady – ID девушки
+Возвращает
+[{"success":true}]
+
+### Отправить typing_notification (не чаще чем раз в 10 сек)
+
+GET https://api-m.marmeladies.com/v1/chats/typing
+Принимает
+man – ID мужчины
+lady – ID девушки
+Возвращает
+[{"success":true}]
+
+## 7. Избранное
+
+Добавить
+POST https://api-m.marmeladies.com/v1/favorites
+Принимает
+man – ID мужчины
+lady – ID девушки
+Возвращает
+[{"success":true}]
+или
+[{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
+
+### Удалить
+
+DELETE https://api-m.marmeladies.com/v1/favorites
+Принимает
+man – ID мужчины
+lady – ID девушки
+Возвращает
+[{"success":true}]
+или
+[{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
+
+## 8. Блоклист
+
+### Добавить
+
+POST https://api-m.marmeladies.com/v1/blocklists
+Принимает
+man – ID мужчины
+lady – ID девушки
+Возвращает
+[{"success":true}]
+или
+[{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
+
+### Удалить
+
+DELETE https://api-m.marmeladies.com/v1/blocklists
+Принимает
+man – ID мужчины
+lady – ID девушки
+Возвращает
+[{"success":true}]
+или
+[{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
+
+## 9. Подмигивания
+
+### Отправить
+
+POST https://api-m.marmeladies.com/v1/kisses
+Принимает
+man – ID мужчины
+lady – ID девушки
+Возвращает
+[{"success":true}]
+или
+[{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
+
+## 10. Мужчины
+
+### Список
+
+GET https://api-m.marmeladies.com/v1/mens
+Принимает
+filter = 1 (отправить приглашение):
+lady – ID девушки
+age_1 и age_2 – интервал «Возраст»
+height_1 и height_2 – интервал «Рост»
+weight_1 и weight_2 – интервал «Вес»
+hair – цвет волос (список ID через запятую)
+eye – цвет глаз (список ID через запятую)
+marital – семейное положение (список ID через запятую)
+education – образование (список ID через запятую)
+country – страна (список кодов через запятую)
+city - город
+id – ID мужчины
+children – дети – 1:есть;2:нет
+photo – фото - 1:есть;2:нет
+Подгрузка новых данных аналогично списку девушек (21 запись).
+
+## x. Чат сокет
+
+1. Сервер http://socketo.me/
+2. Подключаемся к wss://marmeladies.com/ws/
+3. Подписываемся на топик «токен»
+4. Парсим полученное сообщение:
+   a. from – id отправителя
+   b. from_name – имя отправителя
+   c. msg – текст
+   d. time – время написания сообщения
+   e. country – страна отправителя
+   f. city – город отправителя
+   g. age – возраст отправителя
+   h. avatar – фото отправителя
+   i. favorite – отправитель в favorites у получателя
+   j. id – id сообщения
+5. Типы msg
+   a. typing_notification – собеседник вводит текст
+   b. chat_finish_1_notification – собеседник закрыл чат, выводим сообщение «from_name have left the conversation»
+   c. chat_finish_2_notification – автоматическое закрытие чата, выводим сообщение «from_name missed your invite. Please try again. A lot of other ladies are online and available to Chat Now (ссылка на девушек онлайн)»
+   d. chat_finish_5_notification – автоматическое закрытие чата, выводим сообщение «You have left the conversation. To resume chat please send another message»,
+   e. chat_start_notification – старт чата, показываем кнопки «finish_chat» и «attach»
+   f. delete_chat_message – удаляем сообщение id из ленты
+   g. chat_page_open_notification – у мужчин не обрабатываем
+   h. иначе – текст сообщение, выводим в чат, если открыт экран чата с отправителем или в уведомления

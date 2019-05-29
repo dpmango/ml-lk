@@ -1,7 +1,10 @@
 <template>
-  <div class="ui-checkbox" :class="{'is-active': value}">
+  <div
+    class="ui-checkbox"
+    :class="{'is-active': value, 'is-yellow': yellow, 'with-checkmark': withCheckmark}"
+  >
     <input type="checkbox" :name="name" :id="name" :value="value" @change="handleChange">
-    <label :class="{'is-big-font': big_font}" :for="name">{{label}}</label>
+    <label :class="{'is-big-font': bigFont}" :for="name">{{label}}</label>
   </div>
 </template>
 
@@ -12,7 +15,9 @@ export default {
     name: String,
     label: String,
     value: Boolean,
-    big_font: String,
+    bigFont: Boolean,
+    yellow: Boolean,
+    withCheckmark: Boolean,
   },
   methods: {
     handleChange() {
@@ -51,8 +56,8 @@ export default {
       position: absolute;
       top: 50%;
       left: 0;
-      width: 18px;
-      height: 18px;
+      width: 14px;
+      height: 14px;
       transform: translateY(-50%);
       border: 2px solid rgba(#473f69, 0.5);
       border-radius: 4px;
@@ -62,7 +67,7 @@ export default {
       display: inline-block;
       content: '';
       position: absolute;
-      left: 7px;
+      left: 5px;
       top: 50%;
       width: 8px;
       height: 8px;
@@ -77,6 +82,35 @@ export default {
     font-size: 14px;
     padding-left: 33px;
     color: $fontColor;
+  }
+  &.is-yellow {
+    &.is-active {
+      label {
+        &::after {
+          border-color: $colorOrange;
+        }
+        &::before {
+          background: $colorOrange;
+        }
+      }
+    }
+  }
+  &.with-checkmark {
+    &.is-active {
+      label {
+        &::after {
+          background-color: $colorPrimary;
+        }
+        &::before {
+          // TODO - checkmark icon embeded
+        }
+      }
+      &.is-yellow {
+        label::after {
+          background-color: $colorOrange;
+        }
+      }
+    }
   }
   &.is-active {
     label {

@@ -3,7 +3,7 @@
     <Header/>
     <div class="page__content">
       <Container>
-        <LadiesNotifications/>
+        <SendInvite/>
         <StartMain/>
       </Container>
     </div>
@@ -13,16 +13,16 @@
 <script>
 import Header from '@/components/Shared/Header.vue';
 import Container from '@/components/Shared/Layout/Container.vue';
-import LadiesNotifications from '@/components/LadiesNotifications.vue';
 import StartMain from '@/components/StartMain.vue';
+import SendInvite from '@/components/SendInvite.vue';
 
 export default {
-  name: 'Ladies',
+  name: 'Invite',
   components: {
     Header,
     Container,
-    LadiesNotifications,
     StartMain,
+    SendInvite,
   },
 };
 </script>

@@ -1,48 +1,53 @@
 <template>
-  <Panel name="Уведомления" noClearButton>
+  <Panel name="Контакт-лист" noClearButton>
     <form class="filter botom-line">
       <button class="filter__clear" @click="clearFilter">Очистить</button>
-      <UiSpoiler title="Тип уведомления">
-        <ul class="list">
-          <li>
-            <ui-checkbox
-              @input="filterWithDebounce"
-              v-model="filter.marked"
-              name="marked"
-              label="Отмеченные"
-              bigFont
-            />
-          </li>
-          <li>
-            <ui-checkbox
-              @input="filterWithDebounce"
-              v-model="filter.new"
-              name="new"
-              label="Новые"
-              bigFont
-            />
-          </li>
-          <li>
-            <ui-checkbox
-              @input="filterWithDebounce"
-              v-model="filter.maleOnline"
-              name="maleOnline"
-              label="Мужчина онлайн"
-              bigFont
-            />
-          </li>
-        </ul>
-      </UiSpoiler>
+
+      <ul class="list">
+        <li>
+          <ui-checkbox
+            @input="filterWithDebounce"
+            v-model="filter.active"
+            name="c_active"
+            label="Активный чат"
+            bigFont
+          />
+        </li>
+        <li>
+          <ui-checkbox
+            @input="filterWithDebounce"
+            v-model="filter.new"
+            name="c_new"
+            label="Неотвеченные"
+            bigFont
+          />
+        </li>
+        <li>
+          <ui-checkbox
+            @input="filterWithDebounce"
+            v-model="filter.marked"
+            name="c_marked"
+            label="Отмеченные"
+            bigFont
+          />
+        </li>
+        <li>
+          <ui-checkbox
+            @input="filterWithDebounce"
+            v-model="filter.maleOnline"
+            name="c_maleOnline"
+            label="Мужчина онлайн"
+            bigFont
+          />
+        </li>
+      </ul>
+
       <button class="choose-profile">Выбрать профиль</button>
     </form>
     <div class="table">
       <div class="table__content" ref="list">
         <UiNotification v-if="errorMessage" type="danger">{{errorMessage}}</UiNotification>
-        <RelationNotification
-          v-for="(notification, idx) in notificationsList"
-          :key="idx"
-          :data="notification"
-        />
+        <RelationContact v-for="(contact, idx) in contactsList" :key="idx" :data="contact"/>
         <spinner
           class="table__loader"
           v-if="scrollFetch.isLoading"
@@ -60,29 +65,26 @@ import throttle from 'lodash/throttle';
 import cloneDeep from 'lodash/cloneDeep';
 import Spinner from 'vue-simple-spinner';
 import Panel from '@/components/Shared/Layout/Panel.vue';
-// import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import UiCheckbox from '@/components/Shared/UI/Checkbox.vue';
 import UiNotification from '@/components/Shared/UI/Notification.vue';
-import UiSpoiler from '@/components/Shared/UI/Spoiler.vue';
-import RelationNotification from '@/components/Users/RelationNotification.vue';
+import RelationContact from '@/components/Users/RelationContact.vue';
 import api from '@/helpers/Api';
 
 const defaultFilterState = {
-  marked: false,
+  active: false,
   new: false,
+  marked: false,
   maleOnline: false,
 };
 
 export default {
-  name: 'NotificationsList',
+  name: 'ContactList',
   components: {
     Spinner,
     Panel,
-    // SvgIcon,
     UiCheckbox,
     UiNotification,
-    UiSpoiler,
-    RelationNotification,
+    RelationContact,
   },
   data() {
     return {
@@ -106,8 +108,8 @@ export default {
     this.$refs.list.removeEventListener('scroll', this.scrollWithThrottle, false);
   },
   computed: {
-    notificationsList() {
-      return this.$store.state.notifications.notifications;
+    contactsList() {
+      return this.$store.state.contacts.contacts;
     },
   },
   methods: {
@@ -116,29 +118,33 @@ export default {
     },
     filterToParams() {
       let filterString = '';
-      if (this.filter.marked) {
+      if (this.filter.active) {
         filterString = '1';
       }
       if (this.filter.new) {
         filterString = filterString.length > 0 ? `${filterString},2` : '2';
       }
-      if (this.filter.maleOnline) {
+      if (this.filter.marked) {
         filterString = filterString.length > 0 ? `${filterString},3` : '3';
+      }
+      if (this.filter.maleOnline) {
+        filterString = filterString.length > 0 ? `${filterString},4` : '4';
       }
 
       return {
         filter: filterString,
+        ladies: '', // TODO
       };
     },
     fetchWithFilter() {
       api
-        .get('notifications', {
+        .get('contacts', {
           params: this.filterToParams(),
         })
         .then(res => {
           console.log('res', res.data);
           this.errorMessage = '';
-          this.$store.commit('setNotifications', res.data);
+          this.$store.commit('setContacts', res.data);
         })
         .catch(err => {
           this.errorMessage = err;
@@ -179,7 +185,7 @@ export default {
 .list {
   display: flex;
   flex-wrap: wrap;
-  margin: 0 0 10px;
+  margin: 0;
   padding: 0;
   li {
     width: 100%;

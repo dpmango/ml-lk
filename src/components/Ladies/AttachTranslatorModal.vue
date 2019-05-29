@@ -76,18 +76,22 @@ export default {
       return dateToAge(this.lady.DateOfBirth);
     },
     translatorsResults() {
-      return this.$store.getters.activeTranslators ? this.$store.getters.activeTranslators.map(t => ({
-        id: t.ID,
-        name: `${t.FirstName} ${t.LastName}`,
-        count: t.LadiesCount,
-        isCurrent: t.ID === this.attachedTranslatorID,
-      })) : [];
+      return this.$store.getters.activeTranslators
+        ? this.$store.getters.activeTranslators.map(t => ({
+            id: t.ID,
+            name: `${t.FirstName} ${t.LastName}`,
+            count: t.LadiesCount,
+            isCurrent: t.ID === this.attachedTranslatorID,
+          }))
+        : [];
     },
   },
   methods: {
     beforeOpen(event) {
       this.lady = event.params.lady;
-      this.attachedTranslatorID = event.params.lady.Translator ? event.params.lady.Translator.ID : event.params.translatorID;
+      this.attachedTranslatorID = event.params.lady.Translator
+        ? event.params.lady.Translator.ID
+        : event.params.translatorID;
       this.pivotX = event.params.pivotX;
     },
     beforeClose() {
@@ -100,47 +104,49 @@ export default {
       this.errorMessage = '';
     },
     fetchTranslators() {
-      api
-        .get('translators')
-        .then((res) => {
-          this.$store.commit('updateTranslators', res.data);
-        });
+      api.get('translators').then(res => {
+        this.$store.commit('updateTranslators', res.data);
+      });
     },
     handleTranslatorClick(id) {
-      const attach = (translatorId) => {
-        api.post(`translators/${translatorId}/ladies`, {
-          ladies: this.lady.ID,
-        }).then((res) => {
-          const apiData = res.data[0];
-          if (apiData.success) {
-            this.attachedTranslatorID = translatorId;
-            // this.fetchTranslators();
-            this.errorMessage = '';
-            this.$emit('sucessCallback');
-            this.closeModal();
-          } else {
-            this.errorMessage = apiData.message;
-          }
-        });
+      const attach = translatorId => {
+        api
+          .post(`translators/${translatorId}/ladies`, {
+            ladies: this.lady.ID,
+          })
+          .then(res => {
+            const apiData = res.data[0];
+            if (apiData.success) {
+              this.attachedTranslatorID = translatorId;
+              // this.fetchTranslators();
+              this.errorMessage = '';
+              this.$emit('sucessCallback');
+              this.closeModal();
+            } else {
+              this.errorMessage = apiData.message;
+            }
+          });
       };
 
-      const detach = (translatorId) => {
-        api.delete(`translators/${translatorId}/ladies`, {
-          data: {
-            ladies: this.lady.ID,
-          },
-        }).then((res) => {
-          const apiData = res.data[0];
-          if (apiData.success) {
-            this.attachedTranslatorID = '';
-            // this.fetchTranslators();
-            this.errorMessage = '';
-            this.$emit('sucessCallback');
-            this.closeModal();
-          } else {
-            this.errorMessage = apiData.message;
-          }
-        });
+      const detach = translatorId => {
+        api
+          .delete(`translators/${translatorId}/ladies`, {
+            data: {
+              ladies: this.lady.ID,
+            },
+          })
+          .then(res => {
+            const apiData = res.data[0];
+            if (apiData.success) {
+              this.attachedTranslatorID = '';
+              // this.fetchTranslators();
+              this.errorMessage = '';
+              this.$emit('sucessCallback');
+              this.closeModal();
+            } else {
+              this.errorMessage = apiData.message;
+            }
+          });
       };
 
       // if (this.attachedTranslatorID === id) {
@@ -185,13 +191,13 @@ export default {
       color: $colorRed;
     }
   }
-  &__head{
+  &__head {
     padding: 20px 20px 10px;
     display: flex;
     align-items: center;
-    border-bottom: 1px solid #D1CFDA;
+    border-bottom: 1px solid #d1cfda;
   }
-  &__head-avatar{
+  &__head-avatar {
     position: relative;
     z-index: 1;
     overflow: hidden;
@@ -207,48 +213,49 @@ export default {
       transform: translate(-50%, -50%);
     }
   }
-  &__head-content{
+  &__head-content {
     flex: 1 1 auto;
     padding-left: 12px;
   }
-  &__head-name{
+  &__head-name {
     font-size: 14px;
     line-height: 18px;
   }
-  &__head-location{
+  &__head-location {
     margin-top: 5px;
     font-size: 11px;
     line-height: 14px;
-    color: rgba($fontColor, .6);
+    color: rgba($fontColor, 0.6);
   }
-  &__list{
+  &__list {
     flex: 1 1 auto;
   }
-  &__cta{
+  &__cta {
     padding: 20px;
   }
 }
 
-.translator-row{
+.translator-row {
   display: flex;
   align-items: center;
   padding: 12px 20px;
   font-size: 14px;
-  color: rgba($fontColor, .8);
+  color: rgba($fontColor, 0.8);
   cursor: pointer;
-  transition: background .25s ease-in-out;
-  &__name{
+  transition: background 0.25s ease-in-out;
+  &__name {
     flex: 1 1 auto;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     padding-right: 15px;
   }
-  &__count{
+  &__count {
     margin-left: auto;
   }
-  &:hover, &.is-current{
-    background: rgba(#190F44, .1);
+  &:hover,
+  &.is-current {
+    background: rgba(#190f44, 0.1);
   }
 }
 </style>
