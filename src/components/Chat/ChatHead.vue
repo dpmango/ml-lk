@@ -86,6 +86,12 @@ export default {
   mounted() {
     this.fetchApi();
   },
+  props: {
+    enabled: {
+      isEnabled: Boolean,
+      reason: String,
+    },
+  },
   data() {
     return {
       isPhotosOpen: false,
@@ -136,6 +142,10 @@ export default {
         .then(res => {
           console.log('res', res.data[0]);
           this.data = res.data[0];
+          this.$emit('update:enabled', {
+            isEnabled: res.data[0].Chat_enable,
+            reason: res.data[0].Chat_reason,
+          });
         })
         .catch(err => {
           console.log(err);

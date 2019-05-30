@@ -1,7 +1,7 @@
 <template>
   <div class="chat">
     <div class="chat__head">
-      <chat-head/>
+      <chat-head :enabled.sync="enabled"/>
     </div>
     <div class="chat__messenger">
       <div class="messenger">
@@ -9,7 +9,7 @@
           <message/>
         </div>
         <div class="messenger__add-message">
-          <add-message @addMessage="sendMessage"/>
+          <add-message :enabled="enabled" @addMessage="sendMessage"/>
         </div>
       </div>
     </div>
@@ -27,6 +27,14 @@ export default {
     ChatHead,
     Message,
     AddMessage,
+  },
+  data() {
+    return {
+      enabled: {
+        isEnabled: true,
+        reason: '',
+      },
+    };
   },
   mounted() {
     this.$connect(); // ws

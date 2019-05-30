@@ -1,63 +1,69 @@
 <template>
   <div class="add-message">
-    <div class="add-message__textarea">
-      <textarea
-        name="add-message"
-        id="add-message"
-        rows="5"
-        v-model="textarea"
-        @keydown="handleKeyDown"
-      ></textarea>
-    </div>
-    <div class="add-message__actions">
-      <div class="add-message__enter-to-submit">
-        <ui-checkbox
-          v-model="enterForSubmit"
-          name="enterForSubmit"
-          label="Нажать Enter для отправки"
-        />
+    <!-- temporary enable -->
+    <template v-if="true">
+      <div class="add-message__textarea">
+        <textarea
+          name="add-message"
+          id="add-message"
+          rows="5"
+          v-model="textarea"
+          @keydown="handleKeyDown"
+        ></textarea>
       </div>
-      <div class="add-message__cta add-message__cta--image">
-        <svg-icon name="image" width="18" height="18"/>
-      </div>
-      <div class="add-message__cta add-message__cta--smile">
-        <emoji-picker @emoji="appendEmoji" :search="search">
-          <div
-            class="emoji-invoker"
-            slot="emoji-invoker"
-            slot-scope="{ events: { click: clickEvent } }"
-            @click.stop="clickEvent"
-          >
-            <svg-icon name="smile" width="21" height="21"/>
-          </div>
-          <div slot="emoji-picker" slot-scope="{ emojis, insert }">
-            <div class="emoji-picker">
-              <div class="emoji-picker__search">
-                <input type="text" v-model="search" v-focus>
-              </div>
-              <div>
-                <div v-for="(emojiGroup, category) in emojis" :key="category">
-                  <h5>{{ category }}</h5>
-                  <div class="emojis">
-                    <span
-                      v-for="(emoji, emojiName) in emojiGroup"
-                      :key="emojiName"
-                      @click="insert(emoji)"
-                      :title="emojiName"
-                    >{{ emoji }}</span>
+      <div class="add-message__actions">
+        <div class="add-message__enter-to-submit">
+          <ui-checkbox
+            v-model="enterForSubmit"
+            name="enterForSubmit"
+            label="Нажать Enter для отправки"
+          />
+        </div>
+        <div class="add-message__cta add-message__cta--image">
+          <svg-icon name="image" width="18" height="18"/>
+        </div>
+        <div class="add-message__cta add-message__cta--smile">
+          <emoji-picker @emoji="appendEmoji" :search="search">
+            <div
+              class="emoji-invoker"
+              slot="emoji-invoker"
+              slot-scope="{ events: { click: clickEvent } }"
+              @click.stop="clickEvent"
+            >
+              <svg-icon name="smile" width="21" height="21"/>
+            </div>
+            <div slot="emoji-picker" slot-scope="{ emojis, insert }">
+              <div class="emoji-picker">
+                <div class="emoji-picker__search">
+                  <input type="text" v-model="search" v-focus>
+                </div>
+                <div>
+                  <div v-for="(emojiGroup, category) in emojis" :key="category">
+                    <h5>{{ category }}</h5>
+                    <div class="emojis">
+                      <span
+                        v-for="(emoji, emojiName) in emojiGroup"
+                        :key="emojiName"
+                        @click="insert(emoji)"
+                        :title="emojiName"
+                      >{{ emoji }}</span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </emoji-picker>
-      </div>
+          </emoji-picker>
+        </div>
 
-      <button class="add-message__send-btn" type="button" @click="handleSubmit">
-        <span>Отправить</span>
-        <svg-icon name="send" width="16" height="16"/>
-      </button>
-    </div>
+        <button class="add-message__send-btn" type="button" @click="handleSubmit">
+          <span>Отправить</span>
+          <svg-icon name="send" width="16" height="16"/>
+        </button>
+      </div>
+    </template>
+    <template v-if="!enabled.isEnabled">
+      <div class="add-message__disabled">{{enabled.reason}}</div>
+    </template>
   </div>
 </template>
 
@@ -72,6 +78,12 @@ export default {
     SvgIcon,
     UiCheckbox,
     EmojiPicker,
+  },
+  props: {
+    enabled: {
+      isEnabled: Boolean,
+      reason: String,
+    },
   },
   data() {
     return {
@@ -206,6 +218,10 @@ export default {
         color: white;
       }
     }
+  }
+  &__disabled {
+    font-size: 14px;
+    color: rgba($fontColor, 0.6);
   }
 }
 
