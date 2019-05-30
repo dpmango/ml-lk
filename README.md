@@ -207,7 +207,7 @@ DELETE https://api-m.marmeladies.com/v1/contacts/123456
 ### + Прочитать
 
 cors
-DELETE https://api-m.marmeladies.com/v1/contacts/123456/read
+GET https://api-m.marmeladies.com/v1/contacts/123456/read
 где 123456 – ID контакта
 Возвращает
 [{"success":true}]
@@ -217,7 +217,7 @@ DELETE https://api-m.marmeladies.com/v1/contacts/123456/read
 ### + Отметить
 
 cors
-DELETE https://api-m.marmeladies.com/v1/contacts/123456/mark
+GET https://api-m.marmeladies.com/v1/contacts/123456/mark
 где 123456 – ID контакта
 Возвращает
 [{"success":true}]
@@ -227,7 +227,7 @@ DELETE https://api-m.marmeladies.com/v1/contacts/123456/mark
 ### + Снять отметку
 
 cors
-DELETE https://api-m.marmeladies.com/v1/contacts/123456/unmark
+GET https://api-m.marmeladies.com/v1/contacts/123456/unmark
 где 123456 – ID контакта
 Возвращает
 [{"success":true}]
@@ -261,9 +261,7 @@ DELETE https://api-m.marmeladies.com/v1/notifications/123456
 
 ### + Прочитать
 
-cors error
-
-DELETE https://api-m.marmeladies.com/v1/notifications/123456/read
+GET https://api-m.marmeladies.com/v1/notifications/123456/read
 где 123456 – ID уведомления
 Возвращает
 [{"success":true}]
@@ -272,8 +270,7 @@ DELETE https://api-m.marmeladies.com/v1/notifications/123456/read
 
 ### + Отметить
 
-cors error
-DELETE https://api-m.marmeladies.com/v1/notifications/123456/mark
+GET https://api-m.marmeladies.com/v1/notifications/123456/mark
 где 123456 – ID уведомления
 Возвращает
 [{"success":true}]
@@ -282,8 +279,7 @@ DELETE https://api-m.marmeladies.com/v1/notifications/123456/mark
 
 ### + Снять отметку
 
-cors error
-DELETE https://api-m.marmeladies.com/v1/notifications/123456/unmark
+GET https://api-m.marmeladies.com/v1/notifications/123456/unmark
 где 123456 – ID уведомления
 Возвращает
 [{"success":true}]

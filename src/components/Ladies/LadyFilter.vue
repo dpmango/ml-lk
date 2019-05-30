@@ -2,8 +2,17 @@
   <div v-click-outside="hideDropdown" class="lady-filter" :class="{'is-active' : isOpened}">
     <div class="lady-filter__toggler" @click="toggleDropdown">Выбрать профиль</div>
     <div class="lady-filter__dropdown">
+      <div class="lady-filter__cta">
+        <a href="#" @click="handleSelectAllClick">Выбрать все</a>
+      </div>
       <div class="lady-filter__list">
-        <div class="lady-filter__lady lady-card" v-for="(lady, idx) in list" :key="idx">
+        <div
+          class="lady-filter__lady lady-card"
+          :class="{'is-selected' : selected.indexOf(lady.ID) !== -1}"
+          v-for="(lady, idx) in list"
+          :key="idx"
+          @click="handleLadyClick(lady.ID)"
+        >
           <Avatar :Thumbnail="lady.Thumbnail" :RealName="lady.RealName" :Online="lady.Online"/>
           <div class="lady-card__content">
             <div class="lady-card__name">{{lady.RealName}}</div>
@@ -95,12 +104,22 @@ export default {
       ],
     };
   },
+  props: {
+    selected: Array,
+  },
   methods: {
     toggleDropdown() {
       this.isOpened = !this.isOpened;
     },
     hideDropdown() {
       this.isOpened = false;
+    },
+    handleLadyClick(id) {
+      this.$emit('onSelect', id);
+    },
+    handleSelectAllClick() {
+      const allIDs = this.list.map(x => x.ID);
+      this.$emit('onSelect', allIDs);
     },
   },
   directives: {
@@ -164,6 +183,19 @@ export default {
   &__lady {
     // some
   }
+  &__cta {
+    padding: 8px 15px;
+    a {
+      font-size: 12px;
+      display: inline-block;
+      cursor: pointer;
+      border-bottom: 1px solid currentColor;
+      transition: border 0.25s ease;
+      &:hover {
+        border-color: transparent;
+      }
+    }
+  }
   &.is-active {
     .lady-filter {
       &__dropdown {
@@ -196,8 +228,12 @@ export default {
     font-size: 11px;
     color: $fontColor;
   }
-  &:hover {
+  &:hover,
+  &.is-selected {
     background: $colorBg;
+  }
+  &.is-selected:hover {
+    background: rgba($colorRed, 0.1);
   }
 }
 </style>

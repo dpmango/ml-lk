@@ -33,7 +33,7 @@
           </li>
         </ul>
       </UiSpoiler>
-      <LadyFilter/>
+      <LadyFilter :selected="filter.ladies" @onSelect="ladyFilterSelected"/>
     </form>
     <div class="table">
       <div class="table__content" ref="list">
@@ -72,6 +72,7 @@ const defaultFilterState = {
   marked: false,
   new: false,
   maleOnline: false,
+  ladies: [],
 };
 
 export default {
@@ -118,6 +119,7 @@ export default {
     },
     filterToParams() {
       let filterString = '';
+      let ladiesFilter = '';
       if (this.filter.marked) {
         filterString = '1';
       }
@@ -128,8 +130,13 @@ export default {
         filterString = filterString.length > 0 ? `${filterString},3` : '3';
       }
 
+      if (this.filter.ladies.length > 0) {
+        ladiesFilter = this.filter.ladies.join(',');
+      }
+
       return {
         filter: filterString,
+        ladies: ladiesFilter,
       };
     },
     fetchWithFilter() {
@@ -138,7 +145,6 @@ export default {
           params: this.filterToParams(),
         })
         .then(res => {
-          console.log('res', res.data);
           this.errorMessage = '';
           this.$store.commit('setNotifications', res.data);
         })
@@ -148,6 +154,20 @@ export default {
     },
     clearFilter() {
       this.filter = cloneDeep(defaultFilterState);
+      this.fetchWithFilter();
+    },
+    ladyFilterSelected(id) {
+      if (Array.isArray(id)) {
+        this.filter.ladies = id;
+      } else {
+        const { ladies } = this.filter;
+        if (ladies.indexOf(id) === -1) {
+          this.filter.ladies.push(id);
+        } else {
+          this.filter.ladies = ladies.filter(x => x !== id);
+        }
+      }
+
       this.fetchWithFilter();
     },
     handleListScroll() {

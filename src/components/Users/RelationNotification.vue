@@ -157,7 +157,6 @@ export default {
 };
 </script>
 
-
 <style lang="scss" scoped>
 @import '@/theme/utils.scss';
 
