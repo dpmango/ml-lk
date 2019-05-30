@@ -135,8 +135,10 @@ export default {
       api
         .get('chats/info', {
           params: {
-            man: 1156964,
-            lady: 1543646,
+            // man: 1156964,
+            // lady: 1543646,
+            man: 1714654,
+            lady: 1552269,
           },
         })
         .then(res => {
