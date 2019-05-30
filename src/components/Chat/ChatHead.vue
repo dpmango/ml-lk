@@ -91,6 +91,10 @@ export default {
       isEnabled: Boolean,
       reason: String,
     },
+    params: {
+      man: Number,
+      lady: Number,
+    },
   },
   data() {
     return {
@@ -135,10 +139,8 @@ export default {
       api
         .get('chats/info', {
           params: {
-            // man: 1156964,
-            // lady: 1543646,
-            man: 1714654,
-            lady: 1552269,
+            man: this.params.man,
+            lady: this.params.lady,
           },
         })
         .then(res => {

@@ -1,7 +1,7 @@
 <template>
   <div class="chat">
     <div class="chat__head">
-      <chat-head :enabled.sync="enabled"/>
+      <chat-head :enabled.sync="enabled" :params="params"/>
     </div>
     <div class="chat__messenger">
       <div class="messenger">
@@ -9,7 +9,7 @@
           <message v-for="(message, idx) in chatList" :key="idx" :data="message" :selfID="selfID"/>
         </div>
         <div class="messenger__add-message">
-          <add-message :enabled="enabled" @addMessage="sendMessage"/>
+          <add-message :enabled="enabled" :params="params" @addMessage="sendMessage"/>
         </div>
       </div>
     </div>
@@ -35,6 +35,10 @@ export default {
         isEnabled: true,
         reason: '',
       },
+      params: {
+        man: 1714654,
+        lady: 1552269,
+      },
       selfID: 1552269,
       chatList: [],
     };
@@ -47,16 +51,15 @@ export default {
   },
   beforeDestroy() {
     this.$disconnect();
+    this.finishChat();
   },
   methods: {
     fetchApi() {
       api
         .get('chats', {
           params: {
-            // man: 1156964,
-            // lady: 1543646,
-            man: 1714654,
-            lady: 1552269,
+            man: this.params.man,
+            lady: this.params.lady,
           },
         })
         .then(res => {
@@ -68,8 +71,41 @@ export default {
         });
     },
     sendMessage(val) {
-      console.log(val);
+      api
+        .post('chats', {
+          man: this.params.man,
+          lady: this.params.lady,
+          text: val,
+        })
+        .then(res => {
+          const apiData = res.data[0];
+          if (apiData.success) {
+            console.log('res post /chats', apiData);
+          } else {
+            this.showNotification({ message: apiData.message });
+          }
+        })
+        .catch(err => {
+          this.showNotification({ message: err });
+        });
       // this.$socket.sendObj({msg: 'test'})
+    },
+    finishChat() {
+      api
+        .post('chats/finish', {
+          man: this.params.man,
+          lady: this.params.lady,
+        })
+        .then(res => {})
+        .catch(err => {
+          console.log(err);
+        });
+    },
+  },
+  notifications: {
+    showNotification: {
+      title: 'Ошибка',
+      type: 'error',
     },
   },
 };

@@ -327,7 +327,10 @@ text – текст
 или
 [{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
 
-### Написать сообщение в чат
+### - Написать сообщение в чат
+
+500 error
+message":"Undefined index: chat_attachments_1","code":8
 
 POST https://api-m.marmeladies.com/v1/chats
 Принимает
@@ -360,7 +363,7 @@ man – ID мужчины
 lady – ID девушки
 Фильтрация на фронтенде (SendDate/ ReadDate)
 
-### Завершить чат
+### + Завершить чат
 
 GET https://api-m.marmeladies.com/v1/chats/finish
 Принимает
@@ -369,7 +372,7 @@ lady – ID девушки
 Возвращает
 [{"success":true}]
 
-### Отправить typing_notification (не чаще чем раз в 10 сек)
+### + Отправить typing_notification (не чаще чем раз в 10 сек)
 
 GET https://api-m.marmeladies.com/v1/chats/typing
 Принимает

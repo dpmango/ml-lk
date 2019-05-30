@@ -8,6 +8,7 @@
           id="add-message"
           rows="5"
           v-model="textarea"
+          @input="typingDebounce"
           @keydown="handleKeyDown"
         ></textarea>
       </div>
@@ -68,9 +69,11 @@
 </template>
 
 <script>
+import debounce from 'lodash/debounce';
 import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import UiCheckbox from '@/components/Shared/UI/Checkbox.vue';
 import EmojiPicker from 'vue-emoji-picker';
+import api from '@/helpers/Api';
 
 export default {
   name: 'AddMessage',
@@ -84,6 +87,10 @@ export default {
       isEnabled: Boolean,
       reason: String,
     },
+    params: {
+      man: Number,
+      lady: Number,
+    },
   },
   data() {
     return {
@@ -92,8 +99,12 @@ export default {
       search: '',
     };
   },
+  created() {
+    this.typingDebounce = debounce(this.typingNotification, 10000);
+  },
   methods: {
     handleKeyDown(e) {
+      this.typingDebounce();
       if (e.keyCode === 13 && this.enterForSubmit) {
         e.preventDefault();
 
@@ -106,6 +117,32 @@ export default {
     },
     appendEmoji(emoji) {
       this.textarea += emoji;
+    },
+    typingNotification() {
+      api
+        .get('chats/typing', {
+          params: {
+            man: this.params.man,
+            lady: this.params.lady,
+          },
+        })
+        .then(res => {
+          const apiData = res.data[0];
+          if (apiData.success) {
+            console.log('res get /chats/typing', apiData);
+          } else {
+            this.showNotification({ message: apiData.message });
+          }
+        })
+        .catch(err => {
+          this.showNotification({ message: err });
+        });
+    },
+  },
+  notifications: {
+    showNotification: {
+      title: 'Ошибка',
+      type: 'error',
     },
   },
   directives: {
