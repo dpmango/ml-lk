@@ -116,7 +116,7 @@ export default {
     },
     readContact() {
       this.pingApi({
-        apiAction: 'post',
+        apiAction: 'get',
         urlSuffix: '/read',
         commitAction: 'readContact',
         errTitle: 'Ошибка при прочтении',
