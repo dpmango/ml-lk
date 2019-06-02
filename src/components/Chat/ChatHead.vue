@@ -5,12 +5,14 @@
         <div class="chat-head__user user-head">
           <Avatar
             :size="44"
-            :Thumbnail="data.Man.Thumbnail"
-            :RealName="data.Man.RealName"
-            :Online="data.Man.Online"
+            :Thumbnail="storeData.Man.Thumbnail"
+            :RealName="storeData.Man.RealName"
+            :Online="storeData.Man.Online"
           />
           <div class="user-head__content">
-            <div class="user-head__name">{{data.Man.RealName}}, {{getAge(data.Man.DateOfBirth)}}</div>
+            <div
+              class="user-head__name"
+            >{{storeData.Man.RealName}}, {{getAge(storeData.Man.DateOfBirth)}}</div>
             <div class="user-head__actions">
               <div class="user-head__action user-head__action--heart">
                 <svg-icon name="heart" width="14" height="13"/>
@@ -18,7 +20,7 @@
               <div class="user-head__action user-head__action--block">
                 <svg-icon name="block" width="13" height="13"/>
               </div>
-              <head-actions :Favorite="data.Favorite" :Blocked="data.Blocked"/>
+              <head-actions :Favorite="storeData.Favorite" :Blocked="storeData.Blocked"/>
             </div>
           </div>
         </div>
@@ -27,12 +29,14 @@
         <div class="chat-head__user user-head">
           <Avatar
             :size="44"
-            :Thumbnail="data.Lady.Thumbnail"
-            :RealName="data.Lady.RealName"
-            :Online="data.Lady.Online"
+            :Thumbnail="storeData.Lady.Thumbnail"
+            :RealName="storeData.Lady.RealName"
+            :Online="storeData.Lady.Online"
           />
           <div class="user-head__content">
-            <div class="user-head__name">{{data.Lady.RealName}}, {{getAge(data.Lady.DateOfBirth)}}</div>
+            <div
+              class="user-head__name"
+            >{{storeData.Lady.RealName}}, {{getAge(storeData.Lady.DateOfBirth)}}</div>
             <div class="user-head__actions">TODO - Фото</div>
           </div>
         </div>
@@ -41,15 +45,15 @@
         <div class="chat-head__info">
           <div class="chat-head__info-row">
             <span>Письма:</span>
-            <span>{{data.Msg_stats}}</span>
+            <span>{{storeData.Msg_stats}}</span>
           </div>
           <div class="chat-head__info-row">
             <span>Чаты:</span>
-            <span>{{data.Chat_stats}}</span>
+            <span>{{storeData.Chat_stats}}</span>
           </div>
           <div class="chat-head__info-row">
             <span>Доставки:</span>
-            <span>{{data.Dlv_stats}}</span>
+            <span>{{storeData.Dlv_stats}}</span>
           </div>
         </div>
       </div>
@@ -74,7 +78,6 @@ import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import Avatar from '@/components/Users/Avatar.vue';
 import HeadActions from '@/components/Chat/HeadActions.vue';
 import { dateToAge } from '@/helpers/Dates';
-import api from '@/helpers/Api';
 
 export default {
   name: 'ChatHead',
@@ -83,94 +86,27 @@ export default {
     Avatar,
     HeadActions,
   },
-  mounted() {
-    this.fetchApi();
-  },
-  props: {
-    enabled: {
-      isEnabled: Boolean,
-      reason: String,
-    },
-    params: {
-      man: Number,
-      lady: Number,
-    },
-  },
+  mounted() {},
+  props: {},
   data() {
     return {
       isPhotosOpen: false,
-      data: {
-        Man: {
-          ID: '',
-          RealName: '',
-          DateOfBirth: '',
-          Status: '',
-          Online: '',
-          Thumbnail: '',
-        },
-        Lady: {
-          ID: '',
-          RealName: '',
-          DateOfBirth: '',
-          Status: '',
-          Online: '',
-          Thumbnail: '',
-        },
-        Favorite: false,
-        Blocked: false,
-        Chat_enable: false,
-        Chat_reason: '',
-        Msg_stats: '',
-        Chat_stats: '',
-        Dlv_stats: '',
-        // Comments_man: '',
-        // Comments_lady: '',
-        // Comments_pair: '',
-      },
     };
   },
   computed: {
-    // propParams() {
-    //   return this.params;
-    // },
-    // getAge(DateOfBirth) {
-    //   return dateToAge(DateOfBirth);
-    // },
+    currentUsers() {
+      return this.$store.state.chat.currentUsers;
+    },
+    storeData() {
+      return this.$store.getters.selectInfoByUsers(this.currentUsers);
+    },
   },
   methods: {
-    fetchApi() {
-      if (!this.params.man || !this.params.lady) {
-        console.log('no store users defined');
-        return;
-      }
-      api
-        .get('chats/info', {
-          params: this.params,
-        })
-        .then(res => {
-          console.log('res', res.data[0]);
-          this.data = res.data[0];
-          this.$emit('update:enabled', {
-            isEnabled: res.data[0].Chat_enable,
-            reason: res.data[0].Chat_reason,
-          });
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
     getAge(DateOfBirth) {
       return dateToAge(DateOfBirth);
     },
     togglePhotosDropdown() {
       this.isPhotosOpen = !this.isPhotosOpen;
-    },
-  },
-  watch: {
-    params(Old, New) {
-      if (Old.man !== New.man || Old.lady !== New.lady) {
-        this.fetchApi();
-      }
     },
   },
 };

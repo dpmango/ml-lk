@@ -62,8 +62,8 @@
         </button>
       </div>
     </template>
-    <template v-if="!enabled.isEnabled">
-      <div class="add-message__disabled">{{enabled.reason}}</div>
+    <template v-if="!storeData.Chat_enable">
+      <div class="add-message__disabled">{{storeData.Chat_reason}}</div>
     </template>
   </div>
 </template>
@@ -82,16 +82,7 @@ export default {
     UiCheckbox,
     EmojiPicker,
   },
-  props: {
-    enabled: {
-      isEnabled: Boolean,
-      reason: String,
-    },
-    params: {
-      man: Number,
-      lady: Number,
-    },
-  },
+  props: {},
   data() {
     return {
       textarea: '',
@@ -101,6 +92,14 @@ export default {
   },
   created() {
     this.typingDebounce = debounce(this.typingNotification, 10000, { leading: true });
+  },
+  computed: {
+    currentUsers() {
+      return this.$store.state.chat.currentUsers;
+    },
+    storeData() {
+      return this.$store.getters.selectInfoByUsers(this.currentUsers);
+    },
   },
   methods: {
     handleKeyDown(e) {
@@ -119,30 +118,7 @@ export default {
       this.textarea += emoji;
     },
     typingNotification() {
-      api
-        .get('chats/typing', {
-          params: {
-            man: this.params.man,
-            lady: this.params.lady,
-          },
-        })
-        .then(res => {
-          const apiData = res.data[0];
-          if (apiData.success) {
-            console.log('res get /chats/typing', apiData);
-          } else {
-            this.showNotification({ message: apiData.message });
-          }
-        })
-        .catch(err => {
-          this.showNotification({ message: err });
-        });
-    },
-  },
-  notifications: {
-    showNotification: {
-      title: 'Ошибка',
-      type: 'error',
+      this.$emit('sendTypingNotification');
     },
   },
   directives: {

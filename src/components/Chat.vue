@@ -1,7 +1,7 @@
 <template>
-  <div class="chat" v-if="storeUsers.man && storeUsers.lady">
+  <div class="chat" v-if="haveCurrentUsers">
     <div class="chat__head">
-      <chat-head :enabled.sync="enabled" :params="storeUsers"/>
+      <chat-head/>
     </div>
     <div class="chat__messenger">
       <div class="messenger">
@@ -9,7 +9,7 @@
           <message v-for="(message, idx) in chatList" :key="idx" :data="message" :selfID="selfID"/>
         </div>
         <div class="messenger__add-message">
-          <add-message :enabled="enabled" :params="storeUsers" @addMessage="sendMessage"/>
+          <add-message @addMessage="sendMessage" @sendTypingNotification="typingNotification"/>
         </div>
       </div>
     </div>
@@ -31,58 +31,79 @@ export default {
   },
   data() {
     return {
-      enabled: {
-        isEnabled: true,
-        reason: '',
-      },
       selfID: 1552269,
-      chatList: [],
     };
   },
   mounted() {
-    this.$connect(); // ws
-    this.$options.sockets.onopen = data => console.log('onopen', data);
-    this.$options.sockets.onmessage = data => console.log('onmessage', data);
-    this.fetchApi();
+    // this.$connect(); // ws
+    // this.$options.sockets.onopen = data => console.log('onopen', data);
+    // this.$options.sockets.onmessage = data => console.log('onmessage', data);
+    this.fetchChats();
+    this.fetchChatInfo();
   },
   beforeDestroy() {
-    this.$disconnect();
+    // this.$disconnect();
     this.finishChat();
   },
   computed: {
-    storeUsers() {
-      return this.$store.state.chat.users;
+    currentUsers() {
+      return this.$store.state.chat.currentUsers;
+    },
+    chatList() {
+      return this.$store.getters.selectChatByUsers(this.currentUsers);
+    },
+    haveCurrentUsers() {
+      return this.$store.getters.haveCurrentUsers;
     },
   },
   methods: {
-    fetchApi() {
-      if (!this.storeUsers.man || !this.storeUsers.lady) {
-        console.log('no store users defined');
+    fetchChats() {
+      if (!this.haveCurrentUsers) {
         return;
       }
       api
         .get('chats', {
-          params: this.storeUsers,
+          params: this.currentUsers,
         })
         .then(res => {
-          console.log('res /chats', res.data);
-          this.chatList = res.data;
+          this.$store.commit('SET_CHAT_LIST', {
+            users: this.currentUsers,
+            list: res.data,
+          });
         })
         .catch(err => {
-          console.log(err);
+          this.showNotification({ message: err });
+        });
+    },
+    fetchChatInfo() {
+      if (!this.haveCurrentUsers) {
+        return;
+      }
+      api
+        .get('chats/info', {
+          params: this.currentUsers,
+        })
+        .then(res => {
+          this.$store.commit('SET_CHAT_INFO', {
+            users: this.currentUsers,
+            data: res.data[0],
+          });
+        })
+        .catch(err => {
+          this.showNotification({ message: err });
         });
     },
     sendMessage(val) {
       api
         .post('chats', {
-          man: this.storeUsers.man,
-          lady: this.storeUsers.lady,
+          man: this.currentUsers.man,
+          lady: this.currentUsers.lady,
           text: val,
         })
         .then(res => {
           const apiData = res.data[0];
+          console.log('res post /chats', apiData);
           if (apiData.success) {
-            console.log('res post /chats', apiData);
           } else {
             this.showNotification({ message: apiData.message });
           }
@@ -92,34 +113,38 @@ export default {
         });
       // this.$socket.sendObj({msg: 'test'})
     },
-    finishChat() {
+    typingNotification() {
       api
-        .post('chats/finish', {
-          man: this.storeUsers.man,
-          lady: this.storeUsers.lady,
+        .get('chats/typing', {
+          params: this.currentUsers,
         })
-        .then(res => {})
+        .then(res => {
+          const apiData = res.data[0];
+          if (apiData.success) {
+            console.log('res get /chats/typing', apiData);
+          } else {
+            this.showNotification({ message: apiData.message });
+          }
+        })
         .catch(err => {
-          console.log(err);
+          this.showNotification({ message: err });
         });
     },
-    // watchStore() {
-    //   this.$store.watch(
-    //     (state, getters) => state.chat.users,
-    //     (newValue, oldValue) => {
-    //       // // Do whatever makes sense now
-    //       if (oldValue !== newValue) {
-    //         this.params = newValue;
-    //         this.fetchApi();
-    //       }
-    //     },
-    //   );
-    // },
+    finishChat() {
+      api
+        .post('chats/finish', this.currentUsers)
+        .then(res => {})
+        .catch(err => {
+          this.showNotification({ message: err });
+        });
+    },
   },
   watch: {
-    storeUsers(Old, New) {
+    currentUsers(Old, New) {
+      // when current users change - request new data from API
       if (Old.man !== New.man || Old.lady !== New.lady) {
-        this.fetchApi();
+        this.fetchChats();
+        this.fetchChatInfo();
       }
     },
   },
