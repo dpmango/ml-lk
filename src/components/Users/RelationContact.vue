@@ -1,5 +1,10 @@
 <template>
-  <div class="relation" :data-id="data.ID" @click="readContact">
+  <div
+    class="relation"
+    :class="{'is-chat-active' : isChatActive }"
+    :data-id="data.ID"
+    @click="readContact"
+  >
     <div class="relation__wrapper">
       <div class="relation__user relation__user--left">
         <user-relation
@@ -92,6 +97,11 @@ export default {
     },
     timeStamp() {
       return timestampToTime(this.data.LastMessageDate);
+    },
+    isChatActive() {
+      const manMathch = this.$store.state.chat.users.man === this.data.Man.ID;
+      const ladyMatch = this.$store.state.chat.users.lady === this.data.Lady.ID;
+      return manMathch && ladyMatch;
     },
   },
   methods: {
@@ -252,6 +262,9 @@ export default {
       opacity: 1;
       pointer-events: all;
     }
+  }
+  &.is-chat-active {
+    background: $colorBg;
   }
 }
 </style>
