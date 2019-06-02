@@ -21,6 +21,7 @@ export default {
     },
     isRed: Boolean,
     isBig: Boolean,
+    isNullable: Boolean,
   },
   computed: {
     isActive() {
@@ -32,9 +33,16 @@ export default {
   },
   methods: {
     handleChange() {
-      console.log(this.cbValue);
       // TODO - allow reseting by sending null there?
-      this.$emit('input', this.cbValue);
+      if (this.isNullable) {
+        if (this.value === this.cbValue) {
+          this.$emit('input', null);
+        } else {
+          this.$emit('input', this.cbValue);
+        }
+      } else {
+        this.$emit('input', this.cbValue);
+      }
     },
   },
 };
@@ -61,8 +69,9 @@ export default {
     padding-left: 28px;
     min-height: 30px;
     font-size: 14px;
-    color: rgba($fontColor, 0.8);
+    color: rgba($fontColor, 0.6);
     cursor: pointer;
+    transition: color 0.25s ease;
     &::after {
       display: block;
       content: ' ';
@@ -72,7 +81,8 @@ export default {
       width: 14px;
       height: 14px;
       transform: translateY(-50%);
-      border: 2px solid $colorOrange;
+      border: 2px solid transparent;
+      border-color: rgba(#010101, 0.54);
       border-radius: 50%;
       transition: border 0.25s ease-in-out;
     }
@@ -80,7 +90,7 @@ export default {
       display: inline-block;
       content: '';
       position: absolute;
-      left: 4px;
+      left: 5px;
       top: 50%;
       width: 8px;
       height: 8px;
@@ -94,11 +104,17 @@ export default {
 
   &.is-red {
     label {
-      &::after {
-        border-color: #ff5722;
-      }
+      color: rgba($fontColor, 0.8);
       &::before {
         background: #ff5722;
+      }
+    }
+    &.is-active {
+      label {
+        color: rgba($fontColor, 0.8);
+        &::after {
+          border-color: #ff5722;
+        }
       }
     }
   }
@@ -117,6 +133,10 @@ export default {
   }
   &.is-active {
     label {
+      color: rgba($fontColor, 1);
+      &::after {
+        border-color: $colorOrange;
+      }
       &::before {
         opacity: 1;
       }

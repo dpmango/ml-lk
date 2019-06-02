@@ -2,6 +2,7 @@
   <div class="chat" v-if="haveCurrentUsers">
     <div class="chat__head">
       <chat-head/>
+      <chat-filter @update="onFilterUpdate"/>
     </div>
     <div class="chat__messenger">
       <div class="messenger">
@@ -19,6 +20,7 @@
 
 <script>
 import ChatHead from '@/components/Chat/ChatHead.vue';
+import ChatFilter from '@/components/Chat/ChatFilter.vue';
 import Message from '@/components/Chat/Message.vue';
 import AddMessage from '@/components/Chat/AddMessage.vue';
 import ModalPhotoListLady from '@/components/Chat/PhotoListLady.vue';
@@ -28,6 +30,7 @@ export default {
   name: 'Chat',
   components: {
     ChatHead,
+    ChatFilter,
     Message,
     AddMessage,
     ModalPhotoListLady,
@@ -60,13 +63,19 @@ export default {
     },
   },
   methods: {
-    fetchChats() {
+    fetchChats(filterParams) {
       if (!this.haveCurrentUsers) {
         return;
       }
+      let queryObj = this.currentUsers;
+
+      if (filterParams) {
+        queryObj = { ...queryObj, ...filterParams };
+      }
+
       api
         .get('chats', {
-          params: this.currentUsers,
+          params: queryObj,
         })
         .then(res => {
           this.$store.commit('SET_CHAT_LIST', {
@@ -140,6 +149,9 @@ export default {
         .catch(err => {
           this.showNotification({ message: err });
         });
+    },
+    onFilterUpdate(filter) {
+      this.fetchChats(filter);
     },
   },
   watch: {

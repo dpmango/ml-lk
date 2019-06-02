@@ -17,8 +17,8 @@ const findByUsers = (arr, users) => {
 const Chat = {
   state: {
     currentUsers: {
-      man: undefined,
-      lady: undefined,
+      man: 1714654,
+      lady: 1552269,
     },
     chats: [],
     info: [],
