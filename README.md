@@ -206,7 +206,6 @@ DELETE https://api-m.marmeladies.com/v1/contacts/123456
 
 ### + Прочитать
 
-cors
 GET https://api-m.marmeladies.com/v1/contacts/123456/read
 где 123456 – ID контакта
 Возвращает
@@ -216,7 +215,6 @@ GET https://api-m.marmeladies.com/v1/contacts/123456/read
 
 ### + Отметить
 
-cors
 GET https://api-m.marmeladies.com/v1/contacts/123456/mark
 где 123456 – ID контакта
 Возвращает
@@ -226,7 +224,6 @@ GET https://api-m.marmeladies.com/v1/contacts/123456/mark
 
 ### + Снять отметку
 
-cors
 GET https://api-m.marmeladies.com/v1/contacts/123456/unmark
 где 123456 – ID контакта
 Возвращает

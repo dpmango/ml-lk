@@ -130,18 +130,22 @@ export default {
     };
   },
   computed: {
+    // propParams() {
+    //   return this.params;
+    // },
     // getAge(DateOfBirth) {
     //   return dateToAge(DateOfBirth);
     // },
   },
   methods: {
     fetchApi() {
+      if (!this.params.man || !this.params.lady) {
+        console.log('no store users defined');
+        return;
+      }
       api
         .get('chats/info', {
-          params: {
-            man: this.params.man,
-            lady: this.params.lady,
-          },
+          params: this.params,
         })
         .then(res => {
           console.log('res', res.data[0]);
@@ -160,6 +164,13 @@ export default {
     },
     togglePhotosDropdown() {
       this.isPhotosOpen = !this.isPhotosOpen;
+    },
+  },
+  watch: {
+    params(Old, New) {
+      if (Old.man !== New.man || Old.lady !== New.lady) {
+        this.fetchApi();
+      }
     },
   },
 };

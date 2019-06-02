@@ -100,7 +100,7 @@ export default {
     };
   },
   created() {
-    this.typingDebounce = debounce(this.typingNotification, 10000);
+    this.typingDebounce = debounce(this.typingNotification, 10000, { leading: true });
   },
   methods: {
     handleKeyDown(e) {

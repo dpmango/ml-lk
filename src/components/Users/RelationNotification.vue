@@ -110,6 +110,10 @@ export default {
       });
     },
     readNotification() {
+      this.$store.commit('setChatUsers', {
+        man: this.data.Man.ID,
+        lady: this.data.Lady.ID,
+      });
       this.pingApi({
         apiAction: 'get',
         urlSuffix: '/read',

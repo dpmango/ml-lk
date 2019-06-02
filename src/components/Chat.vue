@@ -1,7 +1,7 @@
 <template>
-  <div class="chat">
+  <div class="chat" v-if="storeUsers.man && storeUsers.lady">
     <div class="chat__head">
-      <chat-head :enabled.sync="enabled" :params="params"/>
+      <chat-head :enabled.sync="enabled" :params="storeUsers"/>
     </div>
     <div class="chat__messenger">
       <div class="messenger">
@@ -9,11 +9,11 @@
           <message v-for="(message, idx) in chatList" :key="idx" :data="message" :selfID="selfID"/>
         </div>
         <div class="messenger__add-message">
-          <add-message :enabled="enabled" :params="params" @addMessage="sendMessage"/>
+          <add-message :enabled="enabled" :params="storeUsers" @addMessage="sendMessage"/>
         </div>
       </div>
     </div>
-  </div> 
+  </div>
 </template>
 
 <script>
@@ -35,10 +35,6 @@ export default {
         isEnabled: true,
         reason: '',
       },
-      params: {
-        man: 1714654,
-        lady: 1552269,
-      },
       selfID: 1552269,
       chatList: [],
     };
@@ -53,14 +49,20 @@ export default {
     this.$disconnect();
     this.finishChat();
   },
+  computed: {
+    storeUsers() {
+      return this.$store.state.chat.users;
+    },
+  },
   methods: {
     fetchApi() {
+      if (!this.storeUsers.man || !this.storeUsers.lady) {
+        console.log('no store users defined');
+        return;
+      }
       api
         .get('chats', {
-          params: {
-            man: this.params.man,
-            lady: this.params.lady,
-          },
+          params: this.storeUsers,
         })
         .then(res => {
           console.log('res /chats', res.data);
@@ -73,8 +75,8 @@ export default {
     sendMessage(val) {
       api
         .post('chats', {
-          man: this.params.man,
-          lady: this.params.lady,
+          man: this.storeUsers.man,
+          lady: this.storeUsers.lady,
           text: val,
         })
         .then(res => {
@@ -93,13 +95,32 @@ export default {
     finishChat() {
       api
         .post('chats/finish', {
-          man: this.params.man,
-          lady: this.params.lady,
+          man: this.storeUsers.man,
+          lady: this.storeUsers.lady,
         })
         .then(res => {})
         .catch(err => {
           console.log(err);
         });
+    },
+    // watchStore() {
+    //   this.$store.watch(
+    //     (state, getters) => state.chat.users,
+    //     (newValue, oldValue) => {
+    //       // // Do whatever makes sense now
+    //       if (oldValue !== newValue) {
+    //         this.params = newValue;
+    //         this.fetchApi();
+    //       }
+    //     },
+    //   );
+    // },
+  },
+  watch: {
+    storeUsers(Old, New) {
+      if (Old.man !== New.man || Old.lady !== New.lady) {
+        this.fetchApi();
+      }
     },
   },
   notifications: {
