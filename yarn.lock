@@ -7364,6 +7364,13 @@ uuid@^3.0.1, uuid@^3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.2.tgz#1b4af4955eb3077c501c23872fc6513811587131"
 
+v-calendar@^0.9.7:
+  version "0.9.7"
+  resolved "https://registry.yarnpkg.com/v-calendar/-/v-calendar-0.9.7.tgz#a0c770d9132ada9dea1684f18f7a35c0da7f9838"
+  integrity sha512-xwSS7i81WGKkQfbNQ0SFdjPBKuXVK4F4y2rT1SGI8oiQbYyoI0PgT1NT0RZ+8FaFeEog6pms6ZMUAswrUe8QHg==
+  dependencies:
+    vue "^2.5.0"
+
 v-img@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/v-img/-/v-img-0.2.0.tgz#60fe336a43f725a935800f59681f151ac4d8d86a"
@@ -7519,7 +7526,7 @@ vue2-dropzone@^3.5.8:
   dependencies:
     dropzone "^5.5.1"
 
-vue@^2.6.6:
+vue@^2.5.0, vue@^2.6.6:
   version "2.6.10"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.10.tgz#a72b1a42a4d82a721ea438d1b6bf55e66195c637"
 

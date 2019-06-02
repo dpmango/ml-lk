@@ -7,6 +7,15 @@
     <ui-radio v-model="filter.checkbox" cbValue="3" name="messagesFilter" label="За период"/>
     <span class="chat-filter__calendar" v-if="shouldShowCalendar">
       <svg-icon name="calendar" width="24" height="24"/>
+      <v-date-picker mode="range" show-caps v-model="filter.dates">
+        <div :type="inputState.type" slot-scope="props">
+          <input
+            type="text"
+            :value="props.inputValue"
+            @change.native="props.updateValue($event.target.value)"
+          >
+        </div>
+      </v-date-picker>
     </span>
   </div>
 </template>
@@ -14,6 +23,7 @@
 <script>
 import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import UiRadio from '@/components/Shared/UI/Radio.vue';
+import { dateToTimestamp } from '@/helpers/Dates';
 
 export default {
   name: 'ChatFilter',
@@ -25,14 +35,38 @@ export default {
     return {
       filter: {
         checkbox: '0',
-        date_1: null,
-        date_2: null,
+        dates: {
+          start: undefined,
+          end: undefined,
+        },
       },
+      // calendarParams: [
+      //   {
+      //     highlight: {
+      //       backgroundColor: '#ff9800',
+      //     },
+      //     contentStyle: {
+      //       color: '#fff',
+      //     },
+      //   },
+      // ],
     };
   },
   computed: {
     shouldShowCalendar() {
       return this.filter.checkbox === '3';
+    },
+    inputState() {
+      if (!this.filter.dates.start) {
+        return {
+          type: 'is-danger',
+          message: 'Date required.',
+        };
+      }
+      return {
+        type: 'is-primary',
+        message: '',
+      };
     },
   },
   methods: {
@@ -43,8 +77,8 @@ export default {
         result.filter = filter.checkbox;
       }
       if (filter.checkbox === '3') {
-        result.date_1 = this.date_1;
-        result.date_2 = this.date_2;
+        result.date_1 = dateToTimestamp(this.filter.dates.start);
+        result.date_2 = dateToTimestamp(this.filter.dates.end);
       }
       return result;
     },
@@ -52,6 +86,7 @@ export default {
   watch: {
     filter: {
       handler(Old, New) {
+        console.log('filter changed');
         this.$emit('update', this.filterToParams(New));
       },
       deep: true,
@@ -86,8 +121,19 @@ export default {
     }
   }
   &__calendar {
+    position: relative;
     flex: 0 0 auto;
     margin-left: 10px;
+    .popover-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      input {
+        width: 100% !important;
+        opacity: 0;
+      }
+    }
   }
 }
 </style>
