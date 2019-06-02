@@ -45,33 +45,69 @@ const Chat = {
     },
     SET_CHAT_LIST(state, payload) {
       const stateCopy = state.chats;
-      const storeChat = findByUsers(state.chats, payload.users);
+      const targetChat = findByUsers(state.chats, payload.users);
 
-      if (storeChat === undefined) {
+      if (targetChat === undefined) {
         // new chat
         state.chats.push(payload);
       } else {
         // update
-        const targetIndex = stateCopy.indexOf(storeChat);
-        storeChat.list = payload.list;
-        stateCopy[targetIndex] = storeChat;
+        const targetIndex = stateCopy.indexOf(targetChat);
+        targetChat.list = payload.list;
+        stateCopy[targetIndex] = targetChat;
         state.chats = stateCopy;
       }
     },
     SET_CHAT_INFO(state, payload) {
       const stateCopy = state.info;
-      const storeChat = findByUsers(state.info, payload.users);
+      const targetChat = findByUsers(state.info, payload.users);
 
-      if (storeChat === undefined) {
+      if (targetChat === undefined) {
         // new chat
         state.info.push(payload);
       } else {
         // update
-        const targetIndex = stateCopy.indexOf(storeChat);
-        storeChat.data = payload.data;
-        stateCopy[targetIndex] = storeChat;
+        const targetIndex = stateCopy.indexOf(targetChat);
+        targetChat.data = payload.data;
+        stateCopy[targetIndex] = targetChat;
         state.info = stateCopy;
       }
+    },
+    CHAT_ADD_FAVORITE(state, users) {
+      const stateCopy = state.info;
+      const targetChat = findByUsers(state.info, users);
+      const targetIndex = stateCopy.indexOf(targetChat);
+
+      targetChat.Favorite = true;
+      stateCopy[targetIndex] = targetChat;
+      state.info = stateCopy;
+    },
+    CHAT_REMOVE_FAVORITE(state, users) {
+      const stateCopy = state.info;
+      const targetChat = findByUsers(state.info, users);
+      const targetIndex = stateCopy.indexOf(targetChat);
+
+      targetChat.Favorite = false;
+      stateCopy[targetIndex] = targetChat;
+      state.info = stateCopy;
+    },
+    CHAT_ADD_BLOCKED(state, users) {
+      const stateCopy = state.info;
+      const targetChat = findByUsers(state.info, users);
+      const targetIndex = stateCopy.indexOf(targetChat);
+
+      targetChat.Blocked = true;
+      stateCopy[targetIndex] = targetChat;
+      state.info = stateCopy;
+    },
+    CHAT_REMOVE_BLOCKED(state, users) {
+      const stateCopy = state.info;
+      const targetChat = findByUsers(state.info, users);
+      const targetIndex = stateCopy.indexOf(targetChat);
+
+      targetChat.Blocked = false;
+      stateCopy[targetIndex] = targetChat;
+      state.info = stateCopy;
     },
     SOCKET_ONOPEN(state, event) {
       Vue.prototype.$socket = event.currentTarget;

@@ -1,5 +1,5 @@
 <template>
-  <div class="head-actions" :class="{'is-active': isMoreOpen}">
+  <div class="head-actions" :class="{'is-active': isMoreOpen}" v-click-outside="hideDropdown">
     <div class="head-actions__toggle" @click="toggleMoreDropdown">
       <span>More</span>
       <svg-icon name="down-arrow" width="9" height="5"/>
@@ -7,27 +7,27 @@
     <div class="head-actions__dropdown">
       <ul class="head-actions__list">
         <li>
-          <a href="#" class="action-markadd" v-if="!Favorite">
+          <a href="#" class="action-markadd" v-if="!Favorite" @click="addFavorite">
             <svg-icon name="starmark" width="15" height="14"/>
             <span>Добавить в Избранное</span>
           </a>
-          <a href="#" class="action-markremove" v-else>
+          <a href="#" class="action-markremove" v-else @click="removeFavorite">
             <svg-icon name="starmark" width="15" height="14"/>
             <span>Удалить из Избранного</span>
           </a>
-          <a href="#" class="action-kiss">
+          <a href="#" class="action-kiss" @click="sendKiss">
             <svg-icon name="kisssmile" width="15" height="15"/>
             <span>Подмигнуть</span>
           </a>
-          <a href="#" class="action-letter">
+          <a href="#" class="action-letter" @click="sendLetter">
             <svg-icon name="mail" width="14" height="10"/>
             <span>Написать письмо</span>
           </a>
-          <a href="#" class="action-block" v-if="!Blocked">
+          <a href="#" class="action-block" v-if="!Blocked" @click="addBlocked">
             <svg-icon name="block" width="14" height="14"/>
             <span>Заблокировать</span>
           </a>
-          <a href="#" class="action-unblock" v-else>
+          <a href="#" class="action-unblock" v-else @click="removeBlocked">
             <svg-icon name="block" width="14" height="14"/>
             <span>Разблокировать</span>
           </a>
@@ -40,6 +40,7 @@
 
 <script>
 import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
+import ClickOutside from 'vue-click-outside';
 import api from '@/helpers/Api';
 
 export default {
@@ -56,10 +57,86 @@ export default {
       isMoreOpen: false,
     };
   },
+  computed: {
+    currentUsers() {
+      return this.$store.state.chat.currentUsers;
+    },
+  },
   methods: {
+    hideDropdown() {
+      this.isMoreOpen = false;
+    },
     toggleMoreDropdown() {
       this.isMoreOpen = !this.isMoreOpen;
     },
+    addFavorite() {
+      this.pingApi({
+        apiAction: 'post',
+        apiEndpoint: `favorites`,
+        commitAction: 'CHAT_ADD_FAVORITE',
+        errTitle: 'Ошибка при добавлении в избранное',
+      });
+    },
+    removeFavorite() {
+      this.pingApi({
+        apiAction: 'delete',
+        apiEndpoint: `favorites`,
+        commitAction: 'CHAT_REMOVE_FAVORITE',
+        errTitle: 'Ошибка при удалении из избранного',
+      });
+    },
+    sendKiss() {
+      this.pingApi({
+        apiAction: 'post',
+        apiEndpoint: `kisses`,
+        // commitAction: 'CHAT_ADD_BLOCKED',
+        errTitle: 'Ошибка при подмигивании',
+      });
+    },
+    sendLetter() {},
+    addBlocked() {
+      this.pingApi({
+        apiAction: 'post',
+        apiEndpoint: `blocklists`,
+        commitAction: 'CHAT_ADD_BLOCKED',
+        errTitle: 'Ошибка при добавлении в блоклист',
+      });
+    },
+    removeBlocked() {
+      this.pingApi({
+        apiAction: 'delete',
+        apiEndpoint: `blocklists`,
+        commitAction: 'CHAT_REMOVE_BLOCKED',
+        errTitle: 'Ошибка при удалении из блоклиста',
+      });
+    },
+    pingApi(options) {
+      api[options.apiAction](options.apiEndpoint, {
+        params: this.currentUsers,
+      })
+        .then(res => {
+          const apiData = res.data[0];
+          if (apiData.success) {
+            if (options.commitAction) {
+              this.$store.commit(options.commitAction, this.currentUsers);
+            }
+          } else {
+            this.showNotification({ title: options.errTitle, message: apiData.message });
+          }
+        })
+        .catch(error => {
+          this.showNotification({ title: options.errTitle, message: error });
+        });
+    },
+  },
+  notifications: {
+    showNotification: {
+      title: 'Ошибка',
+      type: 'error',
+    },
+  },
+  directives: {
+    ClickOutside,
   },
 };
 </script>
