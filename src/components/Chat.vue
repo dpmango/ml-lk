@@ -13,6 +13,7 @@
         </div>
       </div>
     </div>
+    <modal-photo-list-lady/>
   </div>
 </template>
 
@@ -20,6 +21,7 @@
 import ChatHead from '@/components/Chat/ChatHead.vue';
 import Message from '@/components/Chat/Message.vue';
 import AddMessage from '@/components/Chat/AddMessage.vue';
+import ModalPhotoListLady from '@/components/Chat/PhotoListLady.vue';
 import api from '@/helpers/Api';
 
 export default {
@@ -28,6 +30,7 @@ export default {
     ChatHead,
     Message,
     AddMessage,
+    ModalPhotoListLady,
   },
   data() {
     return {

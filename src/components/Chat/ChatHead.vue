@@ -37,7 +37,10 @@
             <div
               class="user-head__name"
             >{{storeData.Lady.RealName}}, {{getAge(storeData.Lady.DateOfBirth)}}</div>
-            <div class="user-head__actions">TODO - Фото</div>
+
+            <div class="user-head__modal-link" @click="openPhotoModal">
+              <span>Фото</span>
+            </div>
           </div>
         </div>
       </div>
@@ -107,6 +110,11 @@ export default {
     },
     togglePhotosDropdown() {
       this.isPhotosOpen = !this.isPhotosOpen;
+    },
+    openPhotoModal() {
+      this.$modal.show('chat-lady-photos', {
+        users: this.currentUsers,
+      });
     },
   },
 };
@@ -185,6 +193,22 @@ export default {
     }
     &--block {
       color: #ad0000;
+    }
+  }
+  &__modal-link {
+    margin-top: 5px;
+    font-size: 11px;
+    color: rgba($fontColor, 0.6);
+    cursor: pointer;
+    span {
+      border-bottom: 1px solid rgba($fontColor, 0.6);
+      transition: color 0.25s ease, border 0.25s ease;
+    }
+    &:hover {
+      span {
+        color: $colorPrimary;
+        border-color: transparent;
+      }
     }
   }
 }

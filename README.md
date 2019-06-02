@@ -354,13 +354,17 @@ file – файл
 
 ### Список фото
 
+500 error
+
 GET https://api-m.marmeladies.com/v1/chats/photos
 Принимает
 man – ID мужчины
 lady – ID девушки
 Фильтрация на фронтенде (SendDate/ ReadDate)
 
-### + Завершить чат
+### - Завершить чат
+
+500 error
 
 GET https://api-m.marmeladies.com/v1/chats/finish
 Принимает
