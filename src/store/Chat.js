@@ -38,6 +38,20 @@ const Chat = {
       const res = findByUsers(state.info, users);
       return res ? res.data : {};
     },
+    getAvatarFromSender: state => (users, sender) => {
+      let res = {};
+      const pair = findByUsers(state.info, users);
+      if (pair) {
+        const pairMan = pair.data.Man;
+        const pairLady = pair.data.Lady;
+        if (pairMan.ID === sender) {
+          res = pairMan;
+        } else if (pairLady.ID === sender) {
+          res = pairLady;
+        }
+      }
+      return res;
+    },
   },
   mutations: {
     SET_CHAT_CURRENTUSERS(state, users) {

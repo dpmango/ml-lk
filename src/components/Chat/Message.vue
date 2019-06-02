@@ -6,7 +6,11 @@
   >
     <UiNotification v-if="errorMessage" type="danger">{{errorMessage}}</UiNotification>
     <div class="message__wrapper">
-      <div class="message__avatar"></div>
+      <Avatar
+        :Thumbnail="storeUser.Thumbnail"
+        :RealName="storeUser.RealName"
+        :Online="storeUser.Online"
+      />
       <div class="message__text" v-html="data.Text" v-if="!hasFile"/>
       <div class="message__file" v-if="hasFile">
         <img v-img :src="getFile(data.File.Url_1)">
@@ -55,6 +59,12 @@ export default {
     };
   },
   computed: {
+    currentUsers() {
+      return this.$store.state.chat.currentUsers;
+    },
+    storeUser() {
+      return this.$store.getters.getAvatarFromSender(this.currentUsers, this.data.Sender);
+    },
     hasFile() {
       return !Array.isArray(this.data.File);
     },
@@ -88,9 +98,6 @@ export default {
   margin-bottom: 16px;
   &__wrapper {
     display: flex;
-  }
-
-  &__avatar {
   }
   &__text {
     flex: 0 1 auto;
