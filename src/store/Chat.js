@@ -2,6 +2,10 @@ import Vue from 'vue';
 
 const Chat = {
   state: {
+    users: {
+      man: undefined,
+      lady: undefined,
+    },
     socket: {
       isConnected: false,
       message: '',
@@ -9,6 +13,9 @@ const Chat = {
     },
   },
   mutations: {
+    setChatUsers(state, user) {
+      state.users = user;
+    },
     SOCKET_ONOPEN(state, event) {
       Vue.prototype.$socket = event.currentTarget;
       state.socket.isConnected = true;

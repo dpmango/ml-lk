@@ -1,5 +1,10 @@
 <template>
-  <div class="relation" :data-id="data.ID" @click="readNotification">
+  <div
+    class="relation"
+    :class="{'is-chat-active' : isChatActive }"
+    :data-id="data.ID"
+    @click="readNotification"
+  >
     <div class="relation__wrapper">
       <div class="relation__user relation__user--left">
         <user-relation
@@ -88,6 +93,11 @@ export default {
     timeStamp() {
       return timestampToTime(this.data.LastMessageDate);
     },
+    isChatActive() {
+      const manMathch = this.$store.state.chat.users.man === this.data.Man.ID;
+      const ladyMatch = this.$store.state.chat.users.lady === this.data.Lady.ID;
+      return manMathch && ladyMatch;
+    },
   },
   methods: {
     markClickRouter(e) {
@@ -103,13 +113,19 @@ export default {
       e.stopPropagation();
 
       this.pingApi({
+        apiAction: 'delete',
         urlSuffix: '',
         commitAction: 'removeNotification',
         errTitle: 'Ошибка при удалении',
       });
     },
     readNotification() {
+      this.$store.commit('setChatUsers', {
+        man: this.data.Man.ID,
+        lady: this.data.Lady.ID,
+      });
       this.pingApi({
+        apiAction: 'get',
         urlSuffix: '/read',
         commitAction: 'readNotification',
         errTitle: 'Ошибка при прочтении',
@@ -117,6 +133,7 @@ export default {
     },
     markNotification() {
       this.pingApi({
+        apiAction: 'get',
         urlSuffix: `/mark`,
         commitAction: 'markNotification',
         errTitle: 'Ошибка при отметке',
@@ -124,14 +141,14 @@ export default {
     },
     unmarkNotification() {
       this.pingApi({
+        apiAction: 'get',
         urlSuffix: `/unmark`,
         commitAction: 'unmarkNotification',
         errTitle: 'Ошибка при снятии отметки',
       });
     },
     pingApi(options) {
-      api
-        .delete(`notifications/${this.data.ID}${options.urlSuffix}`)
+      api[options.apiAction](`notifications/${this.data.ID}${options.urlSuffix}`)
         .then(res => {
           const apiData = res.data[0];
           if (apiData.success) {
@@ -153,7 +170,6 @@ export default {
   },
 };
 </script>
-
 
 <style lang="scss" scoped>
 @import '@/theme/utils.scss';
@@ -244,6 +260,9 @@ export default {
       opacity: 1;
       pointer-events: all;
     }
+  }
+  &.is-chat-active {
+    background: $colorBg;
   }
 }
 </style>

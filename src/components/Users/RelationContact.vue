@@ -1,5 +1,10 @@
 <template>
-  <div class="relation" :data-id="data.ID" @click="readContact">
+  <div
+    class="relation"
+    :class="{'is-chat-active' : isChatActive }"
+    :data-id="data.ID"
+    @click="readContact"
+  >
     <div class="relation__wrapper">
       <div class="relation__user relation__user--left">
         <user-relation
@@ -93,6 +98,11 @@ export default {
     timeStamp() {
       return timestampToTime(this.data.LastMessageDate);
     },
+    isChatActive() {
+      const manMathch = this.$store.state.chat.users.man === this.data.Man.ID;
+      const ladyMatch = this.$store.state.chat.users.lady === this.data.Lady.ID;
+      return manMathch && ladyMatch;
+    },
   },
   methods: {
     markClickRouter(e) {
@@ -108,13 +118,19 @@ export default {
       e.stopPropagation();
 
       this.pingApi({
+        apiAction: 'delete',
         urlSuffix: '',
         commitAction: 'removeContact',
         errTitle: 'Ошибка при удалении',
       });
     },
     readContact() {
+      this.$store.commit('setChatUsers', {
+        man: this.data.Man.ID,
+        lady: this.data.Lady.ID,
+      });
       this.pingApi({
+        apiAction: 'get',
         urlSuffix: '/read',
         commitAction: 'readContact',
         errTitle: 'Ошибка при прочтении',
@@ -122,6 +138,7 @@ export default {
     },
     markContact() {
       this.pingApi({
+        apiAction: 'get',
         urlSuffix: `/mark`,
         commitAction: 'markContact',
         errTitle: 'Ошибка при отметке',
@@ -129,14 +146,14 @@ export default {
     },
     unmarkContact() {
       this.pingApi({
+        apiAction: 'get',
         urlSuffix: `/unmark`,
         commitAction: 'unmarkContact',
         errTitle: 'Ошибка при снятии отметки',
       });
     },
     pingApi(options) {
-      api
-        .delete(`contacts/${this.data.ID}${options.urlSuffix}`)
+      api[options.apiAction](`contacts/${this.data.ID}${options.urlSuffix}`)
         .then(res => {
           const apiData = res.data[0];
           if (apiData.success) {
@@ -245,6 +262,9 @@ export default {
       opacity: 1;
       pointer-events: all;
     }
+  }
+  &.is-chat-active {
+    background: $colorBg;
   }
 }
 </style>

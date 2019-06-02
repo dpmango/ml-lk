@@ -195,9 +195,8 @@ ladies – список ID девушек (через запятую)
 GET https://api-m.marmeladies.com/v1/contacts?page=2
 Контроль пагинации через заголовки X-Pagination-Total-Count, X-Pagination-Page-Count, X-Pagination-Current-Page, X-Pagination-Per-Page
 
-### - Удалить
+### + Удалить
 
-500 error
 DELETE https://api-m.marmeladies.com/v1/contacts/123456
 где 123456 – ID контакта
 Возвращает
@@ -205,30 +204,27 @@ DELETE https://api-m.marmeladies.com/v1/contacts/123456
 или
 [{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
 
-### - Прочитать
+### + Прочитать
 
-cors
-DELETE https://api-m.marmeladies.com/v1/contacts/123456/read
+GET https://api-m.marmeladies.com/v1/contacts/123456/read
 где 123456 – ID контакта
 Возвращает
 [{"success":true}]
 или
 [{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
 
-### - Отметить
+### + Отметить
 
-cors
-DELETE https://api-m.marmeladies.com/v1/contacts/123456/mark
+GET https://api-m.marmeladies.com/v1/contacts/123456/mark
 где 123456 – ID контакта
 Возвращает
 [{"success":true}]
 или
 [{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
 
-### - Снять отметку
+### + Снять отметку
 
-cors
-DELETE https://api-m.marmeladies.com/v1/contacts/123456/unmark
+GET https://api-m.marmeladies.com/v1/contacts/123456/unmark
 где 123456 – ID контакта
 Возвращает
 [{"success":true}]
@@ -251,9 +247,7 @@ DELETE https://api-m.marmeladies.com/v1/contacts/123456/unmark
 GET https://api-m.marmeladies.com/v1/notifications?page=2
 Контроль пагинации через заголовки X-Pagination-Total-Count, X-Pagination-Page-Count, X-Pagination-Current-Page, X-Pagination-Per-Page
 
-### - Удалить
-
-500 error
+### + Удалить
 
 DELETE https://api-m.marmeladies.com/v1/notifications/123456
 где 123456 – ID уведомления
@@ -262,31 +256,27 @@ DELETE https://api-m.marmeladies.com/v1/notifications/123456
 или
 [{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
 
-### - Прочитать
+### + Прочитать
 
-cors error
-
-DELETE https://api-m.marmeladies.com/v1/notifications/123456/read
+GET https://api-m.marmeladies.com/v1/notifications/123456/read
 где 123456 – ID уведомления
 Возвращает
 [{"success":true}]
 или
 [{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
 
-### - Отметить
+### + Отметить
 
-cors error
-DELETE https://api-m.marmeladies.com/v1/notifications/123456/mark
+GET https://api-m.marmeladies.com/v1/notifications/123456/mark
 где 123456 – ID уведомления
 Возвращает
 [{"success":true}]
 или
 [{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
 
-### - Снять отметку
+### + Снять отметку
 
-cors error
-DELETE https://api-m.marmeladies.com/v1/notifications/123456/unmark
+GET https://api-m.marmeladies.com/v1/notifications/123456/unmark
 где 123456 – ID уведомления
 Возвращает
 [{"success":true}]
@@ -295,7 +285,7 @@ DELETE https://api-m.marmeladies.com/v1/notifications/123456/unmark
 
 ## 6. Чаты
 
-### Информация о паре
+### + Информация о паре
 
 GET https://api-m.marmeladies.com/v1/chats/info
 Принимает
@@ -303,14 +293,15 @@ man – ID мужчины
 lady – ID девушки
 Возвращает
 информацию о мужчине и девушке
-Favorite=true – мужчина в избранном, в попапе «More» показываем ссылку «Удалить из Избранного»
-Favorite=false – мужчина не в избранном, в попапе «More» показываем ссылку «Добавить в Избранное»
-Blocked=true – мужчина в блоклисте, в попапе «More» показываем ссылку «Разблокировать»
-Blocked=false – мужчина не в блоклисте, в попапе «More» показываем ссылку «Заблокировать»
-Chat_enable=true – чат доступен, показываем поле для ввода текста и кнопки(смайлики, картинки, отправить …)
-Chat_enable= false – чат не доступен, не показываем поле для ввода текста и кнопки(смайлики, картинки, отправить …), на их месте выводим текст из Chat_reason.
 
-### Список сообщений в паре
+- Favorite=true – мужчина в избранном, в попапе «More» показываем ссылку «Удалить из Избранного»
+- Favorite=false – мужчина не в избранном, в попапе «More» показываем ссылку «Добавить в Избранное»
+- Blocked=true – мужчина в блоклисте, в попапе «More» показываем ссылку «Разблокировать»
+- Blocked=false – мужчина не в блоклисте, в попапе «More» показываем ссылку «Заблокировать»
+- Chat_enable=true – чат доступен, показываем поле для ввода текста и кнопки(смайлики, картинки, отправить …)
+- Chat_enable= false – чат не доступен, не показываем поле для ввода текста и кнопки(смайлики, картинки, отправить …), на их месте выводим текст из Chat_reason.
+
+### + Список сообщений в паре
 
 GET https://api-m.marmeladies.com/v1/chats
 Принимает
@@ -333,7 +324,10 @@ text – текст
 или
 [{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
 
-### Написать сообщение в чат
+### - Написать сообщение в чат
+
+500 error
+message":"Undefined index: chat_attachments_1","code":8
 
 POST https://api-m.marmeladies.com/v1/chats
 Принимает
@@ -366,7 +360,7 @@ man – ID мужчины
 lady – ID девушки
 Фильтрация на фронтенде (SendDate/ ReadDate)
 
-### Завершить чат
+### + Завершить чат
 
 GET https://api-m.marmeladies.com/v1/chats/finish
 Принимает
@@ -375,7 +369,7 @@ lady – ID девушки
 Возвращает
 [{"success":true}]
 
-### Отправить typing_notification (не чаще чем раз в 10 сек)
+### + Отправить typing_notification (не чаще чем раз в 10 сек)
 
 GET https://api-m.marmeladies.com/v1/chats/typing
 Принимает

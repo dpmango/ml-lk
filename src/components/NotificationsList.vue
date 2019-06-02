@@ -33,7 +33,7 @@
           </li>
         </ul>
       </UiSpoiler>
-      <button class="choose-profile">Выбрать профиль</button>
+      <LadyFilter :selected="filter.ladies" @onSelect="ladyFilterSelected"/>
     </form>
     <div class="table">
       <div class="table__content" ref="list">
@@ -65,12 +65,14 @@ import UiCheckbox from '@/components/Shared/UI/Checkbox.vue';
 import UiNotification from '@/components/Shared/UI/Notification.vue';
 import UiSpoiler from '@/components/Shared/UI/Spoiler.vue';
 import RelationNotification from '@/components/Users/RelationNotification.vue';
+import LadyFilter from '@/components/Ladies/LadyFilter.vue';
 import api from '@/helpers/Api';
 
 const defaultFilterState = {
   marked: false,
   new: false,
   maleOnline: false,
+  ladies: [],
 };
 
 export default {
@@ -83,6 +85,7 @@ export default {
     UiNotification,
     UiSpoiler,
     RelationNotification,
+    LadyFilter,
   },
   data() {
     return {
@@ -116,6 +119,7 @@ export default {
     },
     filterToParams() {
       let filterString = '';
+      let ladiesFilter = '';
       if (this.filter.marked) {
         filterString = '1';
       }
@@ -126,8 +130,13 @@ export default {
         filterString = filterString.length > 0 ? `${filterString},3` : '3';
       }
 
+      if (this.filter.ladies.length > 0) {
+        ladiesFilter = this.filter.ladies.join(',');
+      }
+
       return {
         filter: filterString,
+        ladies: ladiesFilter,
       };
     },
     fetchWithFilter() {
@@ -136,7 +145,6 @@ export default {
           params: this.filterToParams(),
         })
         .then(res => {
-          console.log('res', res.data);
           this.errorMessage = '';
           this.$store.commit('setNotifications', res.data);
         })
@@ -146,6 +154,20 @@ export default {
     },
     clearFilter() {
       this.filter = cloneDeep(defaultFilterState);
+      this.fetchWithFilter();
+    },
+    ladyFilterSelected(id) {
+      if (Array.isArray(id)) {
+        this.filter.ladies = id;
+      } else {
+        const { ladies } = this.filter;
+        if (ladies.indexOf(id) === -1) {
+          this.filter.ladies.push(id);
+        } else {
+          this.filter.ladies = ladies.filter(x => x !== id);
+        }
+      }
+
       this.fetchWithFilter();
     },
     handleListScroll() {
@@ -186,18 +208,6 @@ export default {
   }
 }
 
-.choose-profile {
-  margin-left: 43px;
-  font-weight: 500;
-  font-size: 13px;
-  line-height: 20px;
-  cursor: pointer;
-  padding: 0;
-  border: none;
-  border-bottom: 1px dashed #1e1e1e;
-  background: none;
-}
-
 .filter {
   flex: 0 0 auto;
   position: relative;
@@ -205,15 +215,8 @@ export default {
   align-items: center;
   flex-wrap: wrap;
   padding: 15px 10px;
-  .ui-group {
-    margin: 5px 10px;
-  }
   .ui-checkbox {
     margin: 0px 10px;
-  }
-  .multiselect {
-    margin: 5px 10px;
-    max-width: 235px;
   }
   &__clear {
     position: absolute;

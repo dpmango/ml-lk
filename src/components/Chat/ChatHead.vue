@@ -86,6 +86,16 @@ export default {
   mounted() {
     this.fetchApi();
   },
+  props: {
+    enabled: {
+      isEnabled: Boolean,
+      reason: String,
+    },
+    params: {
+      man: Number,
+      lady: Number,
+    },
+  },
   data() {
     return {
       isPhotosOpen: false,
@@ -120,22 +130,30 @@ export default {
     };
   },
   computed: {
+    // propParams() {
+    //   return this.params;
+    // },
     // getAge(DateOfBirth) {
     //   return dateToAge(DateOfBirth);
     // },
   },
   methods: {
     fetchApi() {
+      if (!this.params.man || !this.params.lady) {
+        console.log('no store users defined');
+        return;
+      }
       api
         .get('chats/info', {
-          params: {
-            man: 1156964,
-            lady: 1543646,
-          },
+          params: this.params,
         })
         .then(res => {
           console.log('res', res.data[0]);
           this.data = res.data[0];
+          this.$emit('update:enabled', {
+            isEnabled: res.data[0].Chat_enable,
+            reason: res.data[0].Chat_reason,
+          });
         })
         .catch(err => {
           console.log(err);
@@ -146,6 +164,13 @@ export default {
     },
     togglePhotosDropdown() {
       this.isPhotosOpen = !this.isPhotosOpen;
+    },
+  },
+  watch: {
+    params(Old, New) {
+      if (Old.man !== New.man || Old.lady !== New.lady) {
+        this.fetchApi();
+      }
     },
   },
 };
