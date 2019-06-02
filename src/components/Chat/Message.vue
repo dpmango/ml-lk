@@ -96,6 +96,7 @@ export default {
 
 .message {
   margin-bottom: 16px;
+  margin-right: 70px;
   &__wrapper {
     display: flex;
   }
@@ -140,6 +141,8 @@ export default {
     margin-bottom: 0px;
   }
   &.is-outgoing {
+    margin-left: 70px;
+    margin-right: 0px;
     .message {
       &__wrapper {
         flex-direction: row-reverse;
