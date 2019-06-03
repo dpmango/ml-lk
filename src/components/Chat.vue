@@ -10,7 +10,12 @@
           <message v-for="(message, idx) in chatList" :key="idx" :data="message" :selfID="selfID"/>
         </div>
         <div class="messenger__add-message">
-          <add-message @addMessage="sendMessage" @sendTypingNotification="typingNotification"/>
+          <add-message
+            @addMessage="sendMessage"
+            @addFile="sendFile"
+            @sendTypingNotification="typingNotification"
+          />
+          <span @click="finishChat" class="test">завершить чат (test)</span>
         </div>
       </div>
     </div>
@@ -116,6 +121,8 @@ export default {
           const apiData = res.data[0];
           console.log('res post /chats', apiData);
           if (apiData.success) {
+            this.showNotification({ type: 'success', title: 'сообщение отправлено' });
+            this.fetchChats();
           } else {
             this.showNotification({ message: apiData.message });
           }
@@ -124,6 +131,27 @@ export default {
           this.showNotification({ message: err });
         });
       // this.$socket.sendObj({msg: 'test'})
+    },
+    sendFile(file) {
+      api
+        .post('chats/photos', {
+          man: this.currentUsers.man,
+          lady: this.currentUsers.lady,
+          file: file,
+        })
+        .then(res => {
+          const apiData = res.data[0];
+          console.log('res post /chats/photos', apiData);
+          if (apiData.success) {
+            this.showNotification({ type: 'success', title: 'фото загружено' });
+            this.fetchChats();
+          } else {
+            this.showNotification({ message: apiData.message });
+          }
+        })
+        .catch(err => {
+          this.showNotification({ message: err });
+        });
     },
     typingNotification() {
       api
@@ -222,5 +250,11 @@ export default {
   &__add-message {
     flex: 0 0 auto;
   }
+}
+
+.test {
+  font-size: 11px;
+  padding: 0px 0px 5px 20px;
+  cursor: pointer;
 }
 </style>

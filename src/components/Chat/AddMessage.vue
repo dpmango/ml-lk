@@ -20,8 +20,11 @@
             label="Нажать Enter для отправки"
           />
         </div>
-        <div class="add-message__cta add-message__cta--image">
+        <label for="file" class="add-message__cta add-message__cta--image">
           <svg-icon name="image" width="18" height="18"/>
+        </label>
+        <div class="add-message__file-container">
+          <input type="file" id="file" ref="file" v-on:change="handleFileUpload">
         </div>
         <div class="add-message__cta add-message__cta--smile">
           <emoji-picker @emoji="appendEmoji" :search="search">
@@ -120,6 +123,9 @@ export default {
     typingNotification() {
       this.$emit('sendTypingNotification');
     },
+    handleFileUpload() {
+      this.$emit('addFile', this.$refs.file.files[0]);
+    },
   },
   directives: {
     focus: {
@@ -162,6 +168,7 @@ export default {
     }
   }
   &__actions {
+    position: relative;
     margin-top: 20px;
     display: flex;
     align-items: center;
@@ -199,6 +206,17 @@ export default {
     &:hover {
       background: $colorPrimary;
       color: white;
+    }
+  }
+  &__file-container {
+    input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0.1px;
+      height: 0.1px;
+      opacity: 0;
+      pointer-events: none;
     }
   }
   &__send-btn {

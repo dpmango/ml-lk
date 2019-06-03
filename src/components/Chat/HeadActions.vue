@@ -146,6 +146,7 @@ export default {
 
 .head-actions {
   position: relative;
+  z-index: 5;
   margin-left: 5px;
   transform: translateY(0.1em);
   &__toggle {
