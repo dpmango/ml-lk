@@ -16,7 +16,12 @@
         <img v-img :src="getFile(data.File.Url_1)">
       </div>
       <div class="message__actions">
-        <div class="message__mark" v-if="!hasFile" :class="{'is-active': data.Marked ==='1'}">
+        <div
+          class="message__mark"
+          v-if="!hasFile"
+          :class="{'is-active': data.Marked ==='1'}"
+          @click="markMessage"
+        >
           <svg-icon name="starmark" width="16" height="15"/>
         </div>
         <div class="message__timestamp">{{timeStamp}}</div>
@@ -85,6 +90,47 @@ export default {
         .catch(err => {
           this.errorMessage = `File: ${err}`;
         });
+    },
+    markMessage() {
+      const isMarked = this.data.Marked === '1';
+      let options = {};
+      if (!isMarked) {
+        options = {
+          action: 'mark',
+          errTitle: 'Ошибка при отметке сообщения',
+        };
+      } else {
+        options = {
+          action: 'unmark',
+          errTitle: 'Ошибка при удалении отметки сообщения',
+        };
+      }
+
+      api
+        .get(`chats/${this.data.ID}/${options.action}`, {
+          params: this.currentUsers,
+        })
+        .then(res => {
+          const apiData = res.data[0];
+          if (apiData.success) {
+            this.$store.commit('CHAT_TOGGLE_MESSAGE_MARKED', {
+              users: this.currentUsers,
+              messageID: this.data.ID,
+              isMarked: isMarked,
+            });
+          } else {
+            this.showNotification({ title: options.errTitle, message: apiData.message });
+          }
+        })
+        .catch(error => {
+          this.showNotification({ title: options.errTitle, message: error });
+        });
+    },
+  },
+  notifications: {
+    showNotification: {
+      title: 'Ошибка',
+      type: 'error',
     },
   },
 };

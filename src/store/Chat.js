@@ -123,6 +123,17 @@ const Chat = {
       stateCopy[targetIndex] = targetChat;
       state.info = stateCopy;
     },
+    CHAT_TOGGLE_MESSAGE_MARKED(state, payload) {
+      const stateCopy = state.chats;
+      const targetChat = findByUsers(stateCopy, payload.users);
+      const chatIndex = stateCopy.indexOf(targetChat);
+      const targetMessage = targetChat.list.find(x => x.ID === payload.messageID);
+      const messageIndex = targetChat.list.indexOf(targetMessage);
+
+      targetMessage.Marked = payload.isMarked ? '0' : '1';
+      stateCopy[chatIndex].list[messageIndex] = targetMessage;
+      state.chats = stateCopy;
+    },
     SOCKET_ONOPEN(state, event) {
       Vue.prototype.$socket = event.currentTarget;
       state.socket.isConnected = true;
