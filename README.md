@@ -354,13 +354,17 @@ file – файл
 
 ### Список фото
 
+500 error
+
 GET https://api-m.marmeladies.com/v1/chats/photos
 Принимает
 man – ID мужчины
 lady – ID девушки
 Фильтрация на фронтенде (SendDate/ ReadDate)
 
-### + Завершить чат
+### - Завершить чат
+
+500 error
 
 GET https://api-m.marmeladies.com/v1/chats/finish
 Принимает
@@ -378,8 +382,9 @@ lady – ID девушки
 Возвращает
 [{"success":true}]
 
-## 7. Избранное
+## 7. - Избранное
 
+cors error + 500 error
 Добавить
 POST https://api-m.marmeladies.com/v1/favorites
 Принимает
@@ -390,7 +395,9 @@ lady – ID девушки
 или
 [{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
 
-### Удалить
+### - Удалить
+
+cors error + 500 error
 
 DELETE https://api-m.marmeladies.com/v1/favorites
 Принимает
@@ -403,7 +410,9 @@ lady – ID девушки
 
 ## 8. Блоклист
 
-### Добавить
+### - Добавить
+
+cors error + 500 error
 
 POST https://api-m.marmeladies.com/v1/blocklists
 Принимает
@@ -414,7 +423,7 @@ lady – ID девушки
 или
 [{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
 
-### Удалить
+### - Удалить
 
 DELETE https://api-m.marmeladies.com/v1/blocklists
 Принимает
@@ -427,7 +436,9 @@ lady – ID девушки
 
 ## 9. Подмигивания
 
-### Отправить
+### - Отправить
+
+cors error + 500 error
 
 POST https://api-m.marmeladies.com/v1/kisses
 Принимает

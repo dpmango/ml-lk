@@ -20,8 +20,11 @@
             label="Нажать Enter для отправки"
           />
         </div>
-        <div class="add-message__cta add-message__cta--image">
+        <label for="file" class="add-message__cta add-message__cta--image">
           <svg-icon name="image" width="18" height="18"/>
+        </label>
+        <div class="add-message__file-container">
+          <input type="file" id="file" ref="file" v-on:change="handleFileUpload">
         </div>
         <div class="add-message__cta add-message__cta--smile">
           <emoji-picker @emoji="appendEmoji" :search="search">
@@ -62,8 +65,8 @@
         </button>
       </div>
     </template>
-    <template v-if="!enabled.isEnabled">
-      <div class="add-message__disabled">{{enabled.reason}}</div>
+    <template v-if="!storeData.Chat_enable">
+      <div class="add-message__disabled">{{storeData.Chat_reason}}</div>
     </template>
   </div>
 </template>
@@ -82,16 +85,7 @@ export default {
     UiCheckbox,
     EmojiPicker,
   },
-  props: {
-    enabled: {
-      isEnabled: Boolean,
-      reason: String,
-    },
-    params: {
-      man: Number,
-      lady: Number,
-    },
-  },
+  props: {},
   data() {
     return {
       textarea: '',
@@ -101,6 +95,14 @@ export default {
   },
   created() {
     this.typingDebounce = debounce(this.typingNotification, 10000, { leading: true });
+  },
+  computed: {
+    currentUsers() {
+      return this.$store.state.chat.currentUsers;
+    },
+    storeData() {
+      return this.$store.getters.selectInfoByUsers(this.currentUsers);
+    },
   },
   methods: {
     handleKeyDown(e) {
@@ -119,30 +121,10 @@ export default {
       this.textarea += emoji;
     },
     typingNotification() {
-      api
-        .get('chats/typing', {
-          params: {
-            man: this.params.man,
-            lady: this.params.lady,
-          },
-        })
-        .then(res => {
-          const apiData = res.data[0];
-          if (apiData.success) {
-            console.log('res get /chats/typing', apiData);
-          } else {
-            this.showNotification({ message: apiData.message });
-          }
-        })
-        .catch(err => {
-          this.showNotification({ message: err });
-        });
+      this.$emit('sendTypingNotification');
     },
-  },
-  notifications: {
-    showNotification: {
-      title: 'Ошибка',
-      type: 'error',
+    handleFileUpload() {
+      this.$emit('addFile', this.$refs.file.files[0]);
     },
   },
   directives: {
@@ -186,6 +168,7 @@ export default {
     }
   }
   &__actions {
+    position: relative;
     margin-top: 20px;
     display: flex;
     align-items: center;
@@ -223,6 +206,17 @@ export default {
     &:hover {
       background: $colorPrimary;
       color: white;
+    }
+  }
+  &__file-container {
+    input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0.1px;
+      height: 0.1px;
+      opacity: 0;
+      pointer-events: none;
     }
   }
   &__send-btn {

@@ -3,6 +3,7 @@ import VModal from 'vue-js-modal';
 import VueTextareaAutosize from 'vue-textarea-autosize';
 import VTooltip from 'v-tooltip';
 import VueImg from 'v-img';
+import VCalendar from 'v-calendar';
 import VueNotifications from 'vue-notifications';
 import miniToastr from 'mini-toastr';
 import svg4everybody from 'svg4everybody';
@@ -11,12 +12,17 @@ import App from './App.vue';
 import store from './store';
 import router from './router';
 
+import 'v-calendar/lib/v-calendar.min.css';
+
 Vue.config.productionTip = false;
 
 Vue.use(VModal);
 Vue.use(VueTextareaAutosize);
 Vue.use(VTooltip);
 Vue.use(VueImg);
+Vue.use(VCalendar, {
+  firstDayOfWeek: 2, // Monday
+});
 miniToastr.init({
   types: {
     success: 'success',

@@ -98,9 +98,12 @@ export default {
     timeStamp() {
       return timestampToTime(this.data.LastMessageDate);
     },
+    storeActiveUsers() {
+      return this.$store.state.chat.currentUsers;
+    },
     isChatActive() {
-      const manMathch = this.$store.state.chat.users.man === this.data.Man.ID;
-      const ladyMatch = this.$store.state.chat.users.lady === this.data.Lady.ID;
+      const manMathch = this.storeActiveUsers.man === this.data.Man.ID;
+      const ladyMatch = this.storeActiveUsers.lady === this.data.Lady.ID;
       return manMathch && ladyMatch;
     },
   },
@@ -125,7 +128,7 @@ export default {
       });
     },
     readContact() {
-      this.$store.commit('setChatUsers', {
+      this.$store.commit('SET_CHAT_CURRENTUSERS', {
         man: this.data.Man.ID,
         lady: this.data.Lady.ID,
       });
