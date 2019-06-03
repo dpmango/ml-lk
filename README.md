@@ -311,8 +311,9 @@ filter – 1: Отмеченные; 2:Фотографии; 3:За период 
 Подгрузка новых данных аналогично списку девушек (21 запись).
 При выводе заменять смайлики на картинки
 
-### Обновление комментариев
+### - Обновление комментариев
 
+cors
 POST https://api-m.marmeladies.com/v1/chats/comments
 Принимает
 man – ID мужчины
@@ -340,8 +341,9 @@ file – ID фото (необязательное)
 или
 {"success":false,"message":"Email address \"test@test.com\" used by another member"}
 
-### Загрузка фото
+### - Загрузка фото
 
+ошибька please select lady
 POST https://api-m.marmeladies.com/v1/chats/photos
 Принимает
 man – ID мужчины
@@ -352,15 +354,32 @@ file – файл
 или
 {"success":false,"message":"Email address \"test@test.com\" used by another member"}
 
-### Список фото
-
-500 error
+### + Список фото
 
 GET https://api-m.marmeladies.com/v1/chats/photos
 Принимает
 man – ID мужчины
 lady – ID девушки
 Фильтрация на фронтенде (SendDate/ ReadDate)
+
+### Отметить сообщение
+
+GET https://api-m.marmeladies.com/v1/chats/39260171/mark
+где 39260171 – ID Message
+Возвращает
+[{"success":true}]
+или
+{"success":false,"message":"Email address \"test@test.com\" used by another member"}
+
+### Снять отметку
+
+GET https://api-m.marmeladies.com/v1/chats/39260171/unmark
+где 39260171 – ID Message
+Возвращает
+[{"success":true}]
+или
+{"success":false,"message":"Email address \"test@test.com\" used by another member"}
+Переименуйте фильтр Избранные в Отмеченные
 
 ### - Завершить чат
 

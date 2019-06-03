@@ -19,10 +19,10 @@
             <svg-icon name="kisssmile" width="15" height="15"/>
             <span>Подмигнуть</span>
           </a>
-          <a href="#" class="action-letter" @click="sendLetter">
+          <!-- <a href="#" class="action-letter" @click="sendLetter">
             <svg-icon name="mail" width="14" height="10"/>
             <span>Написать письмо</span>
-          </a>
+          </a>-->
           <a href="#" class="action-block" v-if="!Blocked" @click="addBlocked">
             <svg-icon name="block" width="14" height="14"/>
             <span>Заблокировать</span>
@@ -93,7 +93,9 @@ export default {
         errTitle: 'Ошибка при подмигивании',
       });
     },
-    sendLetter() {},
+    sendLetter() {
+      // ссылка на другую страницу
+    },
     addBlocked() {
       this.pingApi({
         apiAction: 'post',

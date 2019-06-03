@@ -61,26 +61,43 @@
         </div>
       </div>
     </div>
-
+    {{storeData.Comments_man}}
     <div class="chat-head__wrapper">
       <div class="chat-head__col">
-        <textarea class="chat-head__notearea" name id rows="4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum</textarea>
+        <textarea
+          class="chat-head__notearea"
+          @input="textareaDebounce('Comments_man')"
+          v-model="storeData.Comments_man"
+          rows="4"
+        />
       </div>
       <div class="chat-head__col">
-        <textarea class="chat-head__notearea" name id rows="4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum</textarea>
+        <textarea
+          class="chat-head__notearea"
+          @input="textareaDebounce('Comments_lady')"
+          v-model="storeData.Comments_lady"
+          rows="4"
+        />
       </div>
       <div class="chat-head__col">
-        <textarea class="chat-head__notearea" name id rows="4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum</textarea>
+        <textarea
+          class="chat-head__notearea"
+          @input="textareaDebounce('Comments_pair')"
+          v-model="storeData.Comments_pair"
+          rows="4"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import debounce from 'lodash/debounce';
 import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import Avatar from '@/components/Users/Avatar.vue';
 import HeadActions from '@/components/Chat/HeadActions.vue';
 import { dateToAge } from '@/helpers/Dates';
+import api from '@/helpers/Api';
 
 export default {
   name: 'ChatHead',
@@ -89,7 +106,9 @@ export default {
     Avatar,
     HeadActions,
   },
-  mounted() {},
+  mounted() {
+    this.textareaDebounce = debounce(this.updateComments, 1000);
+  },
   props: {},
   data() {
     return {
@@ -115,6 +134,55 @@ export default {
       this.$modal.show('chat-lady-photos', {
         users: this.currentUsers,
       });
+    },
+    updateComments(type) {
+      // Для комментариев о паре передаем man, lady и text,
+      // для комментариев о мужчине передаем только man и text,
+      // для комментариев о девушки передаем только lady и text
+      let postOptions = {};
+
+      if (type === 'Comments_man') {
+        postOptions = {
+          man: this.currentUsers.man,
+          text: this.storeData.Comments_man,
+        };
+      } else if (type === 'Comments_lady') {
+        postOptions = {
+          lady: this.currentUsers.lady,
+          text: this.storeData.Comments_lady,
+        };
+      } else if (type === 'Comments_pair') {
+        postOptions = {
+          man: this.currentUsers.man,
+          lady: this.currentUsers.lady,
+          text: this.storeData.Comments_pari,
+        };
+      } else {
+        return false;
+      }
+
+      console.log({ postOptions });
+
+      api
+        .post('chats/comments', postOptions)
+        .then(res => {
+          const apiData = res.data[0];
+          console.log('res post /chats/comments', apiData);
+          if (apiData.success) {
+            this.showNotification({ type: 'success', title: 'комментарий обновлен загружено' });
+          } else {
+            this.showNotification({ message: apiData.message });
+          }
+        })
+        .catch(err => {
+          this.showNotification({ message: err });
+        });
+    },
+  },
+  notifications: {
+    showNotification: {
+      title: 'Ошибка',
+      type: 'error',
     },
   },
 };
