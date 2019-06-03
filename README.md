@@ -362,7 +362,7 @@ man – ID мужчины
 lady – ID девушки
 Фильтрация на фронтенде (SendDate/ ReadDate)
 
-### Отметить сообщение
+### + Отметить сообщение
 
 GET https://api-m.marmeladies.com/v1/chats/39260171/mark
 где 39260171 – ID Message
@@ -371,7 +371,7 @@ GET https://api-m.marmeladies.com/v1/chats/39260171/mark
 или
 {"success":false,"message":"Email address \"test@test.com\" used by another member"}
 
-### Снять отметку
+### + Снять отметку
 
 GET https://api-m.marmeladies.com/v1/chats/39260171/unmark
 где 39260171 – ID Message

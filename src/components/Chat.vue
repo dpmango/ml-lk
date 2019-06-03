@@ -6,6 +6,7 @@
     </div>
     <div class="chat__messenger">
       <div class="messenger">
+        <div class="messenger__timestamp">{{activeTimestamp.timestamp}}</div>
         <div class="messenger__list">
           <message v-for="(message, idx) in chatList" :key="idx" :data="message" :selfID="selfID"/>
         </div>
@@ -29,6 +30,7 @@ import ChatFilter from '@/components/Chat/ChatFilter.vue';
 import Message from '@/components/Chat/Message.vue';
 import AddMessage from '@/components/Chat/AddMessage.vue';
 import ModalPhotoListLady from '@/components/Chat/PhotoListLady.vue';
+import { timestampToAgoStamp } from '@/helpers/Dates';
 import api from '@/helpers/Api';
 
 export default {
@@ -65,6 +67,24 @@ export default {
     },
     haveCurrentUsers() {
       return this.$store.getters.haveCurrentUsers;
+    },
+    messageDates() {
+      return this.chatList.map(x => ({
+        messageID: x.ID,
+        timestamp: timestampToAgoStamp(x.Date),
+      }));
+    },
+    groupedDates() {
+      let grouped = [];
+      this.messageDates.forEach(x => {
+        if (!grouped.some(g => g.timestamp === x.timestamp)) {
+          grouped.push(x);
+        }
+      });
+      return grouped;
+    },
+    activeTimestamp() {
+      return this.groupedDates[0];
     },
   },
   methods: {
@@ -232,6 +252,7 @@ export default {
 }
 
 .messenger {
+  position: relative;
   flex: 1 1 auto;
   display: flex;
   max-height: 100%;
@@ -258,6 +279,21 @@ export default {
   }
   &__add-message {
     flex: 0 0 auto;
+  }
+  &__timestamp {
+    position: absolute;
+    z-index: 2;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 3px 15px;
+    font-size: 12px;
+    line-height: 23px;
+    text-align: center;
+    min-width: 115px;
+    background: #ffffff;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.16);
+    border-radius: 50px;
   }
 }
 
