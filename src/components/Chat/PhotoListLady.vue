@@ -22,6 +22,25 @@
             <ui-radio isRed isBig v-model="filter.isRead" cbValue="1" name="isRead" label="Нет"/>
           </div>
         </div>
+        <div class="modal__content">
+          <div class="photo-grid">
+            <div class="photo" v-for="(photo, idx) in photos" :key="idx" :data-id="photo.ID">
+              <div class="photo__image">
+                <img v-img :src="photo.Thumbnail">
+              </div>
+              <div class="photo__content">
+                <div class="photo__content-row">
+                  <span>Отправлено:</span>
+                  <span>{{photo.SendDate}}</span>
+                </div>
+                <div class="photo__content-row">
+                  <span>Просмотрено:</span>
+                  <span>{{photo.ReadDate}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </Panel>
   </modal>
@@ -31,6 +50,7 @@
 import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import UiRadio from '@/components/Shared/UI/Radio.vue';
 import Panel from '@/components/Shared/Layout/Panel.vue';
+import api from '@/helpers/Api';
 
 export default {
   name: 'AddEditModal',
@@ -61,8 +81,20 @@ export default {
     beforeOpen(event) {
       this.users = event.params.users;
       // this.type = event.params.type;
+      this.fetchApi();
     },
-
+    fetchApi() {
+      api
+        .get('chats/photos', {
+          params: this.users,
+        })
+        .then(res => {
+          this.photos = res.data;
+        })
+        .catch(err => {
+          this.showNotification({ message: err });
+        });
+    },
     resetState() {
       this.filter = {
         isSend: null,
@@ -70,6 +102,12 @@ export default {
       };
       this.users = {};
       this.photos = [];
+    },
+  },
+  notifications: {
+    showNotification: {
+      title: 'Ошибка при загрузке фото',
+      type: 'error',
     },
   },
 };
@@ -84,6 +122,24 @@ export default {
   &__filter {
     display: flex;
     flex-wrap: wrap;
+  }
+  &__content {
+    flex: 1 1 auto;
+    max-height: 100%;
+    &::-webkit-scrollbar {
+      width: 3px;
+      margin-top: 10px;
+    }
+
+    &::-webkit-scrollbar-track {
+      border-left: 3px solid rgba(black, 0.2);
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-left: 3px solid $colorOrange;
+    }
   }
 }
 
@@ -102,6 +158,44 @@ export default {
     margin-right: 15px;
     &:last-child {
       margin-right: 0px;
+    }
+  }
+}
+
+.photo-grid {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -10px;
+}
+
+.photo {
+  width: 100%;
+  flex: 0 0 33.3333%;
+  max-width: 33.3333%;
+  padding-left: 10px;
+  padding-right: 10px;
+  &__image {
+    img {
+      max-width: 100%;
+    }
+  }
+  &__content {
+    margin: 15px 0 20px;
+  }
+  &__content-row {
+    display: flex;
+    font-size: 11px;
+    margin-top: 0.5em;
+    color: rgba($fontColor, 0.5);
+    span {
+      display: inline-block;
+      width: 100%;
+      flex: 0 0 50%;
+      max-width: 50%;
+      &:nth-child(2) {
+        text-align: right;
+        color: $fontColor;
+      }
     }
   }
 }

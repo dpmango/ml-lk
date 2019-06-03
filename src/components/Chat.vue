@@ -133,12 +133,21 @@ export default {
       // this.$socket.sendObj({msg: 'test'})
     },
     sendFile(file) {
+      console.log(file);
       api
-        .post('chats/photos', {
-          man: this.currentUsers.man,
-          lady: this.currentUsers.lady,
-          file: file,
-        })
+        .post(
+          'chats/photos',
+          {
+            man: this.currentUsers.man,
+            lady: this.currentUsers.lady,
+            file: file,
+          },
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          },
+        )
         .then(res => {
           const apiData = res.data[0];
           console.log('res post /chats/photos', apiData);
