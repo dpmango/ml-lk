@@ -6,8 +6,8 @@
     </div>
     <div class="chat__messenger">
       <div class="messenger">
-        <div class="messenger__timestamp">{{activeTimestamp.timestamp}}</div>
-        <div class="messenger__list">
+        <div class="messenger__timestamp" v-if="activeTimestamp">{{activeTimestamp.timestamp}}</div>
+        <div class="messenger__list" ref="list">
           <message v-for="(message, idx) in chatList" :key="idx" :data="message" :selfID="selfID"/>
         </div>
         <div class="messenger__add-message">
@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import throttle from 'lodash/throttle';
 import ChatHead from '@/components/Chat/ChatHead.vue';
 import ChatFilter from '@/components/Chat/ChatFilter.vue';
 import Message from '@/components/Chat/Message.vue';
@@ -44,17 +45,27 @@ export default {
   },
   data() {
     return {
+      listMounted: false,
+      scrollMessageID: undefined,
       selfID: 1552269,
     };
   },
+  created() {
+    this.scrollWithThrottle = throttle(this.handleListScroll, 100);
+  },
   mounted() {
+    this.tryMount();
     // this.$connect(); // ws
     // this.$options.sockets.onopen = data => console.log('onopen', data);
     // this.$options.sockets.onmessage = data => console.log('onmessage', data);
     this.fetchChats();
     this.fetchChatInfo();
   },
+  updated() {
+    this.tryMount();
+  },
   beforeDestroy() {
+    this.$refs.list.removeEventListener('scroll', this.scrollWithThrottle, false);
     // this.$disconnect();
     this.finishChat();
   },
@@ -84,10 +95,24 @@ export default {
       return grouped;
     },
     activeTimestamp() {
-      return this.groupedDates[0];
+      if (this.scrollMessageID) {
+        let curIndex = 0;
+        this.groupedDates.forEach((x, index) => {
+          if (this.scrollMessageID >= x.messageID) {
+            curIndex = index;
+          }
+        });
+        return this.groupedDates[curIndex];
+      }
     },
   },
   methods: {
+    tryMount() {
+      if (!this.listMounted && this.$refs.list) {
+        this.listMounted = true;
+        this.$refs.list.addEventListener('scroll', this.scrollWithThrottle, false);
+      }
+    },
     fetchChats(filterParams) {
       if (!this.haveCurrentUsers) {
         return;
@@ -209,6 +234,19 @@ export default {
     },
     onFilterUpdate(filter) {
       this.fetchChats(filter);
+    },
+    handleListScroll() {
+      const listDOM = this.$refs.list;
+      const scrollTop = listDOM.scrollTop;
+      const childNodes = listDOM.childNodes;
+      let currentScrollID = undefined;
+      childNodes.forEach(x => {
+        if (scrollTop + 40 >= x.offsetTop) {
+          currentScrollID = x.getAttribute('data-id');
+          return;
+        }
+      });
+      this.scrollMessageID = currentScrollID;
     },
   },
   watch: {
