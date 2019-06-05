@@ -23,7 +23,6 @@
 <script>
 import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import UiRadio from '@/components/Shared/UI/Radio.vue';
-import { dateToTimestamp } from '@/helpers/Dates';
 
 export default {
   name: 'ChatFilter',
@@ -31,26 +30,11 @@ export default {
     SvgIcon,
     UiRadio,
   },
-  data() {
-    return {
-      filter: {
-        checkbox: '0',
-        dates: {
-          start: undefined,
-          end: undefined,
-        },
-      },
-      // calendarParams: [
-      //   {
-      //     highlight: {
-      //       backgroundColor: '#ff9800',
-      //     },
-      //     contentStyle: {
-      //       color: '#fff',
-      //     },
-      //   },
-      // ],
-    };
+  props: {
+    filter: {
+      checkbox: String,
+      dates: ['start', 'end'],
+    },
   },
   computed: {
     shouldShowCalendar() {
@@ -67,29 +51,6 @@ export default {
         type: 'is-primary',
         message: '',
       };
-    },
-  },
-  methods: {
-    filterToParams(filter) {
-      let result = {};
-
-      if (filter.checkbox !== '0') {
-        result.filter = filter.checkbox;
-      }
-      if (filter.checkbox === '3') {
-        result.date_1 = dateToTimestamp(this.filter.dates.start);
-        result.date_2 = dateToTimestamp(this.filter.dates.end);
-      }
-      return result;
-    },
-  },
-  watch: {
-    filter: {
-      handler(Old, New) {
-        console.log('filter changed');
-        this.$emit('update', this.filterToParams(New));
-      },
-      deep: true,
     },
   },
 };

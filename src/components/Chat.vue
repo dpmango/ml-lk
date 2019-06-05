@@ -2,7 +2,7 @@
   <div class="chat" v-if="haveCurrentUsers">
     <div class="chat__head">
       <chat-head/>
-      <chat-filter @update="onFilterUpdate"/>
+      <chat-filter :filter="filter"/>
     </div>
     <div class="chat__messenger">
       <div class="messenger">
@@ -31,7 +31,7 @@ import ChatFilter from '@/components/Chat/ChatFilter.vue';
 import Message from '@/components/Chat/Message.vue';
 import AddMessage from '@/components/Chat/AddMessage.vue';
 import ModalPhotoListLady from '@/components/Chat/PhotoListLady.vue';
-import { timestampToAgoStamp } from '@/helpers/Dates';
+import { timestampToAgoStamp, dateToTimestamp } from '@/helpers/Dates';
 import api from '@/helpers/Api';
 
 export default {
@@ -45,6 +45,17 @@ export default {
   },
   data() {
     return {
+      filter: {
+        checkbox: '0',
+        dates: {
+          start: undefined,
+          end: undefined,
+        },
+      },
+      scrollFetch: {
+        isLoading: false,
+        moreResultsAvailable: true,
+      },
       listMounted: false,
       scrollMessageID: undefined,
     };
@@ -112,14 +123,27 @@ export default {
         this.$refs.list.addEventListener('scroll', this.scrollWithThrottle, false);
       }
     },
-    fetchChats(filterParams) {
+    filterToParams() {
+      let result = {};
+
+      if (this.filter.checkbox !== '0') {
+        result.filter = this.filter.checkbox;
+      }
+      if (this.filter.checkbox === '3') {
+        result.date_1 = dateToTimestamp(this.filter.dates.start);
+        result.date_2 = dateToTimestamp(this.filter.dates.end);
+      }
+      return result;
+    },
+    fetchChats() {
       if (!this.haveCurrentUsers) {
         return;
       }
       let queryObj = this.currentUsers;
 
-      if (filterParams) {
-        queryObj = { ...queryObj, ...filterParams };
+      const filter = this.filterToParams();
+      if (filter) {
+        queryObj = { ...queryObj, ...filter };
       }
 
       api
@@ -231,9 +255,6 @@ export default {
           this.showNotification({ message: err });
         });
     },
-    onFilterUpdate(filter) {
-      this.fetchChats(filter);
-    },
     handleListScroll() {
       const listDOM = this.$refs.list;
       const scrollTop = listDOM.scrollTop;
@@ -242,10 +263,32 @@ export default {
       childNodes.forEach(x => {
         if (scrollTop + 40 >= x.offsetTop) {
           currentScrollID = x.getAttribute('data-id');
+          // todo fix return from loop
           return;
         }
       });
       this.scrollMessageID = currentScrollID;
+
+      // scroll fetch logic
+      const scrollRemaining = listDOM.scrollHeight - listDOM.scrollTop - listDOM.offsetHeight;
+      if (
+        scrollRemaining <= 150 &&
+        !this.scrollFetch.isLoading &&
+        this.scrollFetch.moreResultsAvailable
+      ) {
+        // const lastId = this.ladies[this.ladies.length - 2].ID;
+        this.scrollFetch.isLoading = true;
+
+        // api
+        //   .get(`ladies?last_id=${lastId}`, {
+        //     params: this.filterToParams(),
+        //   })
+        //   .then(res => {
+        //     this.ladies = this.ladies.concat(res.data.slice(1));
+        //     this.scrollFetch.isLoading = false;
+        //     this.scrollFetch.moreResultsAvailable = res.data.length === 21;
+        //   });
+      }
     },
   },
   watch: {
@@ -255,6 +298,12 @@ export default {
         this.fetchChats();
         this.fetchChatInfo();
       }
+    },
+    filter: {
+      handler(Old, New) {
+        this.fetchChats();
+      },
+      deep: true,
     },
   },
   notifications: {

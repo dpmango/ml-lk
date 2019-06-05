@@ -43,7 +43,6 @@ export default {
   },
   methods: {
     toggleFilter() {
-      console.log('toggling filter');
       this.isFilterOpen = !this.isFilterOpen;
     },
     clickClear(e) {
