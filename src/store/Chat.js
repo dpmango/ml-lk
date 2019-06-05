@@ -38,7 +38,7 @@ const Chat = {
       const res = findByUsers(state.info, users);
       return res ? res.data : {};
     },
-    getAvatarFromSender: state => (users, sender) => {
+    getUserFromMessageSender: state => (users, sender) => {
       let res = {};
       const pair = findByUsers(state.info, users);
       if (pair) {
@@ -47,7 +47,7 @@ const Chat = {
         if (pairMan.ID === sender) {
           res = pairMan;
         } else if (pairLady.ID === sender) {
-          res = pairLady;
+          res = { ...pairLady, ...{ isLady: true } };
         }
       }
       return res;

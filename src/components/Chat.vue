@@ -8,7 +8,7 @@
       <div class="messenger">
         <div class="messenger__timestamp" v-if="activeTimestamp">{{activeTimestamp.timestamp}}</div>
         <div class="messenger__list" ref="list">
-          <message v-for="(message, idx) in chatList" :key="idx" :data="message" :selfID="selfID"/>
+          <message v-for="(message, idx) in chatList" :key="idx" :data="message"/>
         </div>
         <div class="messenger__add-message">
           <add-message
@@ -47,7 +47,6 @@ export default {
     return {
       listMounted: false,
       scrollMessageID: undefined,
-      selfID: 1552269,
     };
   },
   created() {

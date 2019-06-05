@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="message"
-    :data-id="data.ID"
-    :class="{'is-outgoing' : data.Sender === selfID.toString()}"
-  >
+  <div class="message" :data-id="data.ID" :class="{'is-outgoing' : this.storeUser.isLady}">
     <UiNotification v-if="errorMessage" type="danger">{{errorMessage}}</UiNotification>
     <div class="message__wrapper">
       <Avatar
@@ -55,7 +51,6 @@ export default {
       File: Array,
       Text_only: String,
     },
-    selfID: Number,
   },
   data() {
     return {
@@ -68,7 +63,7 @@ export default {
       return this.$store.state.chat.currentUsers;
     },
     storeUser() {
-      return this.$store.getters.getAvatarFromSender(this.currentUsers, this.data.Sender);
+      return this.$store.getters.getUserFromMessageSender(this.currentUsers, this.data.Sender);
     },
     hasFile() {
       return !Array.isArray(this.data.File);
