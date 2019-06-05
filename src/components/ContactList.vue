@@ -1,49 +1,51 @@
 <template>
   <Panel name="Контакт-лист" noClearButton>
-    <form class="filter botom-line">
-      <button class="filter__clear" @click="clearFilter">Очистить</button>
+    <template v-slot:filter>
+      <div class="filter botom-line">
+        <button class="filter__clear" @click="clearFilter">Очистить</button>
 
-      <ul class="list">
-        <li>
-          <ui-checkbox
-            @input="filterWithDebounce"
-            v-model="filter.active"
-            name="c_active"
-            label="Активный чат"
-            bigFont
-          />
-        </li>
-        <li>
-          <ui-checkbox
-            @input="filterWithDebounce"
-            v-model="filter.new"
-            name="c_new"
-            label="Неотвеченные"
-            bigFont
-          />
-        </li>
-        <li>
-          <ui-checkbox
-            @input="filterWithDebounce"
-            v-model="filter.marked"
-            name="c_marked"
-            label="Отмеченные"
-            bigFont
-          />
-        </li>
-        <li>
-          <ui-checkbox
-            @input="filterWithDebounce"
-            v-model="filter.maleOnline"
-            name="c_maleOnline"
-            label="Мужчина онлайн"
-            bigFont
-          />
-        </li>
-      </ul>
+        <ul class="list">
+          <li>
+            <ui-checkbox
+              @input="filterWithDebounce"
+              v-model="filter.active"
+              name="c_active"
+              label="Активный чат"
+              bigFont
+            />
+          </li>
+          <li>
+            <ui-checkbox
+              @input="filterWithDebounce"
+              v-model="filter.new"
+              name="c_new"
+              label="Неотвеченные"
+              bigFont
+            />
+          </li>
+          <li>
+            <ui-checkbox
+              @input="filterWithDebounce"
+              v-model="filter.marked"
+              name="c_marked"
+              label="Отмеченные"
+              bigFont
+            />
+          </li>
+          <li>
+            <ui-checkbox
+              @input="filterWithDebounce"
+              v-model="filter.maleOnline"
+              name="c_maleOnline"
+              label="Мужчина онлайн"
+              bigFont
+            />
+          </li>
+        </ul>
 
-      <LadyFilter :selected="filter.ladies" @onSelect="ladyFilterSelected"/>
-    </form>
+        <LadyFilter :selected="filter.ladies" @onSelect="ladyFilterSelected"/>
+      </div>
+    </template>
     <div class="table">
       <div class="table__content" ref="list">
         <UiNotification v-if="errorMessage" type="danger">{{errorMessage}}</UiNotification>
@@ -214,7 +216,6 @@ export default {
 }
 
 .filter {
-  flex: 0 0 auto;
   position: relative;
   display: flex;
   align-items: center;

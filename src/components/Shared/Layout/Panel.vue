@@ -1,6 +1,10 @@
 <template>
-  <div class="panel">
-    <div class="panel__head panel-head" :class="{'panel-head--no-clear' : noClearButton}">
+  <div class="panel" :class="{'is-filter-hidden' : !isFilterOpen}">
+    <div
+      class="panel__head panel-head"
+      :class="{'panel-head--no-clear' : noClearButton}"
+      @click="toggleFilter"
+    >
       <div class="panel-head__icon">
         <div class="icon-circle">
           <svg-icon name="filter" width="13" height="15"/>
@@ -8,10 +12,13 @@
       </div>
       <div class="panel-head__name">{{name}}</div>
       <template v-if="!noClearButton">
-        <div class="panel-head__action" @click="$emit('clearFilter')">
+        <div class="panel-head__action" @click="clickClear">
           <span>Очистить фильтр</span>
         </div>
       </template>
+    </div>
+    <div class="panel__filter">
+      <slot name="filter"></slot>
     </div>
     <slot></slot>
   </div>
@@ -28,6 +35,21 @@ export default {
   props: {
     name: String,
     noClearButton: Boolean,
+  },
+  data() {
+    return {
+      isFilterOpen: true,
+    };
+  },
+  methods: {
+    toggleFilter() {
+      console.log('toggling filter');
+      this.isFilterOpen = !this.isFilterOpen;
+    },
+    clickClear(e) {
+      e.stopPropagation();
+      this.$emit('clearFilter');
+    },
   },
 };
 </script>
@@ -46,6 +68,7 @@ export default {
   justify-content: center;
   text-align: center;
   font-size: 0;
+  transition: background 0.25s ease, opacity 0.25s ease;
 }
 
 .panel {
@@ -57,6 +80,21 @@ export default {
   &__head {
     flex: 0 0 auto;
     background: $colorBg;
+    cursor: pointer;
+  }
+  &__filter {
+    flex: 0 0 auto;
+  }
+  &.is-filter-hidden {
+    .panel__filter {
+      height: 0;
+      overflow: hidden;
+    }
+    .panel-head__icon {
+      .icon-circle {
+        background-color: $colorPrimary;
+      }
+    }
   }
 }
 
@@ -105,9 +143,14 @@ export default {
         flex-basis: 30px;
         max-width: 30px;
       }
-      &__name{
+      &__name {
         padding-right: 30px;
       }
+    }
+  }
+  &:hover {
+    .icon-circle {
+      opacity: 0.7;
     }
   }
 }

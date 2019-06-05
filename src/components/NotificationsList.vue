@@ -1,40 +1,42 @@
 <template>
   <Panel name="Уведомления" noClearButton>
-    <form class="filter botom-line">
-      <button class="filter__clear" @click="clearFilter">Очистить</button>
-      <UiSpoiler title="Тип уведомления">
-        <ul class="list">
-          <li>
-            <ui-checkbox
-              @input="filterWithDebounce"
-              v-model="filter.marked"
-              name="marked"
-              label="Отмеченные"
-              bigFont
-            />
-          </li>
-          <li>
-            <ui-checkbox
-              @input="filterWithDebounce"
-              v-model="filter.new"
-              name="new"
-              label="Новые"
-              bigFont
-            />
-          </li>
-          <li>
-            <ui-checkbox
-              @input="filterWithDebounce"
-              v-model="filter.maleOnline"
-              name="maleOnline"
-              label="Мужчина онлайн"
-              bigFont
-            />
-          </li>
-        </ul>
-      </UiSpoiler>
-      <LadyFilter :selected="filter.ladies" @onSelect="ladyFilterSelected"/>
-    </form>
+    <template v-slot:filter>
+      <div class="filter botom-line">
+        <button class="filter__clear" @click="clearFilter">Очистить</button>
+        <UiSpoiler title="Тип уведомления">
+          <ul class="list">
+            <li>
+              <ui-checkbox
+                @input="filterWithDebounce"
+                v-model="filter.marked"
+                name="marked"
+                label="Отмеченные"
+                bigFont
+              />
+            </li>
+            <li>
+              <ui-checkbox
+                @input="filterWithDebounce"
+                v-model="filter.new"
+                name="new"
+                label="Новые"
+                bigFont
+              />
+            </li>
+            <li>
+              <ui-checkbox
+                @input="filterWithDebounce"
+                v-model="filter.maleOnline"
+                name="maleOnline"
+                label="Мужчина онлайн"
+                bigFont
+              />
+            </li>
+          </ul>
+        </UiSpoiler>
+        <LadyFilter :selected="filter.ladies" @onSelect="ladyFilterSelected"/>
+      </div>
+    </template>
     <div class="table">
       <div class="table__content" ref="list">
         <UiNotification v-if="errorMessage" type="danger">{{errorMessage}}</UiNotification>
@@ -209,7 +211,6 @@ export default {
 }
 
 .filter {
-  flex: 0 0 auto;
   position: relative;
   display: flex;
   align-items: center;
