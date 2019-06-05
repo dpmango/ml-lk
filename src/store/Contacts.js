@@ -3,13 +3,13 @@ const Contacts = {
     contacts: [],
   },
   mutations: {
-    setContacts(state, arr) {
+    CONTACTS_SET(state, arr) {
       state.contacts = arr;
     },
-    removeContact(state, removeId) {
+    CONTACT_REMOVE(state, removeId) {
       state.contacts = state.contacts.filter(x => x.ID !== removeId);
     },
-    readContact(state, readId) {
+    CONTACT_READ(state, readId) {
       const stateCopy = state.contacts;
       const targetContact = stateCopy.find(x => x.ID === readId);
       const targetIndex = stateCopy.indexOf(targetContact);
@@ -17,19 +17,11 @@ const Contacts = {
       stateCopy[targetIndex] = targetContact;
       state.contacts = stateCopy;
     },
-    markContact(state, readId) {
+    CONTACT_TOGGLE_MARKED(state, readId) {
       const stateCopy = state.contacts;
       const targetContact = stateCopy.find(x => x.ID === readId);
       const targetIndex = stateCopy.indexOf(targetContact);
-      targetContact.Marked = '1';
-      stateCopy[targetIndex] = targetContact;
-      state.contacts = stateCopy;
-    },
-    unmarkContact(state, readId) {
-      const stateCopy = state.contacts;
-      const targetContact = stateCopy.find(x => x.ID === readId);
-      const targetIndex = stateCopy.indexOf(targetContact);
-      targetContact.Marked = '0';
+      targetContact.Marked = targetContact.Marked === '1' ? '0' : '1';
       stateCopy[targetIndex] = targetContact;
       state.contacts = stateCopy;
     },

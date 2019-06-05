@@ -3,13 +3,13 @@ const Notifications = {
     notifications: [],
   },
   mutations: {
-    setNotifications(state, arr) {
+    NOTIFICATIONS_SET(state, arr) {
       state.notifications = arr;
     },
-    removeNotification(state, removeId) {
+    NOTIFICATION_REMOVE(state, removeId) {
       state.notifications = state.notifications.filter(x => x.ID !== removeId);
     },
-    readNotification(state, readId) {
+    NOTIFICATION_READ(state, readId) {
       const stateCopy = state.notifications;
       const targetNtf = stateCopy.find(x => x.ID === readId);
       const targetIndex = stateCopy.indexOf(targetNtf);
@@ -17,19 +17,11 @@ const Notifications = {
       stateCopy[targetIndex] = targetNtf;
       state.notifications = stateCopy;
     },
-    markNotification(state, readId) {
+    NOTIFICATION_TOGGLE_MARKED(state, readId) {
       const stateCopy = state.notifications;
       const targetNtf = stateCopy.find(x => x.ID === readId);
       const targetIndex = stateCopy.indexOf(targetNtf);
-      targetNtf.Marked = '1';
-      stateCopy[targetIndex] = targetNtf;
-      state.notifications = stateCopy;
-    },
-    unmarkNotification(state, readId) {
-      const stateCopy = state.notifications;
-      const targetNtf = stateCopy.find(x => x.ID === readId);
-      const targetIndex = stateCopy.indexOf(targetNtf);
-      targetNtf.Marked = '0';
+      targetNtf.Marked = targetNtf.Marked === '1' ? '0' : '1';
       stateCopy[targetIndex] = targetNtf;
       state.notifications = stateCopy;
     },

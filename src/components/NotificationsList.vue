@@ -146,7 +146,7 @@ export default {
         })
         .then(res => {
           this.errorMessage = '';
-          this.$store.commit('setNotifications', res.data);
+          this.$store.commit('NOTIFICATIONS_SET', res.data);
         })
         .catch(err => {
           this.errorMessage = err;

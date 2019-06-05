@@ -105,7 +105,7 @@ export default {
     },
     fetchTranslators() {
       api.get('translators').then(res => {
-        this.$store.commit('updateTranslators', res.data);
+        this.$store.commit('TRANSLATORS_UPDATE', res.data);
       });
     },
     handleTranslatorClick(id) {

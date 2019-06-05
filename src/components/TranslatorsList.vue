@@ -142,7 +142,7 @@ export default {
   methods: {
     fetchApi() {
       api.get('translators').then(res => {
-        this.$store.commit('updateTranslators', res.data);
+        this.$store.commit('TRANSLATORS_UPDATE', res.data);
       });
     },
     updateComponenet() {

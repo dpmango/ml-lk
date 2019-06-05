@@ -151,7 +151,7 @@ export default {
         })
         .then(res => {
           this.errorMessage = '';
-          this.$store.commit('setContacts', res.data);
+          this.$store.commit('CONTACTS_SET', res.data);
         })
         .catch(err => {
           this.errorMessage = err;

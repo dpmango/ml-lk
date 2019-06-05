@@ -123,7 +123,7 @@ export default {
       this.pingApi({
         apiAction: 'delete',
         urlSuffix: '',
-        commitAction: 'removeContact',
+        commitAction: 'CONTACT_REMOVE',
         errTitle: 'Ошибка при удалении',
       });
     },
@@ -135,7 +135,7 @@ export default {
       this.pingApi({
         apiAction: 'get',
         urlSuffix: '/read',
-        commitAction: 'readContact',
+        commitAction: 'CONTACT_READ',
         errTitle: 'Ошибка при прочтении',
       });
     },
@@ -143,7 +143,7 @@ export default {
       this.pingApi({
         apiAction: 'get',
         urlSuffix: `/mark`,
-        commitAction: 'markContact',
+        commitAction: 'CONTACT_TOGGLE_MARKED',
         errTitle: 'Ошибка при отметке',
       });
     },
@@ -151,7 +151,7 @@ export default {
       this.pingApi({
         apiAction: 'get',
         urlSuffix: `/unmark`,
-        commitAction: 'unmarkContact',
+        commitAction: 'CONTACT_TOGGLE_MARKED',
         errTitle: 'Ошибка при снятии отметки',
       });
     },

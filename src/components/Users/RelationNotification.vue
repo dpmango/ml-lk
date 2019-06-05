@@ -118,7 +118,7 @@ export default {
       this.pingApi({
         apiAction: 'delete',
         urlSuffix: '',
-        commitAction: 'removeNotification',
+        commitAction: 'NOTIFICATION_REMOVE',
         errTitle: 'Ошибка при удалении',
       });
     },
@@ -130,7 +130,7 @@ export default {
       this.pingApi({
         apiAction: 'get',
         urlSuffix: '/read',
-        commitAction: 'readNotification',
+        commitAction: 'NOTIFICATION_READ',
         errTitle: 'Ошибка при прочтении',
       });
     },
@@ -138,7 +138,7 @@ export default {
       this.pingApi({
         apiAction: 'get',
         urlSuffix: `/mark`,
-        commitAction: 'markNotification',
+        commitAction: 'NOTIFICATION_TOGGLE_MARKED',
         errTitle: 'Ошибка при отметке',
       });
     },
@@ -146,7 +146,7 @@ export default {
       this.pingApi({
         apiAction: 'get',
         urlSuffix: `/unmark`,
-        commitAction: 'unmarkNotification',
+        commitAction: 'NOTIFICATION_TOGGLE_MARKED',
         errTitle: 'Ошибка при снятии отметки',
       });
     },
