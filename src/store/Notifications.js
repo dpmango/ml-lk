@@ -2,9 +2,17 @@ const Notifications = {
   state: {
     notifications: [],
   },
+  getters: {
+    notificationsListLastId: state => {
+      return state.notifications[state.notifications.length - 1].ID;
+    },
+  },
   mutations: {
     NOTIFICATIONS_SET(state, arr) {
       state.notifications = arr;
+    },
+    NOTIFICATIONS_APPEND(state, arr) {
+      state.notifications = state.notifications.concat(arr.slice(1));
     },
     NOTIFICATION_REMOVE(state, removeId) {
       state.notifications = state.notifications.filter(x => x.ID !== removeId);

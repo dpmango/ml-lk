@@ -114,6 +114,9 @@ export default {
     notificationsList() {
       return this.$store.state.notifications.notifications;
     },
+    notificationsListLastId() {
+      return this.$store.getters.notificationsListLastId;
+    },
   },
   methods: {
     fetchApi() {
@@ -173,25 +176,29 @@ export default {
       this.fetchWithFilter();
     },
     handleListScroll() {
-      // const listDOM = this.$refs.list;
-      // const scrollRemaining = listDOM.scrollHeight - listDOM.scrollTop - listDOM.offsetHeight;
-      // if (
-      //   scrollRemaining <= 150 &&
-      //   !this.scrollFetch.isLoading &&
-      //   this.scrollFetch.moreResultsAvailable
-      // ) {
-      //   const lastId = this.notifications[this.notifications.length - 2].ID;
-      //   this.scrollFetch.isLoading = true;
-      //   api
-      //     .get(`notifications?last_id=${lastId}`, {
-      //       params: this.filterToParams(),
-      //     })
-      //     .then(res => {
-      //       this.notifications = this.notifications.concat(res.data.slice(1));
-      //       this.scrollFetch.isLoading = false;
-      //       this.scrollFetch.moreResultsAvailable = res.data.length === 21;
-      //     });
-      // }
+      const listDOM = this.$refs.list;
+      const scrollRemaining = listDOM.scrollHeight - listDOM.scrollTop - listDOM.offsetHeight;
+      if (
+        scrollRemaining <= 150 &&
+        !this.scrollFetch.isLoading &&
+        this.scrollFetch.moreResultsAvailable
+      ) {
+        const lastId = this.notificationsListLastId;
+        this.scrollFetch.isLoading = true;
+        api
+          .get('notifications?last_id=${lastId}`', {
+            params: this.filterToParams(),
+          })
+          .then(res => {
+            this.errorMessage = '';
+            this.$store.commit('NOTIFICATIONS_APPEND', res.data);
+            this.scrollFetch.isLoading = false;
+            this.scrollFetch.moreResultsAvailable = res.data.length === 20;
+          })
+          .catch(err => {
+            this.errorMessage = err;
+          });
+      }
     },
   },
 };

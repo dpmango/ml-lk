@@ -104,7 +104,7 @@ export default {
       }));
     },
     groupedDates() {
-      let grouped = [];
+      const grouped = [];
       this.messageDates.forEach(x => {
         if (!grouped.some(g => g.timestamp === x.timestamp)) {
           grouped.push(x);
@@ -122,6 +122,7 @@ export default {
         });
         return this.groupedDates[curIndex];
       }
+      return undefined;
     },
   },
   methods: {
@@ -132,7 +133,7 @@ export default {
       }
     },
     filterToParams() {
-      let result = {};
+      const result = {};
 
       if (this.filter.checkbox !== '0') {
         result.filter = this.filter.checkbox;
@@ -209,14 +210,13 @@ export default {
       // this.$socket.sendObj({msg: 'test'})
     },
     sendFile(file) {
-      console.log(file);
       api
         .post(
           'chats/photos',
           {
             man: this.currentUsers.man,
             lady: this.currentUsers.lady,
-            file: file,
+            file,
           },
           {
             headers: {
@@ -258,23 +258,30 @@ export default {
     finishChat() {
       api
         .post('chats/finish', this.currentUsers)
-        .then(res => {})
+        .then(res => {
+          console.log('finish responsce', res.data);
+        })
         .catch(err => {
           this.showNotification({ message: err });
         });
     },
     handleListScroll() {
       const listDOM = this.$refs.list;
-      const scrollTop = listDOM.scrollTop;
-      const childNodes = listDOM.childNodes;
+      const { scrollTop, childNodes } = listDOM;
       let currentScrollID;
-      childNodes.forEach(x => {
-        if (scrollTop + 40 >= x.offsetTop) {
-          currentScrollID = x.getAttribute('data-id');
-          // todo fix return from loop
-          return;
-        }
-      });
+
+      const BreakException = {};
+
+      try {
+        childNodes.forEach(x => {
+          if (scrollTop + 40 >= x.offsetTop) {
+            currentScrollID = x.getAttribute('data-id');
+            throw BreakException;
+          }
+        });
+      } catch (e) {
+        if (e !== BreakException) throw e;
+      }
       this.scrollMessageID = currentScrollID;
 
       // scroll fetch logic
@@ -308,7 +315,7 @@ export default {
       }
     },
     filter: {
-      handler(Old, New) {
+      handler() {
         this.fetchChats();
       },
       deep: true,
