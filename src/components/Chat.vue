@@ -9,6 +9,12 @@
         <div class="messenger__timestamp" v-if="activeTimestamp">{{activeTimestamp.timestamp}}</div>
         <div class="messenger__list" ref="list">
           <message v-for="(message, idx) in chatList" :key="idx" :data="message"/>
+          <spinner
+            class="messenger__loader"
+            v-if="scrollFetch.isLoading"
+            size="medium"
+            line-fg-color="#5aa6ff"
+          />
         </div>
         <div class="messenger__add-message">
           <add-message
@@ -26,6 +32,7 @@
 
 <script>
 import throttle from 'lodash/throttle';
+import Spinner from 'vue-simple-spinner';
 import ChatHead from '@/components/Chat/ChatHead.vue';
 import ChatFilter from '@/components/Chat/ChatFilter.vue';
 import Message from '@/components/Chat/Message.vue';
@@ -37,6 +44,7 @@ import api from '@/helpers/Api';
 export default {
   name: 'Chat',
   components: {
+    Spinner,
     ChatHead,
     ChatFilter,
     Message,
@@ -380,6 +388,9 @@ export default {
     background: #ffffff;
     box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.16);
     border-radius: 50px;
+  }
+  &__loader {
+    margin: 30px 0 0px;
   }
 }
 
