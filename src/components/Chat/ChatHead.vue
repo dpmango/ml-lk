@@ -14,10 +14,16 @@
               class="user-head__name"
             >{{storeData.Man.RealName}}, {{getAge(storeData.Man.DateOfBirth)}}</div>
             <div class="user-head__actions">
-              <div class="user-head__action user-head__action--heart">
+              <div
+                class="user-head__action user-head__action--heart"
+                :class="{'is-active' : storeData.Favorite}"
+              >
                 <svg-icon name="heart" width="14" height="13"/>
               </div>
-              <div class="user-head__action user-head__action--block">
+              <div
+                class="user-head__action user-head__action--block"
+                :class="{'is-active' : storeData.Blocked}"
+              >
                 <svg-icon name="block" width="13" height="13"/>
               </div>
               <head-actions :Favorite="storeData.Favorite" :Blocked="storeData.Blocked"/>
@@ -254,10 +260,16 @@ export default {
     padding: 3px;
     font-size: 0;
     &--heart {
-      color: #ff5722;
+      color: #c6c5c5;
+      &.is-active {
+        color: #ff5722;
+      }
     }
     &--block {
-      color: #ad0000;
+      color: #c6c5c5;
+      &.is-active {
+        color: #ad0000;
+      }
     }
   }
   &__modal-link {

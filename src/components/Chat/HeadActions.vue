@@ -8,11 +8,11 @@
       <ul class="head-actions__list">
         <li>
           <a href="#" class="action-markadd" v-if="!Favorite" @click="addFavorite">
-            <svg-icon name="starmark" width="15" height="14"/>
+            <svg-icon name="heart" width="14" height="13"/>
             <span>Добавить в Избранное</span>
           </a>
           <a href="#" class="action-markremove" v-else @click="removeFavorite">
-            <svg-icon name="starmark" width="15" height="14"/>
+            <svg-icon name="heart" width="14" height="13"/>
             <span>Удалить из Избранного</span>
           </a>
           <a href="#" class="action-kiss" @click="sendKiss">
@@ -209,7 +209,7 @@ export default {
       }
       &.action-markadd {
         .svg-icon {
-          color: $colorOrange;
+          color: #ff5722;
         }
       }
       &.action-markremove {
