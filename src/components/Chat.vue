@@ -239,7 +239,7 @@ export default {
       const listDOM = this.$refs.list;
       const scrollTop = listDOM.scrollTop;
       const childNodes = listDOM.childNodes;
-      let currentScrollID = undefined;
+      let currentScrollID;
       childNodes.forEach(x => {
         if (scrollTop + 40 >= x.offsetTop) {
           currentScrollID = x.getAttribute('data-id');

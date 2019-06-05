@@ -87,39 +87,21 @@ const Chat = {
         state.info = stateCopy;
       }
     },
-    CHAT_ADD_FAVORITE(state, users) {
+    CHAT_TOGGLE_FAVORITE(state, users) {
       const stateCopy = state.info;
       const targetChat = findByUsers(state.info, users);
       const targetIndex = stateCopy.indexOf(targetChat);
 
-      targetChat.Favorite = true;
+      targetChat.data.Favorite = !targetChat.data.Favorite;
       stateCopy[targetIndex] = targetChat;
       state.info = stateCopy;
     },
-    CHAT_REMOVE_FAVORITE(state, users) {
+    CHAT_TOGGLE_BLOCKED(state, users) {
       const stateCopy = state.info;
       const targetChat = findByUsers(state.info, users);
       const targetIndex = stateCopy.indexOf(targetChat);
 
-      targetChat.Favorite = false;
-      stateCopy[targetIndex] = targetChat;
-      state.info = stateCopy;
-    },
-    CHAT_ADD_BLOCKED(state, users) {
-      const stateCopy = state.info;
-      const targetChat = findByUsers(state.info, users);
-      const targetIndex = stateCopy.indexOf(targetChat);
-
-      targetChat.Blocked = true;
-      stateCopy[targetIndex] = targetChat;
-      state.info = stateCopy;
-    },
-    CHAT_REMOVE_BLOCKED(state, users) {
-      const stateCopy = state.info;
-      const targetChat = findByUsers(state.info, users);
-      const targetIndex = stateCopy.indexOf(targetChat);
-
-      targetChat.Blocked = false;
+      targetChat.data.Blocked = !targetChat.data.Blocked;
       stateCopy[targetIndex] = targetChat;
       state.info = stateCopy;
     },

@@ -42,6 +42,7 @@
 import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import ClickOutside from 'vue-click-outside';
 import api from '@/helpers/Api';
+import apiParamsRouter from '@/helpers/ApiHelpers';
 
 export default {
   name: 'ChatHead',
@@ -73,7 +74,7 @@ export default {
       this.pingApi({
         apiAction: 'post',
         apiEndpoint: `favorites`,
-        commitAction: 'CHAT_ADD_FAVORITE',
+        commitAction: 'CHAT_TOGGLE_FAVORITE',
         errTitle: 'Ошибка при добавлении в избранное',
       });
     },
@@ -81,7 +82,7 @@ export default {
       this.pingApi({
         apiAction: 'delete',
         apiEndpoint: `favorites`,
-        commitAction: 'CHAT_REMOVE_FAVORITE',
+        commitAction: 'CHAT_TOGGLE_FAVORITE',
         errTitle: 'Ошибка при удалении из избранного',
       });
     },
@@ -100,7 +101,7 @@ export default {
       this.pingApi({
         apiAction: 'post',
         apiEndpoint: `blocklists`,
-        commitAction: 'CHAT_ADD_BLOCKED',
+        commitAction: 'CHAT_TOGGLE_BLOCKED',
         errTitle: 'Ошибка при добавлении в блоклист',
       });
     },
@@ -108,14 +109,15 @@ export default {
       this.pingApi({
         apiAction: 'delete',
         apiEndpoint: `blocklists`,
-        commitAction: 'CHAT_REMOVE_BLOCKED',
+        commitAction: 'CHAT_TOGGLE_BLOCKED',
         errTitle: 'Ошибка при удалении из блоклиста',
       });
     },
     pingApi(options) {
-      api[options.apiAction](options.apiEndpoint, {
-        params: this.currentUsers,
-      })
+      api[options.apiAction](
+        options.apiEndpoint,
+        apiParamsRouter(this.currentUsers, options.apiAction),
+      )
         .then(res => {
           const apiData = res.data[0];
           if (apiData.success) {

@@ -29,7 +29,8 @@ yarn run lint
 TOKEN BqxKJPW-BrOQA3YbNwp54gFaNcpnO9Iv
 TOKEN BqxKJPW-BrOQA3YbNwp54gFaNcpnO9I
 
-**1.Общие положения**
+## 1 .Общие положения
+
 Формат ответа по умолчанию – json
 Для изменения формата ответа на xml необходимо при запросе отправить заголовок
 Accept:application/xml
@@ -89,10 +90,6 @@ bank - реквизиты
 notes – комментарии
 file – имя загруженного файла
 price_1… price_7 – фин.показатели
-Возвращает
-[{&quot;success&quot;:true}]
-или
-[{&quot;success&quot;:false,&quot;message&quot;:&quot;Emailaddress \&quot;test@test.com\&quot; usedbyanothermember&quot;}]
 
 ### Редактирование переводчика
 
@@ -119,10 +116,6 @@ type = &#39;block&#39; – блокировка
 reason – причина блокировки (обязательно)
 type = &#39;unblock&#39; – снятие блокировки
 type = &#39;restore&#39; – восстановление после удаления
-Возвращает
-[{&quot;success&quot;:true}]
-или
-[{&quot;success&quot;:false,&quot;message&quot;:&quot;Emailaddress \&quot;test@test.com\&quot; usedbyanothermember&quot;}]
 
 ### Удаление переводчика
 
@@ -130,10 +123,6 @@ DELETE [translators/123456](translators/123456)
 где 123456 – ID переводчика
 Принимает
 reason – причина удаления (обязательно)
-Возвращает
-[{&quot;success&quot;:true}]
-или
-[{&quot;success&quot;:false,&quot;message&quot;:&quot;Emailaddress \&quot;test@test.com\&quot; usedbyanothermember&quot;}]
 
 ### Загрузка файла
 
@@ -142,8 +131,6 @@ POST [translators/files](translators/files)
 file – файл (&#39;jpg&#39;, &#39;jpeg&#39;, &#39;gif&#39;, &#39;png&#39;)
 Возвращает
 {&quot;success&quot;:true, &quot;File&quot;:xxxxxx, &quot;Url&quot;:&quot;yyyyyy&quot;}, где xxxxxx – имя загруженного файла, Url – адрес файла
-или
-{&quot;success&quot;:false,&quot;message&quot;:&quot;Emailaddress \&quot;test@test.com\&quot; usedbyanothermember&quot;}
 
 ### Удалить файл (не отправленный)
 
@@ -164,10 +151,6 @@ POST [translators/123456/ladies](translators/123456/ladies)
 где 123456 – ID переводчика
 Принимает
 ladies – список ID девушек (через запятую)
-Возвращает
-[{&quot;success&quot;:true}]
-или
-[{&quot;success&quot;:false,&quot;message&quot;:&quot;Email address \&quot;test@test.com\&quot; used by another member&quot;}]
 
 ### Удалить девушку у переводчика
 
@@ -176,10 +159,6 @@ DELETE [translators/123456/ladies](translators/123456/ladies)
 где 123456 – ID переводчика
 Принимает
 ladies – список ID девушек (через запятую)
-Возвращает
-[{&quot;success&quot;:true}]
-или
-[{&quot;success&quot;:false,&quot;message&quot;:&quot;Email address \&quot;test@test.com\&quot; used by another member&quot;}]
 
 ## 4. Контакт-лист
 
@@ -199,37 +178,21 @@ GET https://api-m.marmeladies.com/v1/contacts?page=2
 
 DELETE https://api-m.marmeladies.com/v1/contacts/123456
 где 123456 – ID контакта
-Возвращает
-[{"success":true}]
-или
-[{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
 
 ### + Прочитать
 
 GET https://api-m.marmeladies.com/v1/contacts/123456/read
 где 123456 – ID контакта
-Возвращает
-[{"success":true}]
-или
-[{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
 
 ### + Отметить
 
 GET https://api-m.marmeladies.com/v1/contacts/123456/mark
 где 123456 – ID контакта
-Возвращает
-[{"success":true}]
-или
-[{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
 
 ### + Снять отметку
 
 GET https://api-m.marmeladies.com/v1/contacts/123456/unmark
 где 123456 – ID контакта
-Возвращает
-[{"success":true}]
-или
-[{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
 
 ## 5. Уведомления
 
@@ -251,28 +214,16 @@ GET https://api-m.marmeladies.com/v1/notifications?page=2
 
 DELETE https://api-m.marmeladies.com/v1/notifications/123456
 где 123456 – ID уведомления
-Возвращает
-[{"success":true}]
-или
-[{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
 
 ### + Прочитать
 
 GET https://api-m.marmeladies.com/v1/notifications/123456/read
 где 123456 – ID уведомления
-Возвращает
-[{"success":true}]
-или
-[{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
 
 ### + Отметить
 
 GET https://api-m.marmeladies.com/v1/notifications/123456/mark
 где 123456 – ID уведомления
-Возвращает
-[{"success":true}]
-или
-[{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
 
 ### + Снять отметку
 
@@ -320,10 +271,6 @@ man – ID мужчины
 lady – ID девушки
 text – текст
 Для комментариев о паре передаем man, lady и text, для комментариев о мужчине передаем только man и text, для комментариев о девушки передаем только lady и text
-Возвращает
-[{"success":true}]
-или
-[{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
 
 ### - Написать сообщение в чат
 
@@ -351,8 +298,6 @@ lady – ID девушки
 file – файл
 Возвращает
 {"success":true, "ID":xxxxxx, "Url_1":xxxxxx, "Url_2":xxxxxx}, где xxxxxx – ID загруженного фото, Url_1 – адрес превью, Url_2 – адрес самого фото
-или
-{"success":false,"message":"Email address \"test@test.com\" used by another member"}
 
 ### + Список фото
 
@@ -366,20 +311,11 @@ lady – ID девушки
 
 GET https://api-m.marmeladies.com/v1/chats/39260171/mark
 где 39260171 – ID Message
-Возвращает
-[{"success":true}]
-или
-{"success":false,"message":"Email address \"test@test.com\" used by another member"}
 
 ### + Снять отметку
 
 GET https://api-m.marmeladies.com/v1/chats/39260171/unmark
 где 39260171 – ID Message
-Возвращает
-[{"success":true}]
-или
-{"success":false,"message":"Email address \"test@test.com\" used by another member"}
-Переименуйте фильтр Избранные в Отмеченные
 
 ### - Завершить чат
 
@@ -389,8 +325,6 @@ GET https://api-m.marmeladies.com/v1/chats/finish
 Принимает
 man – ID мужчины
 lady – ID девушки
-Возвращает
-[{"success":true}]
 
 ### + Отправить typing_notification (не чаще чем раз в 10 сек)
 
@@ -398,75 +332,47 @@ GET https://api-m.marmeladies.com/v1/chats/typing
 Принимает
 man – ID мужчины
 lady – ID девушки
-Возвращает
-[{"success":true}]
 
-## 7. - Избранное
+## 7. + Избранное
 
-cors error + 500 error
 Добавить
 POST https://api-m.marmeladies.com/v1/favorites
 Принимает
 man – ID мужчины
 lady – ID девушки
-Возвращает
-[{"success":true}]
-или
-[{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
 
-### - Удалить
-
-cors error + 500 error
+### + Удалить
 
 DELETE https://api-m.marmeladies.com/v1/favorites
 Принимает
 man – ID мужчины
 lady – ID девушки
-Возвращает
-[{"success":true}]
-или
-[{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
 
 ## 8. Блоклист
 
-### - Добавить
-
-cors error + 500 error
+### + Добавить
 
 POST https://api-m.marmeladies.com/v1/blocklists
 Принимает
 man – ID мужчины
 lady – ID девушки
-Возвращает
-[{"success":true}]
-или
-[{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
 
-### - Удалить
+### + Удалить
 
 DELETE https://api-m.marmeladies.com/v1/blocklists
 Принимает
 man – ID мужчины
 lady – ID девушки
-Возвращает
-[{"success":true}]
-или
-[{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
 
 ## 9. Подмигивания
 
 ### - Отправить
 
-cors error + 500 error
-
+member not available
 POST https://api-m.marmeladies.com/v1/kisses
 Принимает
 man – ID мужчины
 lady – ID девушки
-Возвращает
-[{"success":true}]
-или
-[{"success":false,"message":"Email address \"test@test.com\" used by another member"}]
 
 ## 10. Мужчины
 

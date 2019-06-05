@@ -61,7 +61,6 @@
         </div>
       </div>
     </div>
-    {{storeData.Comments_man}}
     <div class="chat-head__wrapper">
       <div class="chat-head__col">
         <textarea
@@ -160,8 +159,6 @@ export default {
       } else {
         return false;
       }
-
-      console.log({ postOptions });
 
       api
         .post('chats/comments', postOptions)
