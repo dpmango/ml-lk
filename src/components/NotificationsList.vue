@@ -186,7 +186,7 @@ export default {
         const lastId = this.notificationsListLastId;
         this.scrollFetch.isLoading = true;
         api
-          .get('notifications?last_id=${lastId}`', {
+          .get(`notifications?last_id=${lastId}`, {
             params: this.filterToParams(),
           })
           .then(res => {

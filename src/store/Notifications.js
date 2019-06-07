@@ -12,7 +12,8 @@ const Notifications = {
       state.notifications = arr;
     },
     NOTIFICATIONS_APPEND(state, arr) {
-      state.notifications = state.notifications.concat(arr.slice(1));
+      // slice(1)
+      state.notifications = state.notifications.concat(arr);
     },
     NOTIFICATION_REMOVE(state, removeId) {
       state.notifications = state.notifications.filter(x => x.ID !== removeId);

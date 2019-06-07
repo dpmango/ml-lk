@@ -9,7 +9,7 @@
       />
       <div class="message__text" v-html="data.Text" v-if="!hasFile"/>
       <div class="message__file" v-if="hasFile">
-        <img v-img :src="getFile(data.File.Url_1)">
+        <img v-img :src="fileBase64">
       </div>
       <div class="message__actions">
         <div
@@ -72,6 +72,11 @@ export default {
       return timestampToTime(this.data.Date);
     },
   },
+  mounted() {
+    if (this.hasFile) {
+      this.getFile(this.data.File.Url_1);
+    }
+  },
   methods: {
     getFile(url) {
       api
@@ -80,7 +85,7 @@ export default {
         })
         .then(res => {
           const imgToBase64 = Buffer.from(res.data, 'binary').toString('base64');
-          return `data:image/png;base64, ${imgToBase64}`;
+          this.fileBase64 = `data:image/png;base64, ${imgToBase64}`;
         })
         .catch(err => {
           this.errorMessage = `File: ${err}`;
@@ -111,7 +116,7 @@ export default {
             this.$store.commit('CHAT_TOGGLE_MESSAGE_MARKED', {
               users: this.currentUsers,
               messageID: this.data.ID,
-              isMarked: isMarked,
+              isMarked,
             });
           } else {
             this.showNotification({ title: options.errTitle, message: apiData.message });
@@ -154,6 +159,17 @@ export default {
       vertical-align: baseline;
     }
   }
+  &__file {
+    margin-left: 20px;
+    border: 1px solid #e1e1e1;
+    box-sizing: border-box;
+    border-radius: 10px 10px 10px 0px;
+    overflow: hidden;
+    font-size: 0;
+    img {
+      max-width: 100%;
+    }
+  }
   &__actions {
     display: flex;
     flex-direction: column;
@@ -190,6 +206,9 @@ export default {
       }
       &__text {
         background: rgba($colorPrimary, 0.2);
+      }
+      &__text,
+      &__file {
         border-radius: 10px 10px 0px 10px;
         margin-right: 20px;
         margin-left: 0px;
