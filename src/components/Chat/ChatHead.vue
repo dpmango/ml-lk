@@ -160,7 +160,7 @@ export default {
         postOptions = {
           man: this.currentUsers.man,
           lady: this.currentUsers.lady,
-          text: this.storeData.Comments_pari,
+          text: this.storeData.Comments_pair,
         };
       } else {
         return false;
@@ -170,9 +170,7 @@ export default {
         .post('chats/comments', postOptions)
         .then(res => {
           const apiData = res.data[0];
-          console.log('res post /chats/comments', apiData);
           if (apiData.success) {
-            this.showNotification({ type: 'success', title: 'комментарий обновлен загружено' });
           } else {
             this.showNotification({ message: apiData.message });
           }
