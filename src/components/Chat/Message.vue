@@ -9,7 +9,8 @@
       />
       <div class="message__text" v-html="data.Text" v-if="!hasFile"/>
       <div class="message__file" v-if="hasFile">
-        <img v-img :src="fileBase64">
+        <!-- <a v-img="{'src': fileBase64Full}"></a> -->
+        <img v-img="{'src': fileBase64Full}" :src="fileBase64Thumb">
       </div>
       <div class="message__actions">
         <div
@@ -55,7 +56,8 @@ export default {
   data() {
     return {
       errorMessage: '',
-      fileBase64: '',
+      fileBase64Thumb: '',
+      fileBase64Full: '',
     };
   },
   computed: {
@@ -74,18 +76,23 @@ export default {
   },
   mounted() {
     if (this.hasFile) {
-      this.getFile(this.data.File.Url_1);
+      this.getFile(this.data.File.Url_1, 'thumb');
+      this.getFile(this.data.File.Url_2, 'full');
     }
   },
   methods: {
-    getFile(url) {
+    getFile(url, type) {
       api
         .get(url, {
           responseType: 'arraybuffer',
         })
         .then(res => {
           const imgToBase64 = Buffer.from(res.data, 'binary').toString('base64');
-          this.fileBase64 = `data:image/png;base64, ${imgToBase64}`;
+          if (type === 'thumb') {
+            this.fileBase64Thumb = `data:image/png;base64, ${imgToBase64}`;
+          } else if (type === 'full') {
+            this.fileBase64Full = `data:image/png;base64, ${imgToBase64}`;
+          }
         })
         .catch(err => {
           this.errorMessage = `File: ${err}`;
@@ -160,14 +167,23 @@ export default {
     }
   }
   &__file {
+    position: relative;
     margin-left: 20px;
     border: 1px solid #e1e1e1;
     box-sizing: border-box;
     border-radius: 10px 10px 10px 0px;
     overflow: hidden;
     font-size: 0;
+    a {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
     img {
       max-width: 100%;
+      // pointer-events: none;
     }
   }
   &__actions {
