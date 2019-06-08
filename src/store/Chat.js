@@ -72,6 +72,16 @@ const Chat = {
         state.chats = stateCopy;
       }
     },
+    PREPEND_CHAT_LIST(state, payload) {
+      const stateCopy = state.chats;
+      const targetChat = findByUsers(stateCopy, payload.users);
+
+      const targetIndex = stateCopy.indexOf(targetChat);
+      const shiftedPrepend = payload.list;
+      targetChat.list = [...shiftedPrepend, ...targetChat.list];
+      stateCopy[targetIndex] = targetChat;
+      state.chats = stateCopy;
+    },
     SET_CHAT_INFO(state, payload) {
       const stateCopy = state.info;
       const targetChat = findByUsers(state.info, payload.users);

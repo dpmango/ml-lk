@@ -6,15 +6,18 @@
     </div>
     <div class="chat__messenger">
       <div class="messenger">
-        <div class="messenger__timestamp" v-if="activeTimestamp">{{activeTimestamp.timestamp}}</div>
+        <div
+          class="messenger__timestamp"
+          v-if="activeTimestamp && !scrollFetch.isLoading"
+        >{{activeTimestamp.timestamp}}</div>
+        <spinner
+          class="messenger__loader"
+          v-if="scrollFetch.isLoading"
+          size="medium"
+          line-fg-color="#5aa6ff"
+        />
         <div class="messenger__list" ref="list">
           <message v-for="(message, idx) in chatList" :key="idx" :data="message"/>
-          <spinner
-            class="messenger__loader"
-            v-if="scrollFetch.isLoading"
-            size="medium"
-            line-fg-color="#5aa6ff"
-          />
         </div>
         <div class="messenger__add-message">
           <add-message
@@ -40,6 +43,7 @@ import AddMessage from '@/components/Chat/AddMessage.vue';
 import ModalPhotoListLady from '@/components/Chat/PhotoListLady.vue';
 import { timestampToAgoStamp, dateToTimestamp } from '@/helpers/Dates';
 import api from '@/helpers/Api';
+import { setTimeout } from 'timers';
 
 export default {
   name: 'Chat',
@@ -144,15 +148,23 @@ export default {
       }
       return result;
     },
-    fetchChats() {
+    buildFetchQuery() {
       if (!this.haveCurrentUsers) {
         return;
       }
+
       let queryObj = this.currentUsers;
 
       const filter = this.filterToParams();
       if (filter) {
         queryObj = { ...queryObj, ...filter };
+      }
+      return queryObj;
+    },
+    fetchChats() {
+      const queryObj = this.buildFetchQuery();
+      if (!queryObj) {
+        return;
       }
 
       api
@@ -164,6 +176,10 @@ export default {
             users: this.currentUsers,
             list: res.data,
           });
+          // scroll to the end of the list
+          setTimeout(() => {
+            this.$refs.list.scrollTop = this.$refs.list.scrollHeight;
+          }, 100);
         })
         .catch(err => {
           this.showNotification({ message: err });
@@ -268,12 +284,12 @@ export default {
     handleListScroll() {
       const listDOM = this.$refs.list;
       const { scrollTop, childNodes } = listDOM;
+      const MessageNodesReverse = [...childNodes].reverse();
       let currentScrollID;
 
       const BreakException = {};
-
       try {
-        childNodes.forEach(x => {
+        MessageNodesReverse.forEach(x => {
           if (scrollTop + 40 >= x.offsetTop) {
             currentScrollID = x.getAttribute('data-id');
             throw BreakException;
@@ -285,38 +301,57 @@ export default {
       this.scrollMessageID = currentScrollID;
 
       // scroll fetch logic
-      const scrollRemaining = listDOM.scrollHeight - listDOM.scrollTop - listDOM.offsetHeight;
+      // const scrollRemaining = listDOM.scrollHeight - listDOM.scrollTop - listDOM.offsetHeight;
+      const scrollRemaining = listDOM.scrollTop;
+
       if (
         scrollRemaining <= 150 &&
         !this.scrollFetch.isLoading &&
         this.scrollFetch.moreResultsAvailable
       ) {
-        // const lastId = this.ladies[this.ladies.length - 2].ID;
+        const firstId = this.chatList[1].ID;
         this.scrollFetch.isLoading = true;
+        const queryObj = this.buildFetchQuery();
+        if (!queryObj) {
+          return;
+        }
 
-        // api
-        //   .get(`ladies?last_id=${lastId}`, {
-        //     params: this.filterToParams(),
-        //   })
-        //   .then(res => {
-        //     this.ladies = this.ladies.concat(res.data.slice(1));
-        //     this.scrollFetch.isLoading = false;
-        //     this.scrollFetch.moreResultsAvailable = res.data.length === 21;
-        //   });
+        api
+          .get(`chats?last_id=${firstId}`, {
+            params: queryObj,
+          })
+          .then(res => {
+            this.$store.commit('PREPEND_CHAT_LIST', {
+              users: this.currentUsers,
+              list: res.data.slice(0, res.data.length - 1),
+            });
+            this.scrollFetch.isLoading = false;
+            this.scrollFetch.moreResultsAvailable = res.data.length === 21;
+          })
+          .catch(err => {
+            this.showNotification({ message: err });
+          });
       }
+    },
+    resetScrollFetch() {
+      this.scrollFetch.isLoading = false;
+      this.scrollFetch.moreResultsAvailable = true;
+      this.scrollMessageID = undefined;
     },
   },
   watch: {
     currentUsers(Old, New) {
-      // when current users change - request new data from API
+      // when current users change
       if (Old.man !== New.man || Old.lady !== New.lady) {
         this.fetchChats();
         this.fetchChatInfo();
+        this.resetScrollFetch();
       }
     },
     filter: {
       handler() {
         this.fetchChats();
+        this.resetScrollFetch();
       },
       deep: true,
     },
@@ -397,7 +432,11 @@ export default {
     border-radius: 50px;
   }
   &__loader {
-    margin: 30px 0 0px;
+    position: absolute;
+    z-index: 3;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
   }
 }
 

@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { timestampToTime } from '@/helpers/Dates';
+import { timestampToAgoStamp, timestampToTime } from '@/helpers/Dates';
 import UiNotification from '@/components/Shared/UI/Notification.vue';
 import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import Avatar from '@/components/Users/Avatar.vue';
@@ -71,6 +71,7 @@ export default {
       return !Array.isArray(this.data.File);
     },
     timeStamp() {
+      // return timestampToAgoStamp(this.data.Date);
       return timestampToTime(this.data.Date);
     },
   },
