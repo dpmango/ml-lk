@@ -72,7 +72,7 @@ import UiCheckbox from '@/components/Shared/UI/Checkbox.vue';
 import UiNotification from '@/components/Shared/UI/Notification.vue';
 import RelationContact from '@/components/Users/RelationContact.vue';
 import LadyFilter from '@/components/Ladies/LadyFilter.vue';
-import LadyFilterSelected from '@/components/Ladies/LadyFilterSelected';
+import LadyFilterSelected from '@/components/Ladies/LadyFilterSelected.vue';
 import api from '@/helpers/Api';
 
 const defaultFilterState = {

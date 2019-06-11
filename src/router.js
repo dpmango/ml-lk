@@ -18,15 +18,5 @@ export default new Router({
       name: 'Translators',
       component: () => import('./pages/Translators.vue'),
     },
-    {
-      path: '/ladies',
-      name: 'Ladies',
-      component: () => import('./pages/Ladies.vue'),
-    },
-    {
-      path: '/invite',
-      name: 'Invite',
-      component: () => import('./pages/Invite.vue'),
-    },
   ],
 });
