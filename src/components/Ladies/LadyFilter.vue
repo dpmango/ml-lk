@@ -12,7 +12,7 @@
           :class="{'is-selected' : selected.indexOf(lady.ID) !== -1}"
           v-for="(lady, idx) in list"
           :key="idx"
-          @click="handleLadyClick(lady.ID)"
+          @click="handleLadyClick(lady)"
         >
           <Avatar :Thumbnail="lady.Thumbnail" :RealName="lady.RealName" :Online="lady.Online"/>
           <div class="lady-card__content">
@@ -79,12 +79,13 @@ export default {
     hideDropdown() {
       this.isOpened = false;
     },
-    handleLadyClick(id) {
-      this.$emit('onSelect', id);
+    handleLadyClick(lady) {
+      this.$emit('onSelect', lady);
     },
     handleSelectAllClick() {
-      const allIDs = this.list.map(x => x.ID);
-      this.$emit('onSelect', allIDs);
+      // const allIDs = this.list.map(x => x.ID);
+      // this.$emit('onSelect', allIDs);
+      this.$emit('onSelect', this.list);
     },
     fetchApi() {
       api

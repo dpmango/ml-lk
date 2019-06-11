@@ -14,6 +14,9 @@
           <span>{{MsgNew}}</span>
         </div>
       </div>
+      <div class="user-relation__delete" v-if="removable" @click="$emit('onRemoveClick')">
+        <svg-icon name="close" width="12" height="12"/>
+      </div>
     </div>
   </div>
 </template>
@@ -37,6 +40,7 @@ export default {
     Thumbnail: String,
     ChatNew: String,
     MsgNew: String,
+    removable: Boolean,
   },
   computed: {
     haveMsgCounters() {
@@ -57,6 +61,7 @@ export default {
 @import '@/theme/utils.scss';
 
 .user-relation {
+  position: relative;
   display: flex;
   align-items: center;
 
@@ -102,6 +107,19 @@ export default {
   }
   &__msgnew {
     color: #ff9800;
+  }
+  &__delete {
+    position: absolute;
+    right: -5px;
+    top: 50%;
+    padding: 5px;
+    transform: translateY(-50%);
+    color: rgba($fontColor, 0.4);
+    transition: color 0.25s ease-in-out;
+    cursor: pointer;
+    &:hover {
+      color: $colorRed;
+    }
   }
 }
 </style>

@@ -34,7 +34,8 @@
             </li>
           </ul>
         </UiSpoiler>
-        <LadyFilter :selected="filter.ladies" filterGetList="3" @onSelect="ladyFilterSelected"/>
+        <LadyFilter :selected="ladyFilterIDs" filterGetList="3" @onSelect="ladyFilterSelected"/>
+        <LadyFilterSelected :data="filter.ladies" @onRemove="ladyFilterSelected"/>
       </div>
     </template>
     <div class="table">
@@ -68,6 +69,7 @@ import UiNotification from '@/components/Shared/UI/Notification.vue';
 import UiSpoiler from '@/components/Shared/UI/Spoiler.vue';
 import RelationNotification from '@/components/Users/RelationNotification.vue';
 import LadyFilter from '@/components/Ladies/LadyFilter.vue';
+import LadyFilterSelected from '@/components/Ladies/LadyFilterSelected';
 import api from '@/helpers/Api';
 
 const defaultFilterState = {
@@ -88,6 +90,7 @@ export default {
     UiSpoiler,
     RelationNotification,
     LadyFilter,
+    LadyFilterSelected,
   },
   data() {
     return {
@@ -116,6 +119,9 @@ export default {
     },
     notificationsListLastId() {
       return this.$store.getters.notificationsListLastId;
+    },
+    ladyFilterIDs() {
+      return this.filter.ladies.map(x => x.ID);
     },
   },
   methods: {
@@ -161,15 +167,16 @@ export default {
       this.filter = cloneDeep(defaultFilterState);
       this.fetchWithFilter();
     },
-    ladyFilterSelected(id) {
-      if (Array.isArray(id)) {
-        this.filter.ladies = id;
+    ladyFilterSelected(payload) {
+      if (Array.isArray(payload)) {
+        this.filter.ladies = payload;
       } else {
+        // payload is a single lady
         const { ladies } = this.filter;
-        if (ladies.indexOf(id) === -1) {
-          this.filter.ladies.push(id);
+        if (ladies.indexOf(payload) === -1) {
+          this.filter.ladies.push(payload);
         } else {
-          this.filter.ladies = ladies.filter(x => x !== id);
+          this.filter.ladies = ladies.filter(x => x.ID !== payload.ID);
         }
       }
 
@@ -219,9 +226,6 @@ export default {
 
 .filter {
   position: relative;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
   padding: 15px 10px;
   .ui-checkbox {
     margin: 0px 10px;
