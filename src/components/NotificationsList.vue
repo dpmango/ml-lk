@@ -34,7 +34,7 @@
             </li>
           </ul>
         </UiSpoiler>
-        <LadyFilter :selected="filter.ladies" @onSelect="ladyFilterSelected"/>
+        <LadyFilter :selected="filter.ladies" filterGetList="3" @onSelect="ladyFilterSelected"/>
       </div>
     </template>
     <div class="table">

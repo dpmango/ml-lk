@@ -1,11 +1,12 @@
 <template>
   <div v-click-outside="hideDropdown" class="lady-filter" :class="{'is-active' : isOpened}">
     <div class="lady-filter__toggler" @click="toggleDropdown">Выбрать профиль</div>
-    <div class="lady-filter__dropdown">
-      <div class="lady-filter__cta">
+    <div class="lady-filter__dropdown" ref="list">
+      <div class="lady-filter__cta" v-if="list.length > 1">
         <a href="#" @click="handleSelectAllClick">Выбрать все</a>
       </div>
       <div class="lady-filter__list">
+        <Notification v-if="errorMessage" type="danger">{{errorMessage}}</Notification>
         <div
           class="lady-filter__lady lady-card"
           :class="{'is-selected' : selected.indexOf(lady.ID) !== -1}"
@@ -19,93 +20,57 @@
             <div class="lady-card__country">{{lady.Country}}</div>
           </div>
         </div>
+        <Notification v-if="errorMessage" type="danger">{{errorMessage}}</Notification>
+        <spinner
+          class="lady-filter__loader"
+          v-if="scrollFetch.isLoading"
+          size="medium"
+          line-fg-color="#5aa6ff"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import throttle from 'lodash/throttle';
+import Spinner from 'vue-simple-spinner';
 import Avatar from '@/components/Users/Avatar.vue';
+import Notification from '@/components/Shared/UI/Notification.vue';
 import ClickOutside from 'vue-click-outside';
+import api from '@/helpers/Api';
 
 export default {
   name: 'LadyFilter',
   components: {
     Avatar,
+    Spinner,
+    Notification,
   },
   data() {
     return {
       isOpened: false,
-      list: [
-        {
-          ID: 1,
-          Thumbnail: 'https://marmeladies.com/media/images/profile/1543646_0_17964.jpg',
-          RealName: 'Karina',
-          Age: '21',
-          Country: 'Ukraine, Kiev',
-          Online: '0',
-        },
-        {
-          ID: 2,
-          Thumbnail: 'https://marmeladies.com/media/images/profile/1543646_0_17964.jpg',
-          RealName: 'Karina',
-          Age: '21',
-          Country: 'Ukraine, Kiev',
-          Online: '1',
-        },
-        {
-          ID: 3,
-          Thumbnail: 'https://marmeladies.com/media/images/profile/1543646_0_17964.jpg',
-          RealName: 'Karina',
-          Age: '21',
-          Country: 'Ukraine, Kiev',
-          Online: '0',
-        },
-        {
-          ID: 4,
-          Thumbnail: 'https://marmeladies.com/media/images/profile/1543646_0_17964.jpg',
-          RealName: 'Karina',
-          Age: '21',
-          Country: 'Ukraine, Kiev',
-          Online: '0',
-        },
-        {
-          ID: 5,
-          Thumbnail: 'https://marmeladies.com/media/images/profile/1543646_0_17964.jpg',
-          RealName: 'Karina',
-          Age: '21',
-          Country: 'Ukraine, Kiev',
-          Online: '1',
-        },
-        {
-          ID: 6,
-          Thumbnail: 'https://marmeladies.com/media/images/profile/1543646_0_17964.jpg',
-          RealName: 'Karina',
-          Age: '21',
-          Country: 'Ukraine, Kiev',
-          Online: '0',
-        },
-        {
-          ID: 7,
-          Thumbnail: 'https://marmeladies.com/media/images/profile/1543646_0_17964.jpg',
-          RealName: 'Karina',
-          Age: '21',
-          Country: 'Ukraine, Kiev',
-          Online: '1',
-        },
-        {
-          ID: 8,
-          Thumbnail: 'https://marmeladies.com/media/images/profile/1543646_0_17964.jpg',
-          RealName: 'Karina',
-          Age: '21',
-          Country: 'Ukraine, Kiev',
-          Online: '0',
-        },
-      ],
+      scrollFetch: {
+        isLoading: false,
+        moreResultsAvailable: true,
+      },
+      list: [],
+      errorMessage: '',
     };
   },
   props: {
+    filterGetList: String,
     selected: Array,
+  },
+  created() {
+    this.scrollWithThrottle = throttle(this.handleListScroll, 100);
+  },
+  mounted() {
+    this.fetchApi();
+    this.$refs.list.addEventListener('scroll', this.scrollWithThrottle, false);
+  },
+  beforeDestroy() {
+    this.$refs.list.removeEventListener('scroll', this.scrollWithThrottle, false);
   },
   methods: {
     toggleDropdown() {
@@ -120,6 +85,35 @@ export default {
     handleSelectAllClick() {
       const allIDs = this.list.map(x => x.ID);
       this.$emit('onSelect', allIDs);
+    },
+    fetchApi() {
+      api
+        .get(`ladies?filter=${this.filterGetList}`)
+        .then(res => {
+          this.errorMessage = '';
+          this.list = res.data;
+        })
+        .catch(err => {
+          this.errorMessage = err;
+        });
+    },
+    handleListScroll() {
+      const listDOM = this.$refs.list;
+      const scrollRemaining = listDOM.scrollHeight - listDOM.scrollTop - listDOM.offsetHeight;
+      if (
+        scrollRemaining <= 150 &&
+        !this.scrollFetch.isLoading &&
+        this.scrollFetch.moreResultsAvailable
+      ) {
+        const lastId = this.list[this.list.length - 2].ID;
+        this.scrollFetch.isLoading = true;
+
+        api.get(`ladies?filter=${this.filterGetList}&last_id=${lastId}`).then(res => {
+          this.list = this.list.concat(res.data.slice(1));
+          this.scrollFetch.isLoading = false;
+          this.scrollFetch.moreResultsAvailable = res.data.length === 21;
+        });
+      }
     },
   },
   directives: {
@@ -195,6 +189,14 @@ export default {
         border-color: transparent;
       }
     }
+  }
+  &__loader {
+    margin-top: 30px;
+    // position: absolute;
+    // bottom: 10px;
+    // z-index: 3;
+    // left: 50%;
+    // transform: translateX(-50%);
   }
   &.is-active {
     .lady-filter {

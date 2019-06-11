@@ -43,7 +43,7 @@
           </li>
         </ul>
 
-        <LadyFilter :selected="filter.ladies" @onSelect="ladyFilterSelected"/>
+        <LadyFilter :selected="filter.ladies" filterGetList="4" @onSelect="ladyFilterSelected"/>
       </div>
     </template>
     <div class="table">
