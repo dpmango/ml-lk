@@ -11,11 +11,23 @@
           <ui-switch isGreen @click="handleFilterClick" :active="filter.mailer"/>
         </div>
       </div>
-      <div class="ladies-ntf__list" ref="list">
+      <div class="ladies-ntf__content">
         <Notification v-if="errorMessage" type="danger">{{errorMessage}}</Notification>
-        <div v-for="(lady, idx) in ladies" :key="idx">{{lady}}</div>
+        <div class="ladies-ntf__head head-ntf">
+          <div v-for="(col, idx) in [1,2,3,4]" :key="idx" class="head-ntf__col">
+            <div class="head-ntf__holder">
+              <div class="head-ntf__title">Онлайн</div>
+              <div class="head-ntf__title">Рассылка</div>
+            </div>
+          </div>
+        </div>
+        <div class="ladies-ntf__list" ref="list">
+          <div v-for="(lady, idx) in ladies" :key="idx" class="ladies-ntf__col">
+            <lady-ntf-card :data="lady"/>
+          </div>
+        </div>
         <spinner
-          class="table__loader"
+          class="ladies-ntf__loader"
           v-if="scrollFetch.isLoading"
           size="medium"
           line-fg-color="#5aa6ff"
@@ -27,10 +39,11 @@
 
 <script>
 import throttle from 'lodash/throttle';
+import Spinner from 'vue-simple-spinner';
 import PanelCollapse from '@/components/Shared/Layout/PanelCollapse.vue';
 import UiSwitch from '@/components/Shared/UI/Switch.vue';
-import Spinner from 'vue-simple-spinner';
 import Notification from '@/components/Shared/UI/Notification.vue';
+import LadyNtfCard from '@/components/Ladies/LadyNtfCard.vue';
 import api from '@/helpers/Api';
 
 export default {
@@ -40,6 +53,7 @@ export default {
     UiSwitch,
     Spinner,
     Notification,
+    LadyNtfCard,
   },
   data() {
     return {
@@ -86,18 +100,14 @@ export default {
         !this.scrollFetch.isLoading &&
         this.scrollFetch.moreResultsAvailable
       ) {
-        // const lastId = this.ladies[this.ladies.length - 2].ID;
+        const lastId = this.ladies[this.ladies.length - 2].ID;
         this.scrollFetch.isLoading = true;
 
-        // api
-        //   .get(`ladies?last_id=${lastId}`, {
-        //     params: this.filterToParams(),
-        //   })
-        //   .then(res => {
-        //     this.ladies = this.ladies.concat(res.data.slice(1));
-        //     this.scrollFetch.isLoading = false;
-        //     this.scrollFetch.moreResultsAvailable = res.data.length === 21;
-        //   });
+        api.get(`ladies?filter=1&last_id=${lastId}`).then(res => {
+          this.ladies = this.ladies.concat(res.data.slice(1));
+          this.scrollFetch.isLoading = false;
+          this.scrollFetch.moreResultsAvailable = res.data.length === 21;
+        });
       }
     },
   },
@@ -115,9 +125,58 @@ export default {
     padding: 17px 20px;
     border: 1px solid rgba(#d1cfda, 0.4);
   }
+  &__content {
+    position: relative;
+    max-height: 230px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 15px 20px;
+  }
+  &__head {
+    flex: 0 0 auto;
+    padding-bottom: 10px;
+    min-height: 0px;
+  }
   &__list {
+    flex: 0 1 auto;
+    min-height: 1px;
+    display: flex;
+    flex-wrap: wrap;
+    margin: -10px;
+    overflow-y: scroll;
+    &::-webkit-scrollbar {
+      width: 3px;
+      margin-top: 10px;
+    }
+
+    &::-webkit-scrollbar-track {
+      border-left: 3px solid rgba(black, 0.2);
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-left: 3px solid $colorOrange;
+    }
+  }
+  &__col {
+    width: 100%;
+    flex: 0 0 25%;
+    max-width: 25%;
+    min-height: 0px;
+    min-width: 1px;
+    padding: 10px;
+  }
+  &__loader {
+    position: absolute;
+    bottom: 10px;
+    z-index: 3;
+    left: 50%;
+    transform: translateX(-50%);
   }
 }
+
 .filter-ntf {
   &__item {
     display: flex;
@@ -130,6 +189,43 @@ export default {
     }
     &:last-child {
       margin-right: 0;
+    }
+  }
+}
+
+.head-ntf {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: -10px;
+  margin-right: -10px;
+  &__col {
+    display: flex;
+    width: 100%;
+    flex: 0 0 25%;
+    max-width: 25%;
+    min-height: 0px;
+    min-width: 1px;
+    padding: 0 10px;
+  }
+  &__holder {
+    flex: 0 0 auto;
+    margin-left: auto;
+    display: flex;
+  }
+  &__title {
+    width: 70px;
+    flex: 0 0 auto;
+    min-width: 1px;
+    font-size: 13px;
+    text-align: center;
+  }
+}
+
+@include r($lg) {
+  .ladies-ntf {
+    &__col {
+      flex: 0 0 33.3333%;
+      max-width: 33.3333%;
     }
   }
 }
