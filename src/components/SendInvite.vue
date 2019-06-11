@@ -1,5 +1,5 @@
 <template>
-  <div class="send-invite">
+  <div class="send-invite" v-if="shouldShowModule">
     <panel-collapse name="Отправить приглашение">
       <div class="send-invite__list" ref="list">
         <Notification v-if="errorMessage" type="danger">{{errorMessage}}</Notification>
@@ -88,6 +88,12 @@ export default {
   computed: {
     swiper() {
       return this.$refs.mySwiper.swiper;
+    },
+    pageModules() {
+      return this.$store.state.page.activeModules;
+    },
+    shouldShowModule() {
+      return this.pageModules.indexOf('SendInvite') !== -1;
     },
   },
   methods: {

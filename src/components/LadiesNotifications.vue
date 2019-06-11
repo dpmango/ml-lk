@@ -1,5 +1,5 @@
 <template>
-  <div class="ladies-ntf">
+  <div class="ladies-ntf" v-if="shouldShowModule">
     <panel-collapse name="Девушки">
       <div class="ladies-ntf__filter filter-ntf">
         <div class="filter-ntf__item">
@@ -78,6 +78,14 @@ export default {
   },
   beforeDestroy() {
     this.$refs.list.removeEventListener('scroll', this.scrollWithThrottle, false);
+  },
+  computed: {
+    pageModules() {
+      return this.$store.state.page.activeModules;
+    },
+    shouldShowModule() {
+      return this.pageModules.indexOf('LadiesNotifications') !== -1;
+    },
   },
   methods: {
     fetchApi() {

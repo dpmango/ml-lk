@@ -41,12 +41,8 @@
             <Button primary @click="openAddEdit">Добавить переводчика</Button>
           </template>
           <template v-else>
-            <router-link to="/invite">
-              <Button primary>Отправить приглашение</Button>
-            </router-link>
-            <router-link to="/ladies">
-              <Button primary>Девушки</Button>
-            </router-link>
+            <Button primary @click="setPageModule('SendInvite')">Отправить приглашение</Button>
+            <Button primary @click="setPageModule('LadiesNotifications')">Девушки</Button>
           </template>
         </div>
         <div class="header__logo">
@@ -93,6 +89,9 @@ export default {
         type: 'add',
       });
     },
+    setPageModule(payload) {
+      this.$store.commit('TOGGLE_PAGE_ACTIVE_MODULES', payload);
+    },
   },
 };
 </script>
@@ -123,8 +122,8 @@ export default {
     margin-left: 30px;
     display: flex;
     align-items: center;
-    a {
-      // router-link instances
+    // or change to a = router-link instances
+    button {
       display: inline-block;
       margin-right: 10px;
       &:last-child {

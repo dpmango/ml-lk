@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import Page from '@/store/Page';
 import Translators from '@/store/Translators';
 import Notifications from '@/store/Notifications';
 import Contacts from '@/store/Contacts';
@@ -10,6 +11,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   modules: {
+    page: Page,
     translators: Translators,
     notifications: Notifications,
     contacts: Contacts,
