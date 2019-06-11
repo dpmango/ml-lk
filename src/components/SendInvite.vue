@@ -71,24 +71,8 @@ export default {
           prevEl: '.swiper-prev',
         },
       },
-      inviteList: [
-        {
-          ID: 1,
-          Thumbnail: 'https://marmeladies.com/media/images/profile/1543646_0_17964.jpg',
-          RealName: 'Karina',
-          Age: '21',
-          Country: 'Ukraine, Kiev',
-          Online: '0',
-        },
-        {
-          ID: 2,
-          Thumbnail: 'https://marmeladies.com/media/images/profile/1543646_0_17964.jpg',
-          RealName: 'Karina',
-          Age: '21',
-          Country: 'Ukraine, Kiev',
-          Online: '1',
-        },
-      ],
+      inviteList: [],
+      errorMessage: '',
     };
   },
   created() {
