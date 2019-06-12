@@ -156,6 +156,7 @@ export default {
           params: this.filterToParams(),
         })
         .then(res => {
+          console.log('notifications responce headers', res.headers);
           this.errorMessage = '';
           this.$store.commit('NOTIFICATIONS_SET', res.data);
         })

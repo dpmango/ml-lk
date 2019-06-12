@@ -1,7 +1,6 @@
 <template>
   <div class="add-message">
-    <!-- temporary enable -->
-    <template v-if="true">
+    <template v-if="storeData.Chat_enable">
       <div class="add-message__textarea">
         <textarea
           name="add-message"
@@ -144,6 +143,7 @@ export default {
 @import '@/theme/utils.scss';
 .add-message {
   padding: 20px;
+  min-height: 100px;
   border-top: 1px solid #d1cfda;
   &__textarea {
     textarea {
@@ -258,6 +258,8 @@ export default {
   }
   &__disabled {
     font-size: 14px;
+    text-align: center;
+    padding: 0.5em 0 1em;
     color: rgba($fontColor, 0.6);
   }
 }
