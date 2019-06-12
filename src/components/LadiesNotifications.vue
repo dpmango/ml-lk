@@ -22,7 +22,7 @@
           </div>
         </div>
         <div class="ladies-ntf__list" ref="list">
-          <div v-for="(lady, idx) in ladies" :key="idx" class="ladies-ntf__col">
+          <div v-for="(lady, idx) in ladies20" :key="idx" class="ladies-ntf__col">
             <lady-ntf-card :data="lady"/>
           </div>
         </div>
@@ -85,6 +85,13 @@ export default {
     },
     shouldShowModule() {
       return this.pageModules.indexOf('LadiesNotifications') !== -1;
+    },
+    ladies20() {
+      if (this.scrollFetch.moreResultsAvailable) {
+        return this.ladies.slice(0, this.ladies.length - 1);
+      } else {
+        return this.ladies;
+      }
     },
   },
   methods: {
