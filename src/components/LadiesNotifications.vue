@@ -65,8 +65,8 @@ export default {
         online: false,
         mailer: true,
       },
-      ladies: [],
       errorMessage: '',
+      listMounted: false,
     };
   },
   created() {
@@ -74,10 +74,13 @@ export default {
   },
   mounted() {
     this.fetchApi();
-    this.$refs.list.addEventListener('scroll', this.scrollWithThrottle, false);
+    this.tryMount();
+  },
+  updated() {
+    this.tryMount();
   },
   beforeDestroy() {
-    this.$refs.list.removeEventListener('scroll', this.scrollWithThrottle, false);
+    this.tryUnmount();
   },
   computed: {
     pageModules() {
@@ -86,21 +89,39 @@ export default {
     shouldShowModule() {
       return this.pageModules.indexOf('LadiesNotifications') !== -1;
     },
+    ladiesList() {
+      return this.$store.state.ladiesNtf.ladies;
+    },
+    ladiesNtfListLastId() {
+      return this.$store.getters.ladiesNtfListLastId;
+    },
     ladies20() {
       if (this.scrollFetch.moreResultsAvailable) {
-        return this.ladies.slice(0, this.ladies.length - 1);
+        return this.ladiesList.slice(0, this.ladiesList.length - 1);
       } else {
-        return this.ladies;
+        return this.ladiesList;
       }
     },
   },
   methods: {
+    tryMount() {
+      if (!this.listMounted && this.$refs.list) {
+        this.listMounted = true;
+        this.$refs.list.addEventListener('scroll', this.scrollWithThrottle, false);
+      }
+    },
+    tryUnmount() {
+      if (this.listMounted && this.$refs.list) {
+        this.listMounted = false;
+        this.$refs.list.removeEventListener('scroll', this.scrollWithThrottle, false);
+      }
+    },
     fetchApi() {
       api
         .get('ladies?filter=1')
         .then(res => {
           this.errorMessage = '';
-          this.ladies = res.data;
+          this.$store.commit('SET_LADIESNTF', res.data);
         })
         .catch(err => {
           this.errorMessage = err;
@@ -115,11 +136,13 @@ export default {
         !this.scrollFetch.isLoading &&
         this.scrollFetch.moreResultsAvailable
       ) {
-        const lastId = this.ladies[this.ladies.length - 2].ID;
+        // const lastId = this.ladies[this.ladies.length - 2].ID;
+        const lastId = this.ladiesNtfListLastId;
         this.scrollFetch.isLoading = true;
 
         api.get(`ladies?filter=1&last_id=${lastId}`).then(res => {
-          this.ladies = this.ladies.concat(res.data.slice(1));
+          // this.ladies = this.ladies.concat(res.data.slice(1));
+          this.$store.commit('APPEND_LADIESNTF', res.data.slice(1));
           this.scrollFetch.isLoading = false;
           this.scrollFetch.moreResultsAvailable = res.data.length === 21;
         });

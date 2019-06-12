@@ -7,10 +7,10 @@
     </div>
     <div class="ntf-lady__actions">
       <div class="ntf-lady__toggle">
-        <ui-switch isGreen @click="handleFilterClick('Online')" :active="isOnline"/>
+        <ui-switch isGreen @click="toggleOnline" :active="isOnline"/>
       </div>
       <div class="ntf-lady__toggle">
-        <ui-switch isGreen @click="handleFilterClick('Invitation')" :active="isInvitation"/>
+        <ui-switch isGreen @click="toggleInvitation" :active="isInvitation"/>
       </div>
     </div>
   </div>
@@ -20,18 +20,13 @@
 import Avatar from '@/components/Users/Avatar.vue';
 import UiSwitch from '@/components/Shared/UI/Switch.vue';
 import { dateToAge } from '@/helpers/Dates';
+import api from '@/helpers/Api';
 
 export default {
   name: 'LadyNtfCard',
   components: {
     Avatar,
     UiSwitch,
-  },
-  data() {
-    return {
-      Online: this.data.Online,
-      Invitation: this.data.Invitation,
-    };
   },
   props: {
     data: {
@@ -59,15 +54,68 @@ export default {
       return dateToAge(this.data.DateOfBirth);
     },
     isOnline() {
-      return this.Online === '1';
+      return this.data.Online === '1';
     },
     isInvitation() {
-      return this.Invitation === '1';
+      return this.data.Invitation === '1';
     },
   },
   methods: {
     handleFilterClick(name) {
       this[name] = this[name] === '1' ? '0' : '1';
+    },
+    toggleOnline() {
+      if (!this.isOnline) {
+        this.pingApi({
+          urlSuffix: `/online`,
+          commitAction: 'TOGGLE_LADIESNTF_ONLINE',
+          errTitle: 'Ошибка при добавлении в онлайн',
+        });
+      } else {
+        this.pingApi({
+          urlSuffix: `/offline`,
+          commitAction: 'TOGGLE_LADIESNTF_ONLINE',
+          errTitle: 'Ошибка при удалении из онлайн',
+        });
+      }
+    },
+    toggleInvitation() {
+      if (!this.isInvitation) {
+        this.pingApi({
+          urlSuffix: `/oninvitations`,
+          commitAction: 'TOGGLE_LADIESNTF_INVITATION',
+          errTitle: 'Ошибка при добавлении в рассылки',
+        });
+      } else {
+        this.pingApi({
+          urlSuffix: `/offinvitations`,
+          commitAction: 'TOGGLE_LADIESNTF_ONLINE',
+          errTitle: 'Ошибка при удалении из рассылки',
+        });
+      }
+    },
+    pingApi(options) {
+      api
+        .post(`ladies${options.urlSuffix}`, {
+          ladies: this.data.ID,
+        })
+        .then(res => {
+          const apiData = res.data[0];
+          if (apiData.success) {
+            this.$store.commit(options.commitAction, this.data.ID);
+          } else {
+            this.showNotification({ title: options.errTitle, message: apiData.message });
+          }
+        })
+        .catch(error => {
+          this.showNotification({ title: options.errTitle, message: error });
+        });
+    },
+  },
+  notifications: {
+    showNotification: {
+      title: 'Ошибка',
+      type: 'error',
     },
   },
 };

@@ -1,3 +1,5 @@
+import { toggleObjectKey } from '@/helpers/StoreHelpers';
+
 const Notifications = {
   state: {
     notifications: [],
@@ -26,13 +28,9 @@ const Notifications = {
       stateCopy[targetIndex] = targetNtf;
       state.notifications = stateCopy;
     },
-    NOTIFICATION_TOGGLE_MARKED(state, readId) {
+    NOTIFICATION_TOGGLE_MARKED(state, tId) {
       const stateCopy = state.notifications;
-      const targetNtf = stateCopy.find(x => x.ID === readId);
-      const targetIndex = stateCopy.indexOf(targetNtf);
-      targetNtf.Marked = targetNtf.Marked === '1' ? '0' : '1';
-      stateCopy[targetIndex] = targetNtf;
-      state.notifications = stateCopy;
+      state.notifications = toggleObjectKey(stateCopy, tId, 'Marked');
     },
   },
 };

@@ -73,6 +73,7 @@ export default {
       },
       inviteList: [],
       errorMessage: '',
+      listMounted: false,
     };
   },
   created() {
@@ -80,10 +81,13 @@ export default {
   },
   mounted() {
     this.fetchLadies();
-    this.$refs.list.addEventListener('scroll', this.scrollWithThrottle, false);
+    this.tryMount();
+  },
+  updated() {
+    this.tryMount();
   },
   beforeDestroy() {
-    this.$refs.list.removeEventListener('scroll', this.scrollWithThrottle, false);
+    this.tryUnmount();
   },
   computed: {
     swiper() {
@@ -97,6 +101,18 @@ export default {
     },
   },
   methods: {
+    tryMount() {
+      if (!this.listMounted && this.$refs.list) {
+        this.listMounted = true;
+        this.$refs.list.addEventListener('scroll', this.scrollWithThrottle, false);
+      }
+    },
+    tryUnmount() {
+      if (this.listMounted && this.$refs.list) {
+        this.listMounted = false;
+        this.$refs.list.removeEventListener('scroll', this.scrollWithThrottle, false);
+      }
+    },
     fetchLadies() {
       api
         .get('ladies?filter=2')

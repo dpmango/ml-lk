@@ -1,3 +1,5 @@
+import { toggleObjectKey } from '@/helpers/StoreHelpers';
+
 const Contacts = {
   state: {
     contacts: [],
@@ -26,13 +28,9 @@ const Contacts = {
       stateCopy[targetIndex] = targetContact;
       state.contacts = stateCopy;
     },
-    CONTACT_TOGGLE_MARKED(state, readId) {
+    CONTACT_TOGGLE_MARKED(state, tId) {
       const stateCopy = state.contacts;
-      const targetContact = stateCopy.find(x => x.ID === readId);
-      const targetIndex = stateCopy.indexOf(targetContact);
-      targetContact.Marked = targetContact.Marked === '1' ? '0' : '1';
-      stateCopy[targetIndex] = targetContact;
-      state.contacts = stateCopy;
+      state.contacts = toggleObjectKey(stateCopy, tId, 'Marked');
     },
   },
 };
