@@ -346,9 +346,7 @@ GET https://api-m.marmeladies.com/v1/chats/39260171/mark
 GET https://api-m.marmeladies.com/v1/chats/39260171/unmark
 где 39260171 – ID Message
 
-### - Завершить чат
-
-500 error
+### + Завершить чат
 
 GET https://api-m.marmeladies.com/v1/chats/finish
 Принимает
@@ -395,9 +393,8 @@ lady – ID девушки
 
 ## 9. Подмигивания
 
-### - Отправить
+### + Отправить
 
-member not available
 POST https://api-m.marmeladies.com/v1/kisses
 Принимает
 man – ID мужчины

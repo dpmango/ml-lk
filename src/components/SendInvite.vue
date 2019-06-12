@@ -22,6 +22,7 @@
         />
       </div>
     </panel-collapse>
+    <MansList/>
   </div>
 </template>
 
@@ -30,6 +31,7 @@ import throttle from 'lodash/throttle';
 import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import PanelCollapse from '@/components/Shared/Layout/PanelCollapse.vue';
 import InviteCard from '@/components/Invite/InviteCard.vue';
+import MansList from '@/components/MansList.vue';
 import { swiper, swiperSlide } from 'vue-awesome-swiper';
 import Spinner from 'vue-simple-spinner';
 import Notification from '@/components/Shared/UI/Notification.vue';
@@ -42,6 +44,7 @@ export default {
     SvgIcon,
     PanelCollapse,
     InviteCard,
+    MansList,
     swiper,
     swiperSlide,
     Spinner,

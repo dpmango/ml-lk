@@ -1,6 +1,11 @@
 <template>
-  <div class="invite-card" :class="{'is-selected': isSelected}">
-    <Avatar :size="70" :Thumbnail="data.Thumbnail" :RealName="data.RealName" :Online="data.Online"/>
+  <div class="invite-card" :class="{'is-selected': isSelected, 'is-smaller': isSmaller}">
+    <Avatar
+      :size="!isSmaller && 70"
+      :Thumbnail="data.Thumbnail"
+      :RealName="data.RealName"
+      :Online="data.Online"
+    />
     <div class="invite-card__content">
       <div class="invite-card__name">{{data.RealName}}</div>
       <div class="invite-card__country">{{data.Country}}</div>
@@ -35,6 +40,7 @@ export default {
       Thumbnail: String,
       Online: String,
     },
+    isSmaller: Boolean,
   },
   methods: {
     select() {
@@ -57,13 +63,17 @@ export default {
   border: 1px solid transparent;
   transition: background-color 0.25s ease, border-color 0.25s ease;
   &__content {
-    width: 100%;
+    flex: 1 1 auto;
+    min-width: 1px;
     margin-left: 10px;
     padding-right: 20px;
   }
   &__name {
     font-size: 14px;
     line-height: 18px;
+    // overflow: hidden;
+    text-overflow: ellipsis;
+    // white-space: nowrap;
   }
   &__country {
     margin-top: 0.5em;
@@ -80,6 +90,9 @@ export default {
     background-color: white;
     border-color: $colorOrange;
     box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.08);
+  }
+  &.is-smaller {
+    padding: 12px 10px;
   }
   &:hover {
     background-color: white;

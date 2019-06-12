@@ -102,7 +102,11 @@ export default {
           background-color: $colorPrimary;
         }
         &::before {
-          // TODO - checkmark icon embeded
+          left: 2.5px;
+          width: 14px;
+          height: 10px;
+          z-index: 2;
+          background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAKCAYAAACE2W/HAAAABGdBTUEAALGPC/xhBQAAAK1JREFUKBWVjzEKwkAURBMiimBvY2NjZWWVU+RU1mnTpkhhm0YsvYaNIDYpUgRygM2bsLuoZCEOPPbv/JkNiaI/ZIzZwh1Os2uEd/AA6TqrSHAPTzWQvrgZiwzL0AvsDvAG6QZrV8q4vOD4W5YHDUg1rHyGSyUXteB/WrP1OMwFFr6kASOBEqQOUotmSbvkq+QuLGIoQOotmuXFLhc8CeVKW+XB4NSC0llM7T69AcWO0hZLcgV4AAAAAElFTkSuQmCC);
         }
       }
       &.is-yellow {
