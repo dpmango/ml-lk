@@ -63,6 +63,9 @@
           <span>Отправить</span>
           <svg-icon name="send" width="16" height="16"/>
         </button>
+        <div class="add-message__cta add-message__cta--finish" @click="$emit('finishChat')">
+          <svg-icon name="exit-chat" width="18" height="18"/>
+        </div>
       </div>
     </template>
     <template v-if="!storeData.Chat_enable">
@@ -202,6 +205,9 @@ export default {
       margin-left: auto;
     }
     &--smile {
+    }
+    &--finish {
+      margin-left: 10px;
     }
     &:hover {
       background: $colorPrimary;

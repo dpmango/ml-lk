@@ -24,8 +24,8 @@
             @addMessage="sendMessage"
             @addFile="sendFile"
             @sendTypingNotification="typingNotification"
+            @finishChat="finishChat"
           />
-          <span @click="finishChat" class="test">завершить чат (test)</span>
         </div>
       </div>
     </div>
@@ -270,7 +270,7 @@ export default {
     },
     finishChat() {
       api
-        .post('chats/finish', this.currentUsers)
+        .get('chats/finish', { params: this.currentUsers })
         .then(res => {
           console.log('finish responsce', res.data);
         })
@@ -435,11 +435,5 @@ export default {
     left: 50%;
     transform: translateX(-50%);
   }
-}
-
-.test {
-  font-size: 11px;
-  padding: 0px 0px 5px 20px;
-  cursor: pointer;
 }
 </style>
