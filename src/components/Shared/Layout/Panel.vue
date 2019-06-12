@@ -1,5 +1,8 @@
 <template>
-  <div class="panel" :class="{'is-filter-hidden' : !isFilterOpen}">
+  <div
+    class="panel"
+    :class="{'is-filter-hidden' : !isFilterOpen, 'is-filter-active': isFilterActive}"
+  >
     <div
       class="panel__head panel-head"
       :class="{'panel-head--no-clear' : noClearButton}"
@@ -35,11 +38,29 @@ export default {
   props: {
     name: String,
     noClearButton: Boolean,
+    filter: Object,
   },
   data() {
     return {
       isFilterOpen: true,
     };
+  },
+  computed: {
+    isFilterActive() {
+      if (this.filter) {
+        return Object.keys(this.filter).some(f => {
+          const fKey = this.filter[f];
+          if (typeof fKey === 'boolean') {
+            return fKey;
+          } else if (Array.isArray(fKey)) {
+            return fKey.length > 0;
+          } else {
+            return false;
+          }
+        });
+      }
+      return false;
+    },
   },
   methods: {
     toggleFilter() {
@@ -89,6 +110,8 @@ export default {
       height: 0;
       overflow: hidden;
     }
+  }
+  &.is-filter-active {
     .panel-head__icon {
       .icon-circle {
         background-color: $colorPrimary;
