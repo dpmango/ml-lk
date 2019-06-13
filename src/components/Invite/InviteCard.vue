@@ -11,7 +11,13 @@
       <div class="invite-card__country">{{data.Country}}</div>
     </div>
     <div class="invite-card__checkbox">
-      <ui-checkbox yellow withCheckmark v-model="isSelected" :name=" 'inviteSelected_' + data.ID"/>
+      <ui-checkbox
+        yellow
+        withCheckmark
+        @input="$emit('onSelect', data.ID)"
+        :value="isSelected"
+        :name=" 'inviteSelected_' + data.ID"
+      />
     </div>
   </div>
 </template>
@@ -26,11 +32,6 @@ export default {
     Avatar,
     UiCheckbox,
   },
-  data() {
-    return {
-      isSelected: false,
-    };
-  },
   props: {
     data: {
       ID: String,
@@ -40,6 +41,7 @@ export default {
       Thumbnail: String,
       Online: String,
     },
+    isSelected: Boolean,
     isSmaller: Boolean,
   },
   methods: {

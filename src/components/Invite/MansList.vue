@@ -1,12 +1,12 @@
 <template>
-  <div class="mans panel">
+  <div class="mans panel" v-if="forLady">
     <div class="panel__head panel-head">
       <div class="panel-head__icon">
         <div class="icon-circle">
           <svg-icon name="filter" width="13" height="15"/>
         </div>
       </div>
-      <div class="panel-head__name">Мужчины ({{mans.length}})</div>
+      <div class="panel-head__name">Мужчины</div>
       <div class="panel-head__action">
         <ui-checkbox
           @input="checkAll"
@@ -72,7 +72,6 @@ export default {
   },
   data() {
     return {
-      ladyId: '1552269',
       scrollFetch: {
         isLoading: false,
         moreResultsAvailable: true,
@@ -81,6 +80,9 @@ export default {
       mans: [],
       errorMessage: '',
     };
+  },
+  props: {
+    forLady: String,
   },
   mounted() {
     this.fetchApi();
@@ -132,10 +134,13 @@ export default {
 
       return {
         filter: 1,
-        lady: this.ladyId,
+        lady: this.forLady,
       };
     },
     fetchApi() {
+      if (!this.forLady) {
+        return;
+      }
       api
         .get('mens', {
           params: this.filterToParams(),
@@ -175,6 +180,11 @@ export default {
     },
     clearFilter() {
       this.filter = cloneDeep(defaultFilterState);
+      this.fetchApi();
+    },
+  },
+  watch: {
+    forLady() {
       this.fetchApi();
     },
   },

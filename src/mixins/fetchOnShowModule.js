@@ -11,6 +11,8 @@ const fetchOnShowModule = {
           this.fetchApi();
           this.initialListLoaded = true;
         }
+      } else {
+        this.initialListLoaded = false;
       }
     },
   },
