@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import throttle from 'lodash/throttle';
+import tryMount from '@/mixins/tryMount';
 import Spinner from 'vue-simple-spinner';
 import ChatHead from '@/components/Chat/ChatHead.vue';
 import ChatFilter from '@/components/Chat/ChatFilter.vue';
@@ -47,6 +47,7 @@ import { setTimeout } from 'timers';
 
 export default {
   name: 'Chat',
+  mixins: [tryMount],
   components: {
     Spinner,
     ChatHead,
@@ -68,26 +69,17 @@ export default {
         isLoading: false,
         moreResultsAvailable: true,
       },
-      listMounted: false,
       scrollMessageID: undefined,
     };
   },
-  created() {
-    this.scrollWithThrottle = throttle(this.handleListScroll, 100);
-  },
   mounted() {
-    this.tryMount();
     // this.$connect(); // ws
     // this.$options.sockets.onopen = data => console.log('onopen', data);
     // this.$options.sockets.onmessage = data => console.log('onmessage', data);
     this.fetchChats();
     this.fetchChatInfo();
   },
-  updated() {
-    this.tryMount();
-  },
   beforeDestroy() {
-    this.$refs.list.removeEventListener('scroll', this.scrollWithThrottle, false);
     // this.$disconnect();
     this.finishChat();
   },
@@ -130,12 +122,6 @@ export default {
     },
   },
   methods: {
-    tryMount() {
-      if (!this.listMounted && this.$refs.list) {
-        this.listMounted = true;
-        this.$refs.list.addEventListener('scroll', this.scrollWithThrottle, false);
-      }
-    },
     filterToParams() {
       const result = {};
 

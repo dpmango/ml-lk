@@ -27,7 +27,8 @@
 </template>
 
 <script>
-import throttle from 'lodash/throttle';
+import fetchOnShowModule from '@/mixins/fetchOnShowModule';
+import tryMount from '@/mixins/tryMount';
 import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import PanelCollapse from '@/components/Shared/Layout/PanelCollapse.vue';
 import InviteCard from '@/components/Invite/InviteCard.vue';
@@ -40,6 +41,7 @@ import 'swiper/dist/css/swiper.css';
 
 export default {
   name: 'SendInvite',
+  mixins: [fetchOnShowModule, tryMount],
   components: {
     SvgIcon,
     PanelCollapse,
@@ -76,22 +78,7 @@ export default {
       },
       inviteList: [],
       errorMessage: '',
-      listMounted: false,
-      initialListLoaded: false,
     };
-  },
-  created() {
-    this.scrollWithThrottle = throttle(this.handleListScroll, 100);
-  },
-  mounted() {
-    // this.fetchLadies();
-    this.tryMount();
-  },
-  updated() {
-    this.tryMount();
-  },
-  beforeDestroy() {
-    this.tryUnmount();
   },
   computed: {
     swiper() {
@@ -105,19 +92,7 @@ export default {
     },
   },
   methods: {
-    tryMount() {
-      if (!this.listMounted && this.$refs.list) {
-        this.listMounted = true;
-        this.$refs.list.addEventListener('scroll', this.scrollWithThrottle, false);
-      }
-    },
-    tryUnmount() {
-      if (this.listMounted && this.$refs.list) {
-        this.listMounted = false;
-        this.$refs.list.removeEventListener('scroll', this.scrollWithThrottle, false);
-      }
-    },
-    fetchLadies() {
+    fetchApi() {
       api
         .get('ladies?filter=2')
         .then(res => {
@@ -148,16 +123,6 @@ export default {
         //     this.scrollFetch.isLoading = false;
         //     this.scrollFetch.moreResultsAvailable = res.data.length === 21;
         //   });
-      }
-    },
-  },
-  watch: {
-    shouldShowModule() {
-      if (this.shouldShowModule) {
-        if (!this.initialListLoaded) {
-          this.fetchLadies();
-          this.initialListLoaded = true;
-        }
       }
     },
   },

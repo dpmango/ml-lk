@@ -38,7 +38,8 @@
 </template>
 
 <script>
-import throttle from 'lodash/throttle';
+import fetchOnShowModule from '@/mixins/fetchOnShowModule';
+import tryMount from '@/mixins/tryMount';
 import Spinner from 'vue-simple-spinner';
 import PanelCollapse from '@/components/Shared/Layout/PanelCollapse.vue';
 import UiSwitch from '@/components/Shared/UI/Switch.vue';
@@ -48,6 +49,7 @@ import api from '@/helpers/Api';
 
 export default {
   name: 'LadiesNotifications',
+  mixins: [fetchOnShowModule, tryMount],
   components: {
     PanelCollapse,
     UiSwitch,
@@ -66,22 +68,7 @@ export default {
         mailer: true,
       },
       errorMessage: '',
-      listMounted: false,
-      initialListLoaded: false,
     };
-  },
-  created() {
-    this.scrollWithThrottle = throttle(this.handleListScroll, 100);
-  },
-  mounted() {
-    // this.fetchApi();
-    this.tryMount();
-  },
-  updated() {
-    this.tryMount();
-  },
-  beforeDestroy() {
-    this.tryUnmount();
   },
   computed: {
     pageModules() {
@@ -105,18 +92,6 @@ export default {
     },
   },
   methods: {
-    tryMount() {
-      if (!this.listMounted && this.$refs.list) {
-        this.listMounted = true;
-        this.$refs.list.addEventListener('scroll', this.scrollWithThrottle, false);
-      }
-    },
-    tryUnmount() {
-      if (this.listMounted && this.$refs.list) {
-        this.listMounted = false;
-        this.$refs.list.removeEventListener('scroll', this.scrollWithThrottle, false);
-      }
-    },
     fetchApi() {
       api
         .get('ladies?filter=1')
@@ -147,16 +122,6 @@ export default {
           this.scrollFetch.isLoading = false;
           this.scrollFetch.moreResultsAvailable = res.data.length === 21;
         });
-      }
-    },
-  },
-  watch: {
-    shouldShowModule() {
-      if (this.shouldShowModule) {
-        if (!this.initialListLoaded) {
-          this.fetchApi();
-          this.initialListLoaded = true;
-        }
       }
     },
   },

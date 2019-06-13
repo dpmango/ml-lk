@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import throttle from 'lodash/throttle';
+import tryMount from '@/mixins/tryMount';
 import cloneDeep from 'lodash/cloneDeep';
 import Spinner from 'vue-simple-spinner';
 import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
@@ -62,6 +62,7 @@ const defaultFilterState = {
 
 export default {
   name: 'MansList',
+  mixins: [tryMount],
   components: {
     Spinner,
     SvgIcon,
@@ -76,7 +77,6 @@ export default {
         isLoading: false,
         moreResultsAvailable: true,
       },
-      listMounted: false,
       filter: cloneDeep(defaultFilterState),
       mans: [],
       errorMessage: '',
@@ -87,13 +87,6 @@ export default {
   },
   mounted() {
     this.fetchApi();
-    this.tryMount();
-  },
-  updated() {
-    this.tryMount();
-  },
-  beforeDestroy() {
-    this.tryUnmount();
   },
   computed: {
     mansMinus8() {
@@ -107,20 +100,7 @@ export default {
       }
     },
   },
-
   methods: {
-    tryMount() {
-      if (!this.listMounted && this.$refs.list) {
-        this.listMounted = true;
-        this.$refs.list.addEventListener('scroll', this.scrollWithThrottle, false);
-      }
-    },
-    tryUnmount() {
-      if (this.listMounted && this.$refs.list) {
-        this.listMounted = false;
-        this.$refs.list.removeEventListener('scroll', this.scrollWithThrottle, false);
-      }
-    },
     filterToParams() {
       // let filterString = '';
       // let ladiesFilter = '';
