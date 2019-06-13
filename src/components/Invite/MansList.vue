@@ -210,15 +210,18 @@ export default {
       }
     },
     checkAll() {
-      // triggered when Check all is changed
-      console.log(this.filter.allChecked);
+      const manIDs = this.mans.map(x => x.ID);
+      if (this.filter.allChecked) {
+        this.selectedMans = manIDs;
+      } else {
+        this.selectedMans = [];
+      }
     },
     clearFilter() {
       this.filter = cloneDeep(defaultFilterState);
       this.fetchApi();
     },
     handleSubmit() {
-      console.log(this.textarea);
       api
         .post('chats/sendinvitations', {
           lady: this.forLady,
