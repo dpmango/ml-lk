@@ -6,7 +6,8 @@
         id="sent-invite-message"
         rows="6"
         placeholder="Текст сообщения"
-        v-model="textarea"
+        @input="handleInput"
+        :value="textarea"
       ></textarea>
     </div>
     <div class="add-message__actions">
@@ -63,14 +64,19 @@ export default {
   },
   data() {
     return {
-      textarea: '',
       search: '',
     };
   },
+  props: {
+    textarea: String,
+  },
   methods: {
+    handleInput(e) {
+      this.$emit('update:textarea', e.target.value);
+    },
     handleSubmit() {
-      this.$emit('sentInvite', this.textarea);
-      this.textarea = ''; // reset state
+      this.$emit('sentInvite');
+      // this.textarea = ''; // reset state
     },
     appendEmoji(emoji) {
       this.textarea += emoji;

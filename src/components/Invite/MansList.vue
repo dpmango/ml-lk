@@ -42,8 +42,8 @@
             </div>
           </div>
         </div>
-        <div class="mans__col mans__col--textarea">
-          <add-invite @sentInvite="sentInvite"/>
+        <div class="mans__col mans__col--textarea" v-if="mans.length > 0">
+          <add-invite :textarea.sync="textarea" @sentInvite="sentInvite"/>
         </div>
       </div>
     </div>
@@ -78,7 +78,9 @@ export default {
       filter: cloneDeep(defaultFilterState),
       mans: [],
       selectedMans: [],
+      moreMansAvailable: true,
       errorMessage: '',
+      textarea: '',
     };
   },
   props: {
@@ -97,7 +99,7 @@ export default {
     },
   },
   methods: {
-    filterToParams() {
+    filterToParams(lastId) {
       // let filterString = '';
       // let ladiesFilter = '';
       // if (this.filter.marked) {
@@ -129,29 +131,33 @@ export default {
       // children – дети – 1:есть;2:нет
       // photo – фото - 1:есть;2:нет
 
-      return {
+      let filterObj = {
         filter: 1,
         lady: this.forLady,
       };
+
+      if (lastId) {
+        filterObj = { ...filterObj, ...{ last_id: lastId } };
+      }
+
+      return filterObj;
     },
-    fetchApi() {
+    fetchApi(lastId) {
       if (!this.forLady) {
         return;
       }
       api
         .get('mens', {
-          params: this.filterToParams(),
+          params: this.filterToParams(lastId),
         })
         .then(res => {
           this.errorMessage = '';
           this.mans = res.data;
+          this.moreMansAvailable = res.data.length === 21;
         })
         .catch(err => {
           this.errorMessage = err;
         });
-    },
-    requestNextMans(count) {
-      alert(`requesting next mans - count ${count}`);
     },
     onManSelect(id) {
       if (this.selectedMans.indexOf(id) !== -1) {
@@ -172,17 +178,24 @@ export default {
       this.filter = cloneDeep(defaultFilterState);
       this.fetchApi();
     },
-    sentInvite(txt) {
+    resetState() {
+      this.mans = [];
+      this.selectedMans = [];
+      this.moreMansAvailable = true;
+      this.errorMessage = '';
+    },
+    sentInvite() {
       api
         .post('chats/sendinvitations', {
           lady: this.forLady,
           men: this.selectedMans.join(','),
-          text: txt,
+          text: this.textarea,
         })
         .then(res => {
           const apiData = res.data[0];
           if (apiData.success) {
             // reset state
+            const lastId = this.mans[this.mans.length - 1].ID;
             this.errorMessage = '';
             this.showNotification({
               title: '',
@@ -192,28 +205,32 @@ export default {
                 'приглашения',
                 'приглашений',
               )}`,
+              type: 'success',
             });
             this.mans = [];
             this.selectedMans = [];
-            this.requestNextMans(apiData.count);
+            this.filter.allChecked = false;
+            //  fetch new
+            this.fetchApi(lastId);
           } else {
-            this.showNotification({ title: options.errTitle, message: apiData.message });
+            this.showNotification({ message: apiData.message });
           }
         })
         .catch(err => {
           this.errorMessage = err;
-          this.showNotification({ title: options.errTitle, message: error });
+          this.showNotification({ message: error });
         });
     },
   },
   watch: {
     forLady() {
+      this.resetState();
       this.fetchApi();
     },
   },
   notifications: {
     showNotification: {
-      title: 'Ошибка',
+      title: 'Ошибка при отправке приглашения',
       type: 'error',
     },
   },
