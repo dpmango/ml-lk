@@ -1,6 +1,7 @@
 const Page = {
   state: {
-    activeModules: ['SendInvite'],
+    // activeModules: ['SendInvite'],
+    activeModules: [],
   },
   mutations: {
     TOGGLE_PAGE_ACTIVE_MODULES(state, payload) {

@@ -1,7 +1,7 @@
 <template>
   <div class="send-invite" v-if="shouldShowModule">
     <panel-collapse name="Отправить приглашение">
-      <div class="send-invite__list" ref="list">
+      <div class="send-invite__list" ref="list" v-if="inviteList.length > 0">
         <Notification v-if="errorMessage" type="danger">{{errorMessage}}</Notification>
         <swiper :options="swiperOption" ref="mySwiper">
           <swiper-slide v-for="(lady, idx) in inviteList" :key="idx">
@@ -77,13 +77,14 @@ export default {
       inviteList: [],
       errorMessage: '',
       listMounted: false,
+      initialListLoaded: false,
     };
   },
   created() {
     this.scrollWithThrottle = throttle(this.handleListScroll, 100);
   },
   mounted() {
-    this.fetchLadies();
+    // this.fetchLadies();
     this.tryMount();
   },
   updated() {
@@ -147,6 +148,16 @@ export default {
         //     this.scrollFetch.isLoading = false;
         //     this.scrollFetch.moreResultsAvailable = res.data.length === 21;
         //   });
+      }
+    },
+  },
+  watch: {
+    shouldShowModule() {
+      if (this.shouldShowModule) {
+        if (!this.initialListLoaded) {
+          this.fetchLadies();
+          this.initialListLoaded = true;
+        }
       }
     },
   },

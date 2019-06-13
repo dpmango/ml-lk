@@ -50,6 +50,7 @@ export default {
   data() {
     return {
       isOpened: false,
+      initialListLoaded: false,
       scrollFetch: {
         isLoading: false,
         moreResultsAvailable: true,
@@ -66,7 +67,7 @@ export default {
     this.scrollWithThrottle = throttle(this.handleListScroll, 100);
   },
   mounted() {
-    this.fetchApi();
+    // this.fetchApi();
     this.$refs.list.addEventListener('scroll', this.scrollWithThrottle, false);
   },
   beforeDestroy() {
@@ -119,6 +120,14 @@ export default {
   },
   directives: {
     ClickOutside,
+  },
+  watch: {
+    isOpened(Old, New) {
+      if (!this.initialListLoaded) {
+        this.fetchApi();
+        this.initialListLoaded = true;
+      }
+    },
   },
 };
 </script>

@@ -11,7 +11,7 @@
           <ui-switch isGreen @click="handleFilterClick" :active="filter.mailer"/>
         </div>
       </div>
-      <div class="ladies-ntf__content">
+      <div class="ladies-ntf__content" v-if="ladiesList.length > 0">
         <Notification v-if="errorMessage" type="danger">{{errorMessage}}</Notification>
         <div class="ladies-ntf__head head-ntf">
           <div v-for="(col, idx) in [1,2,3,4]" :key="idx" class="head-ntf__col">
@@ -67,13 +67,14 @@ export default {
       },
       errorMessage: '',
       listMounted: false,
+      initialListLoaded: false,
     };
   },
   created() {
     this.scrollWithThrottle = throttle(this.handleListScroll, 100);
   },
   mounted() {
-    this.fetchApi();
+    // this.fetchApi();
     this.tryMount();
   },
   updated() {
@@ -146,6 +147,16 @@ export default {
           this.scrollFetch.isLoading = false;
           this.scrollFetch.moreResultsAvailable = res.data.length === 21;
         });
+      }
+    },
+  },
+  watch: {
+    shouldShowModule() {
+      if (this.shouldShowModule) {
+        if (!this.initialListLoaded) {
+          this.fetchApi();
+          this.initialListLoaded = true;
+        }
       }
     },
   },
