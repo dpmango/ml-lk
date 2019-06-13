@@ -98,37 +98,6 @@ export default {
   },
   methods: {
     filterToParams(lastId) {
-      // let filterString = '';
-      // let ladiesFilter = '';
-      // if (this.filter.marked) {
-      //   filterString = '1';
-      // }
-      // if (this.filter.new) {
-      //   filterString = filterString.length > 0 ? `${filterString},2` : '2';
-      // }
-      // if (this.filter.maleOnline) {
-      //   filterString = filterString.length > 0 ? `${filterString},3` : '3';
-      // }
-
-      // if (this.filter.ladies.length > 0) {
-      //   ladiesFilter = this.filter.ladies.join(',');
-      // }
-
-      // filter = 1 (отправить приглашение):
-      // lady – ID девушки
-      // age_1 и age_2 – интервал «Возраст»
-      // height_1 и height_2 – интервал «Рост»
-      // weight_1 и weight_2 – интервал «Вес»
-      // hair – цвет волос (список ID через запятую)
-      // eye – цвет глаз (список ID через запятую)
-      // marital – семейное положение (список ID через запятую)
-      // education – образование (список ID через запятую)
-      // country – страна (список кодов через запятую)
-      // city - город
-      // id – ID мужчины
-      // children – дети – 1:есть;2:нет
-      // photo – фото - 1:есть;2:нет
-
       let filterObj = {
         filter: 1,
         lady: this.forLady,
