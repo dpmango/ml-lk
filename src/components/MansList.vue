@@ -82,9 +82,6 @@ export default {
       errorMessage: '',
     };
   },
-  created() {
-    this.scrollWithThrottle = throttle(this.handleListScroll, 100);
-  },
   mounted() {
     this.fetchApi();
   },

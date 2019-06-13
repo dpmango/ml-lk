@@ -2,6 +2,12 @@ import { toggleObjectKey } from '@/helpers/StoreHelpers';
 
 const Notifications = {
   state: {
+    pagination: {
+      current: 1,
+      next: 1,
+      all: 1,
+      isNextAvaiable: true,
+    },
     notifications: [],
   },
   getters: {
@@ -10,12 +16,25 @@ const Notifications = {
     },
   },
   mutations: {
-    NOTIFICATIONS_SET(state, arr) {
+    SET_NOTIFICATIONS(state, arr) {
       state.notifications = arr;
     },
-    NOTIFICATIONS_APPEND(state, arr) {
+    APPEND_NOTIFICATIONS(state, arr) {
       // slice(1)
       state.notifications = state.notifications.concat(arr);
+    },
+    SET_NOTIFICATIONS_PAGINATION(state, payload) {
+      const headers = {
+        current: parseInt(payload['x-pagination-current-page'], 10),
+        all: parseInt(payload['x-pagination-page-count'], 10),
+      };
+      const nextNum = headers.current + 1;
+      state.pagination = {
+        current: headers.current,
+        next: nextNum,
+        all: headers.all,
+        isNextAvaiable: nextNum <= headers.all,
+      };
     },
     NOTIFICATION_REMOVE(state, removeId) {
       state.notifications = state.notifications.filter(x => x.ID !== removeId);

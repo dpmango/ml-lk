@@ -119,6 +119,9 @@ export default {
     contactsList() {
       return this.$store.state.contacts.contacts;
     },
+    contactsPagination() {
+      return this.$store.state.contacts.pagination;
+    },
     contactsListLastId() {
       return this.$store.getters.contactsListLastId;
     },
@@ -162,7 +165,8 @@ export default {
         })
         .then(res => {
           this.errorMessage = '';
-          this.$store.commit('CONTACTS_SET', res.data);
+          this.$store.commit('SET_CONTACTS_PAGINATION', res.headers);
+          this.$store.commit('SET_CONTACTS', res.data);
         })
         .catch(err => {
           this.errorMessage = err;
@@ -193,19 +197,18 @@ export default {
       if (
         scrollRemaining <= 150 &&
         !this.scrollFetch.isLoading &&
-        this.scrollFetch.moreResultsAvailable
+        this.contactsPagination.isNextAvaiable
       ) {
-        const lastId = this.notificationsListLastId;
         this.scrollFetch.isLoading = true;
         api
-          .get(`contacts?last_id=${lastId}`, {
+          .get(`contacts?page=${this.contactsPagination.next}`, {
             params: this.filterToParams(),
           })
           .then(res => {
             this.errorMessage = '';
-            this.$store.commit('CONTACTS_APPEND', res.data);
+            this.$store.commit('SET_CONTACTS_PAGINATION', res.headers);
+            this.$store.commit('APPEND_CONTACTS', res.data);
             this.scrollFetch.isLoading = false;
-            this.scrollFetch.moreResultsAvailable = res.data.length === 20;
           })
           .catch(err => {
             this.errorMessage = err;

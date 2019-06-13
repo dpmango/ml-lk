@@ -2,6 +2,12 @@ import { toggleObjectKey } from '@/helpers/StoreHelpers';
 
 const Contacts = {
   state: {
+    pagination: {
+      current: 1,
+      next: 1,
+      all: 1,
+      isNextAvaiable: true,
+    },
     contacts: [],
   },
   getters: {
@@ -10,12 +16,25 @@ const Contacts = {
     },
   },
   mutations: {
-    CONTACTS_SET(state, arr) {
+    SET_CONTACTS(state, arr) {
       state.contacts = arr;
     },
-    CONTACTS_APPEND(state, arr) {
+    APPEND_CONTACTS(state, arr) {
       // slice(1)
       state.contacts = state.contacts.concat(arr);
+    },
+    SET_CONTACTS_PAGINATION(state, payload) {
+      const headers = {
+        current: parseInt(payload['x-pagination-current-page'], 10),
+        all: parseInt(payload['x-pagination-page-count'], 10),
+      };
+      const nextNum = headers.current + 1;
+      state.pagination = {
+        current: headers.current,
+        next: nextNum,
+        all: headers.all,
+        isNextAvaiable: nextNum <= headers.all,
+      };
     },
     CONTACT_REMOVE(state, removeId) {
       state.contacts = state.contacts.filter(x => x.ID !== removeId);

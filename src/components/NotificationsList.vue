@@ -117,6 +117,9 @@ export default {
     notificationsList() {
       return this.$store.state.notifications.notifications;
     },
+    notificationsPagination() {
+      return this.$store.state.notifications.pagination;
+    },
     notificationsListLastId() {
       return this.$store.getters.notificationsListLastId;
     },
@@ -156,9 +159,9 @@ export default {
           params: this.filterToParams(),
         })
         .then(res => {
-          console.log('notifications responce headers', res.headers);
           this.errorMessage = '';
-          this.$store.commit('NOTIFICATIONS_SET', res.data);
+          this.$store.commit('SET_NOTIFICATIONS_PAGINATION', res.headers);
+          this.$store.commit('SET_NOTIFICATIONS', res.data);
         })
         .catch(err => {
           this.errorMessage = err;
@@ -189,19 +192,18 @@ export default {
       if (
         scrollRemaining <= 150 &&
         !this.scrollFetch.isLoading &&
-        this.scrollFetch.moreResultsAvailable
+        this.notificationsPagination.isNextAvaiable
       ) {
-        const lastId = this.notificationsListLastId;
         this.scrollFetch.isLoading = true;
         api
-          .get(`notifications?last_id=${lastId}`, {
+          .get(`notifications?page=${this.notificationsPagination.next}`, {
             params: this.filterToParams(),
           })
           .then(res => {
             this.errorMessage = '';
-            this.$store.commit('NOTIFICATIONS_APPEND', res.data);
+            this.$store.commit('SET_NOTIFICATIONS_PAGINATION', res.headers);
+            this.$store.commit('APPEND_NOTIFICATIONS', res.data);
             this.scrollFetch.isLoading = false;
-            this.scrollFetch.moreResultsAvailable = res.data.length === 20;
           })
           .catch(err => {
             this.errorMessage = err;
