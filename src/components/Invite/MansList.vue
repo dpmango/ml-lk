@@ -186,8 +186,8 @@ export default {
             this.errorMessage = '';
             this.showNotification({
               title: '',
-              message: `Отправлено ${this.selectedMans.length} ${Plurize(
-                this.selectedMans.length,
+              message: `Отправлено ${apiData.count} ${Plurize(
+                apiData.count,
                 'приглашение',
                 'приглашения',
                 'приглашений',
