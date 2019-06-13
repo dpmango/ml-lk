@@ -1,7 +1,7 @@
 <template>
   <div class="invite-card" :class="{'is-selected': isSelected, 'is-smaller': isSmaller}">
     <Avatar
-      :size="!isSmaller && 70"
+      :size="!isSmaller ? 70 : 50"
       :Thumbnail="data.Thumbnail"
       :RealName="data.RealName"
       :Online="data.Online"
