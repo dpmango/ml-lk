@@ -2,9 +2,7 @@
   <div class="mans panel" v-if="forLady">
     <div class="panel__head panel-head">
       <div class="panel-head__icon">
-        <div class="icon-circle">
-          <svg-icon name="filter" width="13" height="15"/>
-        </div>
+        <invite-mans-filter @applyFilters="applyFilters" ref="filter"/>
       </div>
       <div class="panel-head__name">Мужчины</div>
       <div class="panel-head__action">
@@ -52,9 +50,9 @@
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
-import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import UiCheckbox from '@/components/Shared/UI/Checkbox.vue';
 import UiNotification from '@/components/Shared/UI/Notification.vue';
+import InviteMansFilter from '@/components/Invite/InviteMansFilter.vue';
 import InviteCard from '@/components/Invite/InviteCard.vue';
 import AddInvite from '@/components/Invite/AddInvite.vue';
 import Plurize from '@/helpers/Plurize';
@@ -67,9 +65,9 @@ const defaultFilterState = {
 export default {
   name: 'MansList',
   components: {
-    SvgIcon,
     UiCheckbox,
     UiNotification,
+    InviteMansFilter,
     InviteCard,
     AddInvite,
   },
@@ -159,6 +157,10 @@ export default {
           this.errorMessage = err;
         });
     },
+    applyFilters() {
+      const filters = this.$refs.filter.getFilters();
+      console.log('filters from child components', { filters });
+    },
     onManSelect(id) {
       if (this.selectedMans.indexOf(id) !== -1) {
         this.selectedMans = this.selectedMans.filter(x => x !== id);
@@ -240,20 +242,6 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/theme/utils.scss';
-
-.icon-circle {
-  display: block;
-  width: 30px;
-  height: 30px;
-  background: #d1cfda;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  font-size: 0;
-  transition: background 0.25s ease, opacity 0.25s ease;
-}
 
 .panel {
   background: #ffffff;
