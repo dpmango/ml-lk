@@ -70,6 +70,7 @@ export default {
         moreResultsAvailable: true,
       },
       scrollMessageID: undefined,
+      lastLoadId: undefined,
     };
   },
   mounted() {
@@ -304,10 +305,15 @@ export default {
             params: queryObj,
           })
           .then(res => {
+            this.lastLoadId = firstId;
             this.$store.commit('PREPEND_CHAT_LIST', {
               users: this.currentUsers,
               list: res.data.slice(0, res.data.length - 1),
             });
+            setTimeout(() => {
+              this.scrollToLastMsg();
+            }, 100);
+
             this.scrollFetch.isLoading = false;
             this.scrollFetch.moreResultsAvailable = res.data.length === 21;
           })
@@ -320,6 +326,21 @@ export default {
       this.scrollFetch.isLoading = false;
       this.scrollFetch.moreResultsAvailable = true;
       this.scrollMessageID = undefined;
+    },
+    scrollToLastMsg() {
+      const listDOM = this.$refs.list;
+      const { scrollTop, childNodes } = listDOM;
+      const MessageNodesReverse = [...childNodes].reverse();
+
+      let lastMsgPos;
+
+      MessageNodesReverse.forEach(x => {
+        if (x.getAttribute('data-id') === this.lastLoadId) {
+          lastMsgPos = x.offsetTop;
+        }
+      });
+
+      listDOM.scrollTop = lastMsgPos - 40;
     },
   },
   watch: {
