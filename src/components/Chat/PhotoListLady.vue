@@ -63,7 +63,7 @@
               :data-id="photo.ID"
             >
               <div class="photo__image">
-                <img v-img :src="photo.Thumbnail">
+                <img v-img :src="getImage(photo.ID)">
               </div>
               <div class="photo__content">
                 <div class="photo__content-row">
@@ -104,6 +104,7 @@ export default {
       },
       users: {},
       photos: [],
+      photosBase64: [],
     };
   },
   computed: {
@@ -151,9 +152,36 @@ export default {
         })
         .then(res => {
           this.photos = res.data;
+          this.getFiles();
         })
         .catch(err => {
           this.showNotification({ message: err });
+        });
+    },
+    getImage(id) {
+      return this.photosBase64.find(x => x.ID === id).img;
+    },
+    getFiles() {
+      if (this.photos.length > 0) {
+        this.photos.forEach(x => {
+          this.getFile(x.Thumbnail, x.ID);
+        });
+      }
+    },
+    getFile(url, ID) {
+      api
+        .get(url, {
+          responseType: 'arraybuffer',
+        })
+        .then(res => {
+          const imgToBase64 = Buffer.from(res.data, 'binary').toString('base64');
+          this.photosBase64.push({
+            ID: ID,
+            img: `data:image/png;base64, ${imgToBase64}`,
+          });
+        })
+        .catch(err => {
+          this.showNotification({ message: `File: ${err}` });
         });
     },
     resetState() {
@@ -163,6 +191,7 @@ export default {
       };
       this.users = {};
       this.photos = [];
+      this.photosBase64 = [];
     },
   },
   notifications: {
@@ -187,6 +216,7 @@ export default {
   &__content {
     flex: 1 1 auto;
     max-height: 100%;
+    padding: 10px 0;
     &::-webkit-scrollbar {
       width: 3px;
       margin-top: 10px;
@@ -233,8 +263,7 @@ export default {
   width: 100%;
   flex: 0 0 33.3333%;
   max-width: 33.3333%;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding: 10px;
   &__image {
     img {
       max-width: 100%;
