@@ -193,7 +193,7 @@
               track-by="label"
               label="label"
               placeholder="Выберите"
-              :searchable="false"
+              :searchable="true"
               :allowEmpty="false"
               :options="options.country"
             >
@@ -262,6 +262,7 @@ import UiRadio from '@/components/Shared/UI/Radio.vue';
 import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import Button from '@/components/Shared/UI/Button.vue';
 import SelectArrow from '@/components/Shared/UI/Partials/SelectArrow.vue';
+import { countriesSelect } from '@/data/countries';
 
 const defaultFilterState = {
   age_1: { label: 'Все', value: undefined },
@@ -320,11 +321,7 @@ const selectOptions = {
   eye: [{ label: 'Все', value: undefined }],
   marital: [{ label: 'Все', value: undefined }],
   education: [{ label: 'Все', value: undefined }],
-  country: [
-    { label: 'Все', value: undefined },
-    { label: 'Россия', value: 'Россия' },
-    { label: 'Украина', value: 'Украина' },
-  ],
+  country: [...[{ label: 'Все', value: undefined }], ...countriesSelect],
 };
 
 export default {
