@@ -84,7 +84,7 @@ export default {
   props: {
     forLady: String,
   },
-  mounted() {
+  created() {
     this.fetchApi();
   },
   computed: {
@@ -98,13 +98,63 @@ export default {
   },
   methods: {
     filterToParams(lastId) {
+      const filtersRef = this.$refs.filter;
+      let filters;
+      if (filtersRef) {
+        filters = filtersRef.getFilters();
+      }
+
       let filterObj = {
         filter: 1,
         lady: this.forLady,
       };
 
+      function mergeToFilter(obj) {
+        return { ...filterObj, ...obj };
+      }
+
+      function mergeFilterSelect(name) {
+        if (filters[name].value) {
+          filterObj = mergeToFilter({ [name]: filters[name].value });
+        }
+      }
+
+      function mergeFilterSelectMultiple(name) {
+        // todo - multiple selects - value.join(',')
+        if (filters[name].value) {
+          filterObj = mergeToFilter({ [name]: filters[name].value });
+        }
+      }
+
       if (lastId) {
-        filterObj = { ...filterObj, ...{ last_id: lastId } };
+        filterObj = mergeToFilter({ last_id: lastId });
+      }
+
+      // filters from child
+      if (filtersRef) {
+        if (filters.id.trim() !== '') {
+          filterObj = mergeToFilter({ lady: filters.id });
+        }
+        if (filters.city.trim() !== '') {
+          filterObj = mergeToFilter({ city: filters.city });
+        }
+        mergeFilterSelect('age_1');
+        mergeFilterSelect('age_2');
+        mergeFilterSelect('height_1');
+        mergeFilterSelect('height_2');
+        mergeFilterSelect('weight_1');
+        mergeFilterSelect('weight_2');
+        mergeFilterSelectMultiple('hair');
+        mergeFilterSelectMultiple('eye');
+        mergeFilterSelectMultiple('marital');
+        mergeFilterSelectMultiple('education');
+        mergeFilterSelectMultiple('country');
+        if (filters.children) {
+          filterObj = mergeToFilter({ children: filters.children });
+        }
+        if (filters.photo) {
+          filterObj = mergeToFilter({ photo: filters.photo });
+        }
       }
 
       return filterObj;
@@ -127,8 +177,8 @@ export default {
         });
     },
     applyFilters() {
-      const filters = this.$refs.filter.getFilters();
-      console.log('filters from child components', { filters });
+      // const filters = this.$refs.filter.getFilters();
+      this.fetchApi();
     },
     onManSelect(id) {
       if (this.selectedMans.indexOf(id) !== -1) {

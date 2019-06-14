@@ -94,7 +94,7 @@
                 isRed
                 isBig
                 v-model="filter.children"
-                cbValue="0"
+                cbValue="1"
                 name="manFilterChildren"
                 label="Да"
               />
@@ -102,7 +102,7 @@
                 isRed
                 isBig
                 v-model="filter.children"
-                cbValue="1"
+                cbValue="2"
                 name="manFilterChildren"
                 label="Нет"
               />
@@ -230,7 +230,7 @@
                 isRed
                 isBig
                 v-model="filter.photo"
-                cbValue="0"
+                cbValue="1"
                 name="manFilterPhoto"
                 label="Да"
               />
@@ -238,14 +238,14 @@
                 isRed
                 isBig
                 v-model="filter.photo"
-                cbValue="1"
+                cbValue="2"
                 name="manFilterPhoto"
                 label="Нет"
               />
             </div>
           </div>
           <div class="filter__group filter__group--cta">
-            <Button orange block @click="$emit('applyFilters')">Подобрать</Button>
+            <Button orange block @click="applyFilters">Подобрать</Button>
           </div>
         </div>
       </div>
@@ -272,12 +272,12 @@ import {
 } from '@/data/personParams';
 
 const defaultFilterState = {
-  age_1: { label: 'Все', value: undefined },
-  age_2: { label: 'Все', value: undefined },
-  height_1: { label: 'Все', value: undefined },
-  height_2: { label: 'Все', value: undefined },
-  weight_1: { label: 'Все', value: undefined },
-  weight_2: { label: 'Все', value: undefined },
+  age_1: { label: 'от', value: undefined },
+  age_2: { label: 'до', value: undefined },
+  height_1: { label: 'от', value: undefined },
+  height_2: { label: 'до', value: undefined },
+  weight_1: { label: 'от', value: undefined },
+  weight_2: { label: 'до', value: undefined },
   hair: { label: 'Все', value: undefined },
   eye: { label: 'Все', value: undefined },
   marital: { label: 'Все', value: undefined },
@@ -292,10 +292,10 @@ const defaultFilterState = {
 const selectOptions = {
   age_1: [...[{ label: 'Все', value: undefined }], ...ageSelect],
   age_2: [...[{ label: 'Все', value: undefined }], ...ageSelect],
-  height_1: [...[{ label: 'Все', value: undefined }], ...weight1Select],
-  height_2: [...[{ label: 'Все', value: undefined }], ...weight2Select],
-  weight_1: [...[{ label: 'Все', value: undefined }], ...height1Select],
-  weight_2: [...[{ label: 'Все', value: undefined }], ...height2Select],
+  height_1: [...[{ label: 'Все', value: undefined }], ...height1Select],
+  height_2: [...[{ label: 'Все', value: undefined }], ...height2Select],
+  weight_1: [...[{ label: 'Все', value: undefined }], ...weight1Select],
+  weight_2: [...[{ label: 'Все', value: undefined }], ...weight2Select],
   hair: [{ label: 'Все', value: undefined }],
   eye: [{ label: 'Все', value: undefined }],
   marital: [{ label: 'Все', value: undefined }],
@@ -327,11 +327,16 @@ export default {
     closeFilter() {
       this.isFilterOpen = false;
     },
+    applyFilters() {
+      this.$emit('applyFilters');
+      this.closeFilter();
+    },
     getFilters() {
       return this.filter;
     },
     clearFilter() {
       this.filter = cloneDeep(defaultFilterState);
+      this.applyFilters();
     },
   },
   directives: {
