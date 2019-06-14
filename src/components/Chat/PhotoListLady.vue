@@ -24,7 +24,12 @@
         </div>
         <div class="modal__content">
           <div class="photo-grid">
-            <div class="photo" v-for="(photo, idx) in photos" :key="idx" :data-id="photo.ID">
+            <div
+              class="photo"
+              v-for="(photo, idx) in photosFiltered"
+              :key="idx"
+              :data-id="photo.ID"
+            >
               <div class="photo__image">
                 <img v-img :src="photo.Thumbnail">
               </div>
@@ -59,14 +64,6 @@ export default {
     UiRadio,
     Panel,
   },
-  computed: {
-    currentUsers() {
-      return this.$store.state.chat.currentUsers;
-    },
-    photosCount() {
-      return this.photos.length;
-    },
-  },
   data() {
     return {
       filter: {
@@ -76,6 +73,38 @@ export default {
       users: {},
       photos: [],
     };
+  },
+  computed: {
+    currentUsers() {
+      return this.$store.state.chat.currentUsers;
+    },
+    photosCount() {
+      return this.photos.length;
+    },
+    photosFiltered() {
+      const { isSend, isRead } = this.filter;
+
+      const bySend = x => {
+        if (isSend === '0') {
+          return x.SendDate !== '0';
+        } else if (isSend === '1') {
+          return x.SendDate === '0';
+        } else {
+          return true;
+        }
+      };
+      const byRead = x => {
+        if (isRead === '0') {
+          return x.ReadDate !== '0';
+        } else if (isRead === '1') {
+          return x.ReadDate === '0';
+        } else {
+          return true;
+        }
+      };
+
+      return this.photos.filter(x => bySend(x) && byRead(x));
+    },
   },
   methods: {
     beforeOpen(event) {
