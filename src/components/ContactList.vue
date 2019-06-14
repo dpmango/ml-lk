@@ -150,7 +150,7 @@ export default {
       }
 
       if (this.filter.ladies.length > 0) {
-        ladiesFilter = this.filter.ladies.join(',');
+        ladiesFilter = this.filter.ladies.map(x => x.ID).join(',');
       }
 
       return {
