@@ -13,13 +13,45 @@
         <div class="modal__filter">
           <div class="ui-radio-group">
             <label for>Отправлено:</label>
-            <ui-radio isRed isBig v-model="filter.isSend" cbValue="0" name="isSend" label="Да"/>
-            <ui-radio isRed isBig v-model="filter.isSend" cbValue="1" name="isSend" label="Нет"/>
+            <ui-radio
+              isRed
+              isNullable
+              isBig
+              v-model="filter.isSend"
+              cbValue="0"
+              name="isSend"
+              label="Да"
+            />
+            <ui-radio
+              isRed
+              isNullable
+              isBig
+              v-model="filter.isSend"
+              cbValue="1"
+              name="isSend"
+              label="Нет"
+            />
           </div>
           <div class="ui-radio-group">
             <label for>Просмотрено:</label>
-            <ui-radio isRed isBig v-model="filter.isRead" cbValue="0" name="isRead" label="Да"/>
-            <ui-radio isRed isBig v-model="filter.isRead" cbValue="1" name="isRead" label="Нет"/>
+            <ui-radio
+              isRed
+              isNullable
+              isBig
+              v-model="filter.isRead"
+              cbValue="0"
+              name="isRead"
+              label="Да"
+            />
+            <ui-radio
+              isRed
+              isNullable
+              isBig
+              v-model="filter.isRead"
+              cbValue="1"
+              name="isRead"
+              label="Нет"
+            />
           </div>
         </div>
         <div class="modal__content">

@@ -1,7 +1,7 @@
 <template>
   <div class="ui-radio" :class="{'is-active': isActive, 'is-red': isRed, 'is-big': isBig}">
-    <input type="radio" :name="name" :id="idvalue" :value="cbValue" @change="handleChange">
-    <label :for="idvalue">{{label}}</label>
+    <input type="radio" :name="name" :id="idvalue" :value="cbValue">
+    <label :for="idvalue" @click="handleChange">{{label}}</label>
   </div>
 </template>
 
@@ -33,7 +33,6 @@ export default {
   },
   methods: {
     handleChange() {
-      // TODO - allow reseting by sending null there?
       if (this.isNullable) {
         if (this.value === this.cbValue) {
           this.$emit('input', null);
