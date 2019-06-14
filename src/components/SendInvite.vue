@@ -57,5 +57,7 @@ export default {
 
 .send-invite {
   margin-bottom: 10px;
+  position: relative;
+  z-index: 5;
 }
 </style>

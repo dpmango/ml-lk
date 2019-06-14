@@ -120,9 +120,9 @@ export default {
       }
 
       function mergeFilterSelectMultiple(name) {
-        // todo - multiple selects - value.join(',')
-        if (filters[name].value) {
-          filterObj = mergeToFilter({ [name]: filters[name].value });
+        if (filters[name].length > 0) {
+          const joinedValues = filters[name].map(x => x.value).join(',');
+          filterObj = mergeToFilter({ [name]: joinedValues });
         }
       }
 

@@ -77,13 +77,20 @@
               v-model="filter.marital"
               track-by="label"
               label="label"
-              placeholder="Выберите"
+              placeholder="Все"
+              :multiple="true"
               :searchable="false"
-              :allowEmpty="false"
+              :allowEmpty="true"
               :options="options.marital"
             >
               <template slot="caret">
                 <select-arrow/>
+              </template>
+              <template slot="selection" slot-scope="{ values }">
+                <span
+                  class="multiselect__single"
+                  v-if="values.length"
+                >{{multipleSelectPlaceholder(values, 'marital')}}</span>
               </template>
             </multiselect>
           </div>
@@ -117,13 +124,20 @@
               v-model="filter.eye"
               track-by="label"
               label="label"
-              placeholder="Выберите"
+              placeholder="Все"
+              :multiple="true"
               :searchable="true"
-              :allowEmpty="false"
+              :allowEmpty="true"
               :options="options.eye"
             >
               <template slot="caret">
                 <select-arrow/>
+              </template>
+              <template slot="selection" slot-scope="{ values }">
+                <span
+                  class="multiselect__single"
+                  v-if="values.length"
+                >{{multipleSelectPlaceholder(values, 'eye')}}</span>
               </template>
             </multiselect>
           </div>
@@ -133,13 +147,20 @@
               v-model="filter.hair"
               track-by="label"
               label="label"
-              placeholder="Выберите"
+              placeholder="Все"
+              :multiple="true"
               :searchable="true"
-              :allowEmpty="false"
+              :allowEmpty="true"
               :options="options.hair"
             >
               <template slot="caret">
                 <select-arrow/>
+              </template>
+              <template slot="selection" slot-scope="{ values }">
+                <span
+                  class="multiselect__single"
+                  v-if="values.length"
+                >{{multipleSelectPlaceholder(values, 'hair')}}</span>
               </template>
             </multiselect>
           </div>
@@ -192,13 +213,20 @@
               v-model="filter.country"
               track-by="label"
               label="label"
-              placeholder="Выберите"
+              placeholder="Все"
+              :multiple="true"
               :searchable="true"
-              :allowEmpty="false"
+              :allowEmpty="true"
               :options="options.country"
             >
               <template slot="caret">
                 <select-arrow/>
+              </template>
+              <template slot="selection" slot-scope="{ values }">
+                <span
+                  class="multiselect__single"
+                  v-if="values.length"
+                >{{multipleSelectPlaceholder(values, 'country')}}</span>
               </template>
             </multiselect>
           </div>
@@ -208,13 +236,20 @@
               v-model="filter.education"
               track-by="label"
               label="label"
-              placeholder="Выберите"
+              placeholder="Все"
+              :multiple="true"
               :searchable="false"
-              :allowEmpty="false"
+              :allowEmpty="true"
               :options="options.education"
             >
               <template slot="caret">
                 <select-arrow/>
+              </template>
+              <template slot="selection" slot-scope="{ values }">
+                <span
+                  class="multiselect__single"
+                  v-if="values.length"
+                >{{multipleSelectPlaceholder(values, 'education')}}</span>
               </template>
             </multiselect>
           </div>
@@ -262,8 +297,10 @@ import UiRadio from '@/components/Shared/UI/Radio.vue';
 import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import Button from '@/components/Shared/UI/Button.vue';
 import SelectArrow from '@/components/Shared/UI/Partials/SelectArrow.vue';
+import Plurize from '@/helpers/Plurize';
 import { countriesSelect } from '@/data/countries';
 import {
+  arrayToSelect,
   ageSelect,
   weight1Select,
   weight2Select,
@@ -278,11 +315,11 @@ const defaultFilterState = {
   height_2: { label: 'до', value: undefined },
   weight_1: { label: 'от', value: undefined },
   weight_2: { label: 'до', value: undefined },
-  hair: { label: 'Все', value: undefined },
-  eye: { label: 'Все', value: undefined },
-  marital: { label: 'Все', value: undefined },
-  education: { label: 'Все', value: undefined },
-  country: { label: 'Все', value: undefined },
+  hair: [],
+  eye: [],
+  marital: [],
+  education: [],
+  country: [],
   city: '',
   id: '',
   children: null,
@@ -296,10 +333,34 @@ const selectOptions = {
   height_2: [...[{ label: 'Все', value: undefined }], ...height2Select],
   weight_1: [...[{ label: 'Все', value: undefined }], ...weight1Select],
   weight_2: [...[{ label: 'Все', value: undefined }], ...weight2Select],
-  hair: [{ label: 'Все', value: undefined }],
-  eye: [{ label: 'Все', value: undefined }],
-  marital: [{ label: 'Все', value: undefined }],
-  education: [{ label: 'Все', value: undefined }],
+  hair: [
+    { label: 'Черный', value: 1 },
+    { label: 'Белый', value: 2 },
+    { label: 'Коричневый', value: 3 },
+    { label: 'Светлый', value: 4 },
+    { label: 'Каштановый', value: 5 },
+    { label: 'Рыжий', value: 6 },
+    { label: 'Серый', value: 7 },
+  ],
+  eye: [
+    { label: 'Голубой', value: 1 },
+    { label: 'Коричневый', value: 2 },
+    { label: 'Серый', value: 3 },
+    { label: 'Зеленый', value: 4 },
+    { label: 'Карий', value: 5 },
+  ],
+  marital: [
+    { label: 'Не был женат', value: 1 },
+    { label: 'Разведен', value: 2 },
+    { label: 'Жента', value: 3 },
+    { label: 'Вдовец', value: 4 },
+  ],
+  education: [
+    { label: 'Среднее', value: 1 },
+    { label: 'Колледж', value: 2 },
+    { label: 'Студент', value: 3 },
+    { label: 'Высшее', value: 4 },
+  ],
   country: [...[{ label: 'Все', value: undefined }], ...countriesSelect],
 };
 
@@ -320,6 +381,7 @@ export default {
       options: selectOptions,
     };
   },
+  computed: {},
   methods: {
     toggleFilterOpen() {
       this.isFilterOpen = !this.isFilterOpen;
@@ -337,6 +399,27 @@ export default {
     clearFilter() {
       this.filter = cloneDeep(defaultFilterState);
       this.applyFilters();
+    },
+    multipleSelectPlaceholder(values, type) {
+      // get plurize
+      let plural = '';
+      if (type === 'country') {
+        plural = Plurize(values.length, 'страна', 'страны', 'стран');
+      } else if (type === 'education') {
+        plural = Plurize(values.length, 'страна', 'страны', 'стран');
+      } else if (type === 'eye') {
+        plural = Plurize(values.length, 'цвет', 'цвета', 'цветов');
+      } else if (type === 'hair') {
+        plural = Plurize(values.length, 'цвет', 'цвета', 'цветов');
+      } else {
+        plural = Plurize(values.length, 'значение', 'значения', 'значений');
+      }
+
+      if (values.length === 1) {
+        return values[0].label;
+      } else {
+        return `${values.length} ${plural} выбрано`;
+      }
     },
   },
   directives: {
