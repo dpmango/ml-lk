@@ -15,7 +15,7 @@
                 track-by="label"
                 label="label"
                 placeholder="Выберите"
-                :searchable="false"
+                :searchable="true"
                 :allowEmpty="false"
                 :options="options.age_1"
               >
@@ -29,7 +29,7 @@
                 track-by="label"
                 label="label"
                 placeholder="Выберите"
-                :searchable="false"
+                :searchable="true"
                 :allowEmpty="false"
                 :options="options.age_2"
               >
@@ -118,7 +118,7 @@
               track-by="label"
               label="label"
               placeholder="Выберите"
-              :searchable="false"
+              :searchable="true"
               :allowEmpty="false"
               :options="options.eye"
             >
@@ -134,7 +134,7 @@
               track-by="label"
               label="label"
               placeholder="Выберите"
-              :searchable="false"
+              :searchable="true"
               :allowEmpty="false"
               :options="options.hair"
             >
@@ -263,6 +263,13 @@ import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import Button from '@/components/Shared/UI/Button.vue';
 import SelectArrow from '@/components/Shared/UI/Partials/SelectArrow.vue';
 import { countriesSelect } from '@/data/countries';
+import {
+  ageSelect,
+  weight1Select,
+  weight2Select,
+  height1Select,
+  height2Select,
+} from '@/data/personParams';
 
 const defaultFilterState = {
   age_1: { label: 'Все', value: undefined },
@@ -283,40 +290,12 @@ const defaultFilterState = {
 };
 
 const selectOptions = {
-  age_1: [
-    { label: 'Все', value: undefined },
-    { label: '18-25', value: 18 },
-    { label: '25-35', value: 25 },
-    { label: '35-50', value: 35 },
-    { label: '50-70', value: 50 },
-  ],
-  age_2: [
-    { label: 'Все', value: undefined },
-    { label: '18-25', value: 18 },
-    { label: '25-35', value: 25 },
-    { label: '35-50', value: 35 },
-    { label: '50-70', value: 50 },
-  ],
-  height_1: [
-    { label: 'Все', value: undefined },
-    { label: '100-150', value: 100 },
-    { label: '150-200', value: 150 },
-  ],
-  height_2: [
-    { label: 'Все', value: undefined },
-    { label: '100-150', value: 100 },
-    { label: '150-200', value: 150 },
-  ],
-  weight_1: [
-    { label: 'Все', value: undefined },
-    { label: '0-50', value: 0 },
-    { label: '50-100', value: 50 },
-  ],
-  weight_2: [
-    { label: 'Все', value: undefined },
-    { label: '0-50', value: 0 },
-    { label: '50-100', value: 50 },
-  ],
+  age_1: [...[{ label: 'Все', value: undefined }], ...ageSelect],
+  age_2: [...[{ label: 'Все', value: undefined }], ...ageSelect],
+  height_1: [...[{ label: 'Все', value: undefined }], ...weight1Select],
+  height_2: [...[{ label: 'Все', value: undefined }], ...weight2Select],
+  weight_1: [...[{ label: 'Все', value: undefined }], ...height1Select],
+  weight_2: [...[{ label: 'Все', value: undefined }], ...height2Select],
   hair: [{ label: 'Все', value: undefined }],
   eye: [{ label: 'Все', value: undefined }],
   marital: [{ label: 'Все', value: undefined }],
