@@ -60,4 +60,11 @@ export default {
   position: relative;
   z-index: 5;
 }
+
+@include r($sm) {
+  .send-invite {
+    margin-left: -20px;
+    margin-right: -20px;
+  }
+}
 </style>

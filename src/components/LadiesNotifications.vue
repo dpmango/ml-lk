@@ -235,12 +235,47 @@ export default {
   }
 }
 
-@include r($lg) {
-  .ladies-ntf {
+@include r(1300) {
+  .ladies-ntf,
+  .head-ntf {
     &__col {
       flex: 0 0 33.3333%;
       max-width: 33.3333%;
     }
+  }
+  .head-ntf__col:nth-child(4) {
+    display: none;
+  }
+}
+
+@include r($lg) {
+  .ladies-ntf,
+  .head-ntf {
+    &__col {
+      flex: 0 0 50%;
+      max-width: 50%;
+    }
+  }
+  .head-ntf__col:nth-child(3) {
+    display: none;
+  }
+}
+@include r(680) {
+  .ladies-ntf,
+  .head-ntf {
+    &__col {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+  }
+  .head-ntf__col:nth-child(2) {
+    display: none;
+  }
+}
+@include r($sm) {
+  .ladies-ntf {
+    margin-left: -20px;
+    margin-right: -20px;
   }
 }
 </style>

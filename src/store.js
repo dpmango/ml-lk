@@ -6,7 +6,6 @@ import Notifications from '@/store/Notifications';
 import Contacts from '@/store/Contacts';
 import LadiesNtf from '@/store/LadiesNtf';
 import Chat from '@/store/Chat';
-import Users from '@/store/Users';
 
 Vue.use(Vuex);
 
@@ -18,6 +17,5 @@ export default new Vuex.Store({
     contacts: Contacts,
     ladiesNtf: LadiesNtf,
     chat: Chat,
-    users: Users,
   },
 });

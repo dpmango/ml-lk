@@ -85,6 +85,7 @@ export default {
     font-size: 13px;
     font-weight: 500;
     cursor: pointer;
+    transform: translateY(0.1em);
     span {
       display: inline-block;
       margin-right: 10px;
@@ -102,6 +103,10 @@ export default {
 }
 @include r($sm) {
   .panel-head {
+    &__name {
+      padding-left: 0;
+      text-align: left;
+    }
   }
 }
 </style>

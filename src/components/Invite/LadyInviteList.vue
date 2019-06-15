@@ -59,21 +59,35 @@ export default {
         moreResultsAvailable: true,
       },
       swiperOption: {
-        // https://idangero.us/swiper/api/
-        // wrapperClass: 'swiper-wrapper',
-        // slideClass: 'example-slide',
         direction: 'horizontal',
         loop: false,
         watchOverflow: true,
         setWrapperSize: false,
         spaceBetween: 10,
-        slidesPerView: 'auto',
+        slidesPerView: 6,
         normalizeSlideIndex: true,
-        freeMode: true,
-        freeModeSticky: true,
+        // freeMode: true,
+        // freeModeSticky: true,
         navigation: {
           nextEl: '.swiper-next',
           prevEl: '.swiper-prev',
+        },
+        breakpoints: {
+          568: {
+            slidesPerView: 1,
+          },
+          768: {
+            slidesPerView: 2,
+          },
+          920: {
+            slidesPerView: 3,
+          },
+          1100: {
+            slidesPerView: 4,
+          },
+          1300: {
+            slidesPerView: 5,
+          },
         },
       },
       inviteList: [],
@@ -143,11 +157,10 @@ export default {
     .swiper-container {
       padding: 15px 50px;
     }
-
     .swiper-slide {
       width: 100%;
-      flex: 0 0 16.6666%;
-      max-width: 16.6666%;
+      // flex: 0 0 16.6666%;
+      // max-width: 16.6666%;
       min-width: 1px;
       min-height: 0;
     }
@@ -156,21 +169,28 @@ export default {
 .swiper-prev,
 .swiper-next {
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
   z-index: 2;
   padding: 10px;
+  width: 50px;
   cursor: pointer;
   color: #6f6e70;
+  background: white;
   transition: color 0.25s ease;
   &:hover {
     color: $fontColor;
   }
 }
 .swiper-prev {
-  left: 15px;
+  left: 0px;
 }
 .swiper-next {
-  right: 15px;
+  right: 0px;
 }
 </style>

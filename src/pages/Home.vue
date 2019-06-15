@@ -127,11 +127,11 @@ export default {
 //   .col {
 //   }
 // }
-@include r($sm) {
+@include r($md) {
   .grid {
     flex-wrap: wrap;
-    margin-left: -25px;
-    margin-right: -25px;
+    // margin-left: -25px;
+    // margin-right: -25px;
     padding-bottom: 40px;
     .col--left,
     .col--right {
@@ -156,6 +156,12 @@ export default {
         transform: translateX(0px);
       }
     }
+  }
+}
+@include r($sm) {
+  .grid {
+    margin-left: -25px;
+    margin-right: -25px;
   }
 }
 </style>

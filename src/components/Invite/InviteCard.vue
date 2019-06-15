@@ -1,5 +1,9 @@
 <template>
-  <div class="invite-card" :class="{'is-selected': isSelected, 'is-smaller': isSmaller}">
+  <div
+    class="invite-card"
+    :class="{'is-selected': isSelected, 'is-smaller': isSmaller}"
+    @click="$emit('onSelect', data.ID)"
+  >
     <Avatar
       :size="!isSmaller ? 70 : 50"
       :Thumbnail="data.Thumbnail"
@@ -11,13 +15,7 @@
       <div class="invite-card__country">{{data.Country}}</div>
     </div>
     <div class="invite-card__checkbox">
-      <ui-checkbox
-        yellow
-        withCheckmark
-        @input="$emit('onSelect', data.ID)"
-        :value="isSelected"
-        :name=" 'inviteSelected_' + data.ID"
-      />
+      <ui-checkbox yellow withCheckmark :value="isSelected" :name=" 'inviteSelected_' + data.ID"/>
     </div>
   </div>
 </template>
@@ -63,6 +61,7 @@ export default {
   align-items: center;
   padding: 15px 12px;
   border: 1px solid transparent;
+  cursor: pointer;
   transition: background-color 0.25s ease, border-color 0.25s ease;
   &__content {
     flex: 1 1 auto;
@@ -86,6 +85,7 @@ export default {
     position: absolute;
     top: 50%;
     right: 0px;
+    pointer-events: none;
     transform: translateY(-50%);
   }
   &.is-selected {

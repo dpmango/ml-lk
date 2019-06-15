@@ -4,7 +4,9 @@
       <div class="panel-head__icon">
         <invite-mans-filter @applyFilters="applyFilters" ref="filter"/>
       </div>
-      <div class="panel-head__name">Мужчины</div>
+      <div
+        class="panel-head__name"
+      >Мужчины {{mans.length}} - {{mansMinus8.length}} {{mansRest8.length}}</div>
       <div class="panel-head__action">
         <ui-checkbox
           @input="checkAll"
@@ -49,6 +51,7 @@
 </template>
 
 <script>
+import debounce from 'lodash/debounce';
 import cloneDeep from 'lodash/cloneDeep';
 import UiCheckbox from '@/components/Shared/UI/Checkbox.vue';
 import UiNotification from '@/components/Shared/UI/Notification.vue';
@@ -77,8 +80,10 @@ export default {
       mans: [],
       selectedMans: [],
       moreMansAvailable: true,
+      isSecondListOrMore: false,
       errorMessage: '',
       textarea: '',
+      wWdith: window.innerWidth,
     };
   },
   props: {
@@ -86,17 +91,45 @@ export default {
   },
   created() {
     this.fetchApi();
+    this.resizeWithDebounce = debounce(this.handleResize, 100);
+  },
+  mounted() {
+    window.addEventListener('resize', this.resizeWithDebounce, false);
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.resizeWithDebounce, false);
   },
   computed: {
     mansMinus8() {
+      if (this.wWdith <= 920) {
+        return this.mans;
+      }
+      if (this.wWdith <= 1100) {
+        return this.mans.slice(0, this.mans.length - 5);
+      }
+      if (this.wWdith <= 1300) {
+        return this.mans.slice(0, this.mans.length - 6);
+      }
       return this.mans.slice(0, this.mans.length - 9);
     },
     mansRest8() {
-      return this.mans.slice(this.mans.length - 8, this.mans.length);
-      // return this.mans.slice(this.mans.length - 9, this.mans.length);
+      const addedLength = this.moreMansAvailable ? 1 : 0;
+      if (this.wWdith <= 920) {
+        return [];
+      }
+      if (this.wWdith <= 1100) {
+        return this.mans.slice(this.mans.length - 5, this.mans.length - addedLength);
+      }
+      if (this.wWdith <= 1300) {
+        return this.mans.slice(this.mans.length - 6, this.mans.length - addedLength);
+      }
+      return this.mans.slice(this.mans.length - 9, this.mans.length - addedLength);
     },
   },
   methods: {
+    handleResize() {
+      this.wWdith = window.innerWidth;
+    },
     filterToParams(lastId) {
       const filtersRef = this.$refs.filter;
       let filters;
@@ -163,6 +196,9 @@ export default {
       if (!this.forLady) {
         return;
       }
+      if (lastId) {
+        this.isSecondListOrMore = true;
+      }
       api
         .get('mens', {
           params: this.filterToParams(lastId),
@@ -203,6 +239,7 @@ export default {
       this.mans = [];
       this.selectedMans = [];
       this.moreMansAvailable = true;
+      this.isSecondListOrMore = false;
       this.errorMessage = '';
     },
     sentInvite() {
@@ -216,7 +253,7 @@ export default {
           const apiData = res.data[0];
           if (apiData.success) {
             // reset state
-            const lastId = this.mans[this.mans.length - 1].ID;
+            const lastId = this.mans[this.mans.length - 2].ID;
             this.errorMessage = '';
             this.showNotification({
               title: '',
@@ -288,7 +325,7 @@ export default {
   display: flex;
   align-items: center;
   min-height: 40px;
-  padding: 5px 15px 5px 20px;
+  padding: 5px 20px 5px 20px;
   &__icon {
     flex: 0 0 auto;
   }
@@ -342,12 +379,79 @@ export default {
   // }
 }
 
-@include r($xl) {
-  .panel {
-    height: auto;
-    max-height: calc(100vh - 80px - 40px);
+@include r(1300) {
+  .mans__col {
+    flex-basis: 20%;
+    max-width: 20%;
+    &--collumned {
+      flex-basis: 33.3333%;
+      max-width: 33.3333%;
+    }
+    &--restcards {
+      flex-basis: 60%;
+      max-width: 60%;
+    }
+    &--textarea {
+      flex-basis: 40%;
+      max-width: 40%;
+    }
   }
 }
+@include r(1100) {
+  .mans__col {
+    flex-basis: 25%;
+    max-width: 25%;
+    &--collumned {
+      flex-basis: 50%;
+      max-width: 50%;
+    }
+    &--restcards {
+      flex-basis: 50%;
+      max-width: 50%;
+    }
+    &--textarea {
+      flex-basis: 50%;
+      max-width: 50%;
+    }
+  }
+}
+@include r(920) {
+  .mans__col {
+    flex-basis: 33.3333%;
+    max-width: 33.3333%;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    &--restcards {
+      flex-basis: 100%;
+      max-width: 100%;
+    }
+    &--textarea {
+      flex-basis: 100%;
+      max-width: 100%;
+    }
+  }
+}
+@include r($md) {
+  .mans__col {
+    flex-basis: 50%;
+    max-width: 50%;
+    &--restcards {
+      flex-basis: 100%;
+      max-width: 100%;
+    }
+    &--textarea {
+      flex-basis: 100%;
+      max-width: 100%;
+    }
+  }
+}
+@include r($sm) {
+  .mans__col {
+    flex-basis: 100%;
+    max-width: 100%;
+  }
+}
+
 @include r($sm) {
   .panel-head {
     flex-wrap: wrap;

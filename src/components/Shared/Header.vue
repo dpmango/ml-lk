@@ -2,7 +2,7 @@
   <header class="header" :class="{ 'header--attach': isTranslatorsPage }">
     <Container>
       <div class="header__wrapper">
-        <div class="header__hamburger">
+        <div class="header__hamburger" v-click-outside="hideHamburger">
           <button
             @click="toggleHamburger"
             class="hamburger hamburger--elastic"
@@ -14,6 +14,15 @@
             </span>
           </button>
           <div class="menu" :class="{ 'is-active' : hamburgerActive }">
+            <div class="header__actions">
+              <template v-if="isTranslatorsPage">
+                <Button primary @click="openAddEdit">Добавить переводчика</Button>
+              </template>
+              <template v-else>
+                <Button primary @click="setPageModule('SendInvite')">Отправить приглашение</Button>
+                <Button primary @click="setPageModule('LadiesNotifications')">Девушки</Button>
+              </template>
+            </div>
             <ul class="menu__list">
               <li>
                 <router-link to="/translators">Переводчики</router-link>
@@ -56,6 +65,7 @@
 </template>
 
 <script>
+import ClickOutside from 'vue-click-outside';
 import Container from '@/components/Shared/Layout/Container.vue';
 import Button from '@/components/Shared/UI/Button.vue';
 import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
@@ -84,6 +94,9 @@ export default {
     toggleHamburger() {
       this.hamburgerActive = !this.hamburgerActive;
     },
+    hideHamburger() {
+      this.hamburgerActive = false;
+    },
     openAddEdit() {
       this.$modal.show('add-translator', {
         type: 'add',
@@ -92,6 +105,9 @@ export default {
     setPageModule(payload) {
       this.$store.commit('TOGGLE_PAGE_ACTIVE_MODULES', payload);
     },
+  },
+  directives: {
+    ClickOutside,
   },
 };
 </script>
@@ -150,6 +166,29 @@ export default {
       padding-right: 0;
       margin-right: 0;
     }
+    &--attach {
+      .header__logo {
+        padding-right: 0;
+      }
+    }
+  }
+}
+
+@include r($md) {
+  .header {
+    &__actions {
+      display: none;
+    }
+
+    &__logo {
+      padding-right: 20px;
+      margin-right: auto;
+    }
+    &--attach {
+      .header__logo {
+        padding-right: 20px;
+      }
+    }
   }
 }
 
@@ -185,6 +224,20 @@ export default {
       transition: color 0.25s ease-in-out;
       &:hover {
         color: $colorOrange;
+      }
+    }
+  }
+  .header__actions {
+    display: none;
+  }
+}
+@include r($md) {
+  .menu {
+    .header__actions {
+      display: block;
+      margin-left: 0;
+      button {
+        margin-bottom: 10px;
       }
     }
   }
