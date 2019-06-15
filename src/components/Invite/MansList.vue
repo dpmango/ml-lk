@@ -4,9 +4,7 @@
       <div class="panel-head__icon">
         <invite-mans-filter @applyFilters="applyFilters" ref="filter"/>
       </div>
-      <div
-        class="panel-head__name"
-      >Мужчины {{mans.length}} - {{mansMinus8.length}} {{mansRest8.length}}</div>
+      <div class="panel-head__name">Мужчины</div>
       <div class="panel-head__action">
         <ui-checkbox
           @input="checkAll"
@@ -101,8 +99,9 @@ export default {
   },
   computed: {
     mansMinus8() {
+      const addedLength = this.moreMansAvailable ? 1 : 0;
       if (this.wWdith <= 920) {
-        return this.mans;
+        return this.mans.slice(0, this.mans.length - addedLength);
       }
       if (this.wWdith <= 1100) {
         return this.mans.slice(0, this.mans.length - 5);
