@@ -7,7 +7,6 @@ import VCalendar from 'v-calendar';
 import VueNotifications from 'vue-notifications';
 import miniToastr from 'mini-toastr';
 import svg4everybody from 'svg4everybody';
-import VueNativeSock from 'vue-native-websocket';
 import App from './App.vue';
 import store from './store';
 import router from './router';
@@ -39,14 +38,6 @@ Vue.use(VueNotifications, {
   error: toast,
   info: toast,
   warn: toast,
-});
-Vue.use(VueNativeSock, 'wss://marmeladies.com/ws/', {
-  connectManually: true,
-  // store,
-  format: 'json',
-  reconnection: true,
-  reconnectionAttempts: 5,
-  reconnectionDelay: 3000,
 });
 
 svg4everybody();

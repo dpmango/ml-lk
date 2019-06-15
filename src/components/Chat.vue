@@ -44,6 +44,8 @@ import ModalPhotoListLady from '@/components/Chat/PhotoListLady.vue';
 import { timestampToAgoStamp, dateToTimestamp } from '@/helpers/Dates';
 import api from '@/helpers/Api';
 import { setTimeout } from 'timers';
+// import autobahn from 'autobahn';
+// import '@/autobahn.wamp1.js';
 
 export default {
   name: 'Chat',
@@ -74,14 +76,52 @@ export default {
     };
   },
   mounted() {
-    // this.$connect(); // ws
-    // this.$options.sockets.onopen = data => console.log('onopen', data);
-    // this.$options.sockets.onmessage = data => console.log('onmessage', data);
     this.fetchChats();
     this.fetchChatInfo();
+
+    // const socket = new WebSocket('wss://marmeladies.com/ws/');
+    // socket.onopen = event => {
+    //   console.log('onopen', event, socket);
+
+    //   const msg = {
+    //     topic: 'translator-fEYfNEUlMlVhEkQYQGanvihAWGeLqI19',
+    //   };
+    //   // JSON.stringify(msg)
+    //   socket.send(JSON.stringify([5, 'translator-fEYfNEUlMlVhEkQYQGanvihAWGeLqI19']));
+    // };
+    // socket.onmessage = event => {
+    //   const msg = JSON.parse(event.data);
+    //   console.log('onmessage', event, msg);
+    // };
+
+    // var connection = ab.Connection({ url: 'wss://marmeladies.com/ws/', realm: 'realm1' });
+
+    // connection.onopen = function(session) {
+    //   console.log(session);
+
+    //   // 1) subscribe to a topic
+    //   session.subscribe('translator-fEYfNEUlMlVhEkQYQGanvihAWGeLqI19', args => {
+    //     console.log('Event:', args[0]);
+    //   });
+
+    //   // // 2) publish an event
+    //   // session.publish('com.myapp.hello', ['Hello, world!']);
+
+    //   // // 3) register a procedure for remoting
+    //   // function add2(args) {
+    //   //   return args[0] + args[1];
+    //   // }
+    //   // session.register('com.myapp.add2', add2);
+
+    //   // // 4) call a remote procedure
+    //   // session.call('com.myapp.add2', [2, 3]).then(function(res) {
+    //   //   console.log('Result:', res);
+    //   // });
+    // };
+
+    this.wamp();
   },
   beforeDestroy() {
-    // this.$disconnect();
     this.finishChat();
   },
   computed: {
@@ -341,6 +381,49 @@ export default {
       });
 
       listDOM.scrollTop = lastMsgPos;
+    },
+    wamp() {
+      // const optDebug = true;
+
+      // ab._debugrpc = optDebug;
+      // ab._debugpubsub = optDebug;
+      // ab._debugws = optDebug;
+      ab._MESSAGE_TYPEID_WELCOME = 0;
+      ab._MESSAGE_TYPEID_PREFIX = 1;
+      ab._MESSAGE_TYPEID_CALL = 2;
+      ab._MESSAGE_TYPEID_CALL_RESULT = 3;
+      ab._MESSAGE_TYPEID_CALL_ERROR = 4;
+      ab._MESSAGE_TYPEID_SUBSCRIBE = 5;
+      ab._MESSAGE_TYPEID_UNSUBSCRIBE = 6;
+      ab._MESSAGE_TYPEID_PUBLISH = 7;
+      ab._MESSAGE_TYPEID_EVENT = 8;
+
+      const soketOpen = session => {
+        console.log('Connected!', session);
+
+        // 1) subscribe to a topic
+        const topicuri = 'translator-fEYfNEUlMlVhEkQYQGanvihAWGeLqI19';
+
+        session.subscribe(JSON.stringify([ab._MESSAGE_TYPEID_SUBSCRIBE, topicuri]), args => {
+          console.log('Event:', args[0]);
+        });
+      };
+
+      const soketClose = session => {
+        console.log('Connection closed');
+      };
+
+      ab.connect(
+        'wss://marmeladies.com/ws/',
+        //'ws://localhost:8081',
+        session => soketOpen(session),
+        (code, reason, detail) => soketClose(),
+        {
+          maxRetries: 60,
+          retryDelay: 2000,
+          skipSubprotocolCheck: true,
+        },
+      );
     },
   },
   watch: {
