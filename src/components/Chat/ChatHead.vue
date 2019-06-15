@@ -287,4 +287,16 @@ export default {
     }
   }
 }
+@include r($sm) {
+  .chat-head {
+    &__wrapper {
+      margin-bottom: 0;
+    }
+    &__col {
+      flex-basis: 100%;
+      max-width: 100%;
+      margin-bottom: 10px;
+    }
+  }
+}
 </style>

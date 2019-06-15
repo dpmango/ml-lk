@@ -97,4 +97,9 @@ export default {
     }
   }
 }
+@include r($sm) {
+  .chat-filter {
+    margin-top: 0;
+  }
+}
 </style>

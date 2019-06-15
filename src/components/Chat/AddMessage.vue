@@ -1,6 +1,7 @@
 <template>
   <div class="add-message">
-    <template v-if="storeData.Chat_enable">
+    <template v-if="true">
+      <!-- storeData.Chat_enable -->
       <div class="add-message__textarea">
         <textarea
           name="add-message"
@@ -314,5 +315,40 @@ export default {
 .emoji-picker .emojis span:hover {
   background: #ececec;
   cursor: pointer;
+}
+
+@include r($md) {
+  .add-message {
+    &__actions {
+      margin-top: 10px;
+      flex-wrap: wrap;
+      min-height: 48px;
+    }
+    &__enter-to-submit {
+      display: none;
+    }
+    &__cta {
+      &--image {
+        margin-left: 0;
+      }
+    }
+  }
+}
+@include r($sm) {
+  .add-message {
+    padding: 15px 20px;
+  }
+}
+@include r(375) {
+  .add-message {
+    &__cta {
+      &--finish {
+        display: none;
+      }
+    }
+    &__send-btn {
+      margin-left: auto;
+    }
+  }
 }
 </style>

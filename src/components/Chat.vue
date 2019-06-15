@@ -305,7 +305,7 @@ export default {
             params: queryObj,
           })
           .then(res => {
-            this.lastLoadId = firstId;
+            this.lastLoadId = this.chatList[0].ID;
             this.$store.commit('PREPEND_CHAT_LIST', {
               users: this.currentUsers,
               list: res.data.slice(0, res.data.length - 1),
@@ -340,7 +340,7 @@ export default {
         }
       });
 
-      listDOM.scrollTop = lastMsgPos - 40;
+      listDOM.scrollTop = lastMsgPos;
     },
   },
   watch: {
@@ -441,6 +441,34 @@ export default {
     top: 15px;
     left: 50%;
     transform: translateX(-50%);
+  }
+}
+@include r(640) {
+  .messenger {
+    &__list {
+      // padding: 15px 10px;
+    }
+  }
+}
+@include r($sm) {
+  .chat {
+    padding: 12px 20px;
+    // height: calc(100vh - 80px - 40px);
+    height: auto;
+    &__messenger {
+      margin-left: -20px;
+      margin-right: -20px;
+    }
+  }
+  .messenger {
+    &__timestamp {
+      font-size: 10px;
+    }
+    &__list {
+      height: calc(100vh - 80px - 120px);
+      // padding-left: 20px;
+      // padding-right: 20px;
+    }
   }
 }
 </style>

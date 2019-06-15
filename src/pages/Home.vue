@@ -5,7 +5,7 @@
       <Container>
         <LadiesNotifications/>
         <SendInvite/>
-        <div class="grid">
+        <div class="grid" :class="{'is-chat-active': isChatActive}">
           <div class="col col--left">
             <NotificationsList/>
           </div>
@@ -41,6 +41,11 @@ export default {
     ContactList,
     Chat,
   },
+  computed: {
+    isChatActive() {
+      return this.$store.getters.haveCurrentUsers;
+    },
+  },
 };
 </script>
 
@@ -62,11 +67,11 @@ export default {
   padding-left: 5px;
   padding-right: 5px;
   &--left {
-    flex: 0 1 380px;
+    flex: 0 0 380px;
     max-width: 380px;
   }
   &--right {
-    flex: 0 1 380px;
+    flex: 0 0 380px;
     max-width: 380px;
   }
   &--chat {
@@ -74,18 +79,83 @@ export default {
     max-width: calc(100% - 760px);
   }
 }
-@include r($xl) {
+@include r($hd) {
   .grid {
-    flex-wrap: wrap;
-    padding-bottom: 40px;
-  }
-  .col {
+    position: relative;
+    .col--left,
+    .col--right {
+      position: absolute;
+      z-index: 2;
+      top: 0;
+      transition: transform 0.3s ease-out;
+    }
+    .col--left {
+      left: -30px;
+    }
+    .col--right {
+      right: -30px;
+    }
+    .col--chat {
+      position: relative;
+      z-index: 1;
+      flex: 1 1 100%;
+      max-width: 100%;
+      margin-left: 30px;
+      margin-right: 30px;
+    }
+    &.is-chat-active {
+      .col--left {
+        transform: translateX(-320px);
+      }
+      .col--right {
+        transform: translateX(320px);
+      }
+      .col--left,
+      .col--right {
+        &:hover {
+          transform: translateX(0);
+        }
+      }
+    }
   }
 }
+
+// @include r($xl) {
+//   .grid {
+//     flex-wrap: wrap;
+//   }
+//   .col {
+//   }
+// }
 @include r($sm) {
   .grid {
+    flex-wrap: wrap;
     margin-left: -25px;
     margin-right: -25px;
+    padding-bottom: 40px;
+    .col--left,
+    .col--right {
+      flex: 1 1 100%;
+      max-width: 100%;
+      position: static;
+      z-index: 2;
+      top: 0;
+      left: 0;
+      right: 0;
+      transition: none;
+      margin-bottom: 20px;
+    }
+    .col--chat {
+      order: 3;
+      margin-left: 0;
+      margin-right: 0;
+    }
+    &.is-chat-active {
+      .col--left,
+      .col--right {
+        transform: translateX(0px);
+      }
+    }
   }
 }
 </style>

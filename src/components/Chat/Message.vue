@@ -151,6 +151,9 @@ export default {
 .message {
   margin-bottom: 16px;
   margin-right: 70px;
+  .avatar {
+    align-self: flex-end;
+  }
   &__wrapper {
     display: flex;
   }
@@ -233,6 +236,35 @@ export default {
       &__actions {
         padding-right: 9px;
         padding-left: 0px;
+      }
+    }
+  }
+}
+
+@include r(640) {
+  .message {
+    margin-right: 40px;
+    .avatar {
+      transform: scale(0.5);
+      transform-origin: left bottom;
+    }
+    &__text {
+      margin-left: -10px;
+    }
+    &__file {
+      margin-left: -10px;
+    }
+    &.is-outgoing {
+      margin-left: 40px;
+      // margin-right: 0px;
+      .avatar {
+        transform-origin: right bottom;
+      }
+      .message {
+        &__text,
+        &__file {
+          margin-right: -10px;
+        }
       }
     }
   }

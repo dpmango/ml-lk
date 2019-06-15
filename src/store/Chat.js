@@ -55,7 +55,14 @@ const Chat = {
   },
   mutations: {
     SET_CHAT_CURRENTUSERS(state, users) {
-      state.currentUsers = users;
+      if (state.currentUsers.man === users.man && state.currentUsers.lady === users.lady) {
+        state.currentUsers = {
+          man: undefined,
+          lady: undefined,
+        };
+      } else {
+        state.currentUsers = users;
+      }
     },
     SET_CHAT_LIST(state, payload) {
       const stateCopy = state.chats;
