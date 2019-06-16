@@ -98,6 +98,7 @@ export default {
         .then(res => {
           this.errorMessage = '';
           this.$store.commit('SET_LADIESNTF', res.data);
+          this.scrollFetch.moreResultsAvailable = res.data.length === 21;
         })
         .catch(err => {
           this.errorMessage = err;

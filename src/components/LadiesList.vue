@@ -180,6 +180,7 @@ export default {
         .then(res => {
           this.errorMessage = '';
           this.ladies = res.data;
+          this.scrollFetch.moreResultsAvailable = res.data.length === 21;
         })
         .catch(err => {
           this.errorMessage = err;

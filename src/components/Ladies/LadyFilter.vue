@@ -94,6 +94,7 @@ export default {
         .then(res => {
           this.errorMessage = '';
           this.list = res.data;
+          this.scrollFetch.moreResultsAvailable = res.data.length === 21;
         })
         .catch(err => {
           this.errorMessage = err;
