@@ -15,8 +15,8 @@ import { saveToken } from '@/helpers/storeToken';
 import 'v-calendar/lib/v-calendar.min.css';
 
 Vue.config.productionTip = false;
-saveToken('fEYfNEUlMlVhEkQYQGanvihAWGeLqI19');
-// saveToken('BqxKJPW-BrOQA3YbNwp54gFaNcpnO9I');
+// saveToken('fEYfNEUlMlVhEkQYQGanvihAWGeLqI19');
+saveToken('BqxKJPW-BrOQA3YbNwp54gFaNcpnO9I');
 
 Vue.use(VModal);
 Vue.use(VueTextareaAutosize);

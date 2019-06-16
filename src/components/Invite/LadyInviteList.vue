@@ -2,7 +2,7 @@
   <panel-collapse name="Отправить приглашение">
     <div class="send-invite__list" ref="list" v-if="inviteList.length > 0">
       <Notification v-if="errorMessage" type="danger">{{errorMessage}}</Notification>
-      <swiper :options="swiperOption" ref="mySwiper">
+      <swiper :options="swiperOption" ref="mySwiper" @slideChange="slideChange">
         <swiper-slide v-for="(lady, idx) in inviteList" :key="idx">
           <invite-card
             @onSelect="onLadySelect"
@@ -18,7 +18,7 @@
         </div>
       </swiper>
       <spinner
-        class="table__loader"
+        class="send-invite__loader"
         v-if="scrollFetch.isLoading"
         size="medium"
         line-fg-color="#5aa6ff"
@@ -28,7 +28,6 @@
 </template>
 
 <script>
-import tryMount from '@/mixins/tryMount';
 import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import PanelCollapse from '@/components/Shared/Layout/PanelCollapse.vue';
 import InviteCard from '@/components/Invite/InviteCard.vue';
@@ -41,7 +40,6 @@ import 'swiper/dist/css/swiper.css';
 
 export default {
   name: 'LadyInviteList',
-  mixins: [tryMount],
   components: {
     SvgIcon,
     PanelCollapse,
@@ -115,31 +113,48 @@ export default {
         .then(res => {
           this.errorMessage = '';
           this.inviteList = res.data;
+          this.scrollFetch.moreResultsAvailable = res.data.length === 21;
         })
         .catch(err => {
           this.errorMessage = err;
         });
     },
-    handleListScroll() {
-      const listDOM = this.$refs.list;
-      const scrollRemaining = listDOM.scrollHeight - listDOM.scrollTop - listDOM.offsetHeight;
-      if (
-        scrollRemaining <= 150 &&
-        !this.scrollFetch.isLoading &&
-        this.scrollFetch.moreResultsAvailable
-      ) {
-        // const lastId = this.ladies[this.ladies.length - 2].ID;
+    slideChange() {
+      const curIndex = this.swiper.realIndex;
+      const totalSlides = this.swiper.slides.length;
+      let slidesOffset = 6;
+      const wWidth = window.innerWidth;
+      if (wWidth <= 568) {
+        slidesOffset = 0;
+      } else if (wWidth <= 768) {
+        slidesOffset = 1;
+      } else if (wWidth <= 768) {
+        slidesOffset = 2;
+      } else if (wWidth <= 920) {
+        slidesOffset = 3;
+      } else if (wWidth <= 1100) {
+        slidesOffset = 4;
+      } else if (wWidth <= 1300) {
+        slidesOffset = 5;
+      }
+
+      const slideIndexRight = curIndex + slidesOffset;
+      const shouldLoad = slideIndexRight + 2 >= totalSlides;
+
+      if (shouldLoad && !this.scrollFetch.isLoading && this.scrollFetch.moreResultsAvailable) {
+        const lastId = this.inviteList[this.inviteList.length - 2].ID;
         this.scrollFetch.isLoading = true;
 
-        // api
-        //   .get(`ladies?last_id=${lastId}`, {
-        //     params: this.filterToParams(),
-        //   })
-        //   .then(res => {
-        //     this.ladies = this.ladies.concat(res.data.slice(1));
-        //     this.scrollFetch.isLoading = false;
-        //     this.scrollFetch.moreResultsAvailable = res.data.length === 21;
-        //   });
+        api
+          .get(`ladies?filter=2&last_id=${lastId}`)
+          .then(res => {
+            this.inviteList = this.inviteList.concat(res.data.slice(1));
+            this.scrollFetch.isLoading = false;
+            this.scrollFetch.moreResultsAvailable = res.data.length === 21;
+          })
+          .catch(err => {
+            this.errorMessage = err;
+          });
       }
     },
     onLadySelect(id) {
@@ -153,6 +168,7 @@ export default {
 @import '@/theme/utils.scss';
 
 .send-invite {
+  position: relative;
   &__list {
     .swiper-container {
       padding: 15px 50px;
@@ -164,6 +180,13 @@ export default {
       min-width: 1px;
       min-height: 0;
     }
+  }
+  &__loader {
+    position: absolute;
+    z-index: 3;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
   }
 }
 .swiper-prev,

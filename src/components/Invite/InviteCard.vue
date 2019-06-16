@@ -1,6 +1,7 @@
 <template>
   <div
     class="invite-card"
+    :data-id="data.ID"
     :class="{'is-selected': isSelected, 'is-smaller': isSmaller}"
     @click="$emit('onSelect', data.ID)"
   >
