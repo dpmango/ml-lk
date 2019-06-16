@@ -97,7 +97,10 @@ export default {
     };
   },
   created() {
-    this.typingDebounce = debounce(this.typingNotification, 10000, { leading: true });
+    this.typingDebounce = debounce(this.typingNotification, 10000, {
+      leading: true,
+      trailing: false,
+    });
   },
   computed: {
     currentUsers() {

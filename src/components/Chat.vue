@@ -18,6 +18,10 @@
         />
         <div class="messenger__list" ref="list">
           <message v-for="(message, idx) in chatList" :key="idx" :data="message"/>
+          <div
+            class="messenger__typing-notification"
+            v-if="typingNotificationActive"
+          >{{typingNotificationActive}} вводит текст..</div>
         </div>
         <div class="messenger__add-message">
           <add-message
@@ -34,6 +38,7 @@
 </template>
 
 <script>
+import debounce from 'lodash/debounce';
 import tryMount from '@/mixins/tryMount';
 import Spinner from 'vue-simple-spinner';
 import ChatHead from '@/components/Chat/ChatHead.vue';
@@ -44,8 +49,8 @@ import ModalPhotoListLady from '@/components/Chat/PhotoListLady.vue';
 import { timestampToAgoStamp, dateToTimestamp } from '@/helpers/Dates';
 import api from '@/helpers/Api';
 import { setTimeout } from 'timers';
-// import autobahn from 'autobahn';
-// import '@/autobahn.wamp1.js';
+import { getToken } from '@/helpers/storeToken';
+import { scrollToEnd } from '@/helpers/ScrollTo';
 
 export default {
   name: 'Chat',
@@ -71,55 +76,22 @@ export default {
         isLoading: false,
         moreResultsAvailable: true,
       },
+      lastScrollDir: undefined,
       scrollMessageID: undefined,
       lastLoadId: undefined,
+      typingNotificationActive: false,
     };
+  },
+  created() {
+    this.typingResetDebounce = debounce(this.typingReset, 10000, {
+      leading: false,
+      trailing: true,
+    });
   },
   mounted() {
     this.fetchChats();
     this.fetchChatInfo();
-
-    // const socket = new WebSocket('wss://marmeladies.com/ws/');
-    // socket.onopen = event => {
-    //   console.log('onopen', event, socket);
-
-    //   const msg = {
-    //     topic: 'translator-fEYfNEUlMlVhEkQYQGanvihAWGeLqI19',
-    //   };
-    //   // JSON.stringify(msg)
-    //   socket.send(JSON.stringify([5, 'translator-fEYfNEUlMlVhEkQYQGanvihAWGeLqI19']));
-    // };
-    // socket.onmessage = event => {
-    //   const msg = JSON.parse(event.data);
-    //   console.log('onmessage', event, msg);
-    // };
-
-    // var connection = ab.Connection({ url: 'wss://marmeladies.com/ws/', realm: 'realm1' });
-
-    // connection.onopen = function(session) {
-    //   console.log(session);
-
-    //   // 1) subscribe to a topic
-    //   session.subscribe('translator-fEYfNEUlMlVhEkQYQGanvihAWGeLqI19', args => {
-    //     console.log('Event:', args[0]);
-    //   });
-
-    //   // // 2) publish an event
-    //   // session.publish('com.myapp.hello', ['Hello, world!']);
-
-    //   // // 3) register a procedure for remoting
-    //   // function add2(args) {
-    //   //   return args[0] + args[1];
-    //   // }
-    //   // session.register('com.myapp.add2', add2);
-
-    //   // // 4) call a remote procedure
-    //   // session.call('com.myapp.add2', [2, 3]).then(function(res) {
-    //   //   console.log('Result:', res);
-    //   // });
-    // };
-
-    this.wamp();
+    this.mountSocket();
   },
   beforeDestroy() {
     this.finishChat();
@@ -177,7 +149,7 @@ export default {
     },
     buildFetchQuery() {
       if (!this.haveCurrentUsers) {
-        return;
+        return undefined;
       }
 
       let queryObj = this.currentUsers;
@@ -241,7 +213,7 @@ export default {
           const apiData = res.data[0];
           console.log('res post /chats', apiData);
           if (apiData.success) {
-            this.showNotification({ type: 'success', title: 'сообщение отправлено' });
+            // this.showNotification({ type: 'success', title: 'сообщение отправлено' });
             this.fetchChats();
           } else {
             this.showNotification({ message: apiData.message });
@@ -327,9 +299,12 @@ export default {
       // scroll fetch logic
       // const scrollRemaining = listDOM.scrollHeight - listDOM.scrollTop - listDOM.offsetHeight;
       const scrollRemaining = listDOM.scrollTop;
+      const scrollDir = scrollRemaining > this.lastScrollDir ? 'down' : 'up';
+      this.lastScrollDir = scrollRemaining;
 
       if (
         scrollRemaining <= 150 &&
+        scrollDir === 'up' &&
         !this.scrollFetch.isLoading &&
         this.scrollFetch.moreResultsAvailable
       ) {
@@ -369,7 +344,7 @@ export default {
     },
     scrollToLastMsg() {
       const listDOM = this.$refs.list;
-      const { scrollTop, childNodes } = listDOM;
+      const { childNodes } = listDOM;
       const MessageNodesReverse = [...childNodes].reverse();
 
       let lastMsgPos;
@@ -382,12 +357,14 @@ export default {
 
       listDOM.scrollTop = lastMsgPos;
     },
-    wamp() {
-      // const optDebug = true;
+    mountSocket() {
+      const isDebug = true;
 
-      // ab._debugrpc = optDebug;
-      // ab._debugpubsub = optDebug;
-      // ab._debugws = optDebug;
+      /* eslint-disable */
+      // ab._debugrpc = isDebug;
+      ab._debugpubsub = isDebug;
+      // ab._debugws  = isDebug;
+
       ab._MESSAGE_TYPEID_WELCOME = 0;
       ab._MESSAGE_TYPEID_PREFIX = 1;
       ab._MESSAGE_TYPEID_CALL = 2;
@@ -397,22 +374,24 @@ export default {
       ab._MESSAGE_TYPEID_UNSUBSCRIBE = 6;
       ab._MESSAGE_TYPEID_PUBLISH = 7;
       ab._MESSAGE_TYPEID_EVENT = 8;
+      /* eslint-enable */
 
       const soketOpen = session => {
-        console.log('Connected!', session);
+        // console.log('Connected!', session);
 
         // 1) subscribe to a topic
-        const topicuri = 'translator-fEYfNEUlMlVhEkQYQGanvihAWGeLqI19';
-
-        session.subscribe(JSON.stringify([ab._MESSAGE_TYPEID_SUBSCRIBE, topicuri]), args => {
-          console.log('Event:', args[0]);
+        const topicuri = `translator-${getToken()}`;
+        // JSON.stringify([ab._MESSAGE_TYPEID_SUBSCRIBE, topicuri])
+        session.subscribe(topicuri, (topic, data) => {
+          this.handleSocketResponce(data);
         });
       };
 
-      const soketClose = session => {
+      const soketClose = () => {
         console.log('Connection closed');
       };
 
+      /* eslint-disable */
       ab.connect(
         'wss://marmeladies.com/ws/',
         //'ws://localhost:8081',
@@ -424,6 +403,51 @@ export default {
           skipSubprotocolCheck: true,
         },
       );
+      /* eslint-enable */
+    },
+    handleSocketResponce(data) {
+      const msgType = data[3];
+      // const senderId = data[1];
+      const senderName = data[2];
+
+      if (msgType === 'typing_notification') {
+        //  собеседник вводит текст
+        this.typingNotificationActive = senderName;
+        this.typingResetDebounce();
+        scrollToEnd(800, this.$refs.list);
+      } else if (msgType === 'chat_finish_1_notification') {
+        this.showInfoNotification({
+          message: `${senderName} have left the conversation`,
+        });
+      } else if (msgType === 'chat_finish_2_notification') {
+        this.showInfoNotification({
+          message: `${senderName} missed your invite. Please try again. A lot of other ladies are online and available to Chat Now`,
+        });
+      } else if (msgType === 'chat_finish_5_notification') {
+        this.showInfoNotification({
+          message: `You have left the conversation. To resume chat please send another message`,
+        });
+      } else if (msgType === 'chat_start_notification') {
+        // старт чата, показываем кнопки «finish_chat» и «attach»
+        this.showInfoNotification({
+          message: `старт чата, показываем кнопки «finish_chat» и «attach»`,
+        });
+      } else if (msgType === 'delete_chat_message') {
+        // удаляем сообщение id из ленты
+        this.fetchChats();
+      } else if (msgType === 'chat_page_open_notification') {
+        // у мужчин не обрабатываем
+        // this.showInfoNotification({
+        //   message: `chat_page_open_notification`,
+        // });
+      } else {
+        // текст сообщение, выводим в чат, если открыт экран чата с отправителем или в уведомления
+        this.this.typingNotificationActive = false;
+        this.fetchChats();
+      }
+    },
+    typingReset() {
+      this.typingNotificationActive = false;
     },
   },
   watch: {
@@ -447,6 +471,10 @@ export default {
     showNotification: {
       title: 'Ошибка',
       type: 'error',
+    },
+    showInfoNotification: {
+      title: '',
+      type: 'info',
     },
   },
 };
@@ -500,6 +528,12 @@ export default {
       border-left: 3px solid $colorOrange;
     }
   }
+  &__typing-notification {
+    font-size: 12px;
+    line-height: 23px;
+    color: #1e1e1e;
+    padding-left: 70px;
+  }
   &__add-message {
     flex: 0 0 auto;
   }
@@ -530,6 +564,9 @@ export default {
   .messenger {
     &__list {
       // padding: 15px 10px;
+    }
+    &__typing-notification {
+      padding-left: 40px;
     }
   }
 }

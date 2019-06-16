@@ -43,7 +43,7 @@ const Contacts = {
       const stateCopy = state.contacts;
       const targetContact = stateCopy.find(x => x.ID === readId);
       const targetIndex = stateCopy.indexOf(targetContact);
-      targetContact.New = 'N';
+      targetContact.ChatNew = '0';
       stateCopy[targetIndex] = targetContact;
       state.contacts = stateCopy;
     },

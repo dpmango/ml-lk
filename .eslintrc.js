@@ -11,7 +11,8 @@ module.exports = {
     'max-len': 0,
     'arrow-parens': 0,
     camelcase: 0,
-    'no-param-reassign': ['error', { props: false }],
+    'no-param-reassign': 0,
+    'no-plusplus': 0,
   },
   parserOptions: {
     parser: 'babel-eslint',
