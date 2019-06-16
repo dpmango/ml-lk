@@ -118,15 +118,15 @@ export default {
       }
     }
   }
+  .v--modal-block-scroll {
+    .grid {
+      .col--chat {
+        z-index: 5;
+      }
+    }
+  }
 }
 
-// @include r($xl) {
-//   .grid {
-//     flex-wrap: wrap;
-//   }
-//   .col {
-//   }
-// }
 @include r($md) {
   .grid {
     flex-wrap: wrap;
@@ -165,3 +165,4 @@ export default {
   }
 }
 </style>
+

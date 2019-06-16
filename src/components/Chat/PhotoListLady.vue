@@ -289,4 +289,14 @@ export default {
     }
   }
 }
+@include r($sm) {
+  .modal {
+    &__filter {
+    }
+  }
+  .photo {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
 </style>
