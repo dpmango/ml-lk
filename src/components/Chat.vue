@@ -472,9 +472,10 @@ export default {
 
         api
           // .get(`chats/messages/${messageId}`)
-          .get(`contacts/${messageId}`)
+          .get(`contacts/messages/${messageId}`)
           .then(res => {
             const apiData = res.data[0];
+            console.log(apiData);
             const isCurrentChat =
               this.currentUsers.man === apiData.Man.ID &&
               this.currentUsers.lady === apiData.Lady.ID;
