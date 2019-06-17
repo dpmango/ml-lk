@@ -1,5 +1,9 @@
 import { toggleObjectKey } from '@/helpers/StoreHelpers';
 
+const findByUsers = (arr, users) => {
+  return arr.find(x => x.Man.ID === users.man && x.Lady.ID === users.lady);
+};
+
 const Notifications = {
   state: {
     pagination: {
@@ -63,13 +67,15 @@ const Notifications = {
         state.notifications.unshift(payload.notification);
       }
     },
-    NOTIFICATION_READ(state, readId) {
+    NOTIFICATION_READ(state, users) {
       const stateCopy = state.notifications;
-      const targetNtf = stateCopy.find(x => x.ID === readId);
-      const targetIndex = stateCopy.indexOf(targetNtf);
-      targetNtf.New = 'N';
-      stateCopy[targetIndex] = targetNtf;
-      state.notifications = stateCopy;
+      const targetNtf = findByUsers(stateCopy, users);
+      if (targetNtf) {
+        const targetIndex = stateCopy.indexOf(targetNtf);
+        targetNtf.New = 'N';
+        stateCopy[targetIndex] = targetNtf;
+        state.notifications = stateCopy;
+      }
     },
     NOTIFICATION_TOGGLE_MARKED(state, tId) {
       const stateCopy = state.notifications;

@@ -135,7 +135,8 @@ export default {
       this.pingApi({
         apiAction: 'get',
         urlSuffix: '/read',
-        commitAction: 'CONTACT_READ',
+        commitAction: ['CONTACT_READ', 'NOTIFICATION_READ'],
+        commitByUsers: true,
         errTitle: 'Ошибка при прочтении',
       });
     },
@@ -160,7 +161,19 @@ export default {
         .then(res => {
           const apiData = res.data[0];
           if (apiData.success) {
-            this.$store.commit(options.commitAction, this.data.ID);
+            if (Array.isArray(options.commitAction)) {
+              options.commitAction.forEach(action => {
+                this.$store.commit(
+                  action,
+                  options.commitByUsers ? this.storeActiveUsers : this.data.ID,
+                );
+              });
+            } else {
+              this.$store.commit(
+                options.commitAction,
+                options.commitByUsers ? this.storeActiveUsers : this.data.ID,
+              );
+            }
           } else {
             this.showNotification({ title: options.errTitle, message: apiData.message });
           }
