@@ -347,9 +347,13 @@ export default {
       const MessageNodesReverse = [...childNodes].reverse();
 
       let lastMsgPos;
-
+      console.log(MessageNodesReverse);
       MessageNodesReverse.forEach(x => {
-        if (x.getAttribute('data-id') === this.lastLoadId) {
+        if (
+          x.nodeType !== 8 &&
+          x.hasAttribute('data-id') &&
+          x.getAttribute('data-id') === this.lastLoadId
+        ) {
           lastMsgPos = x.offsetTop;
         }
       });
@@ -464,7 +468,32 @@ export default {
           });
       } else {
         // текст сообщение, выводим в чат, если открыт экран чата с отправителем или в уведомления
-        this.this.typingNotificationActive = false;
+        this.typingNotificationActive = false;
+
+        api
+          // .get(`chats/messages/${messageId}`)
+          .get(`contacts/${messageId}`)
+          .then(res => {
+            const apiData = res.data[0];
+            const isCurrentChat =
+              this.currentUsers.man === apiData.Man.ID &&
+              this.currentUsers.lady === apiData.Lady.ID;
+            this.$store.commit('CONTACT_UPDATE_OR_PREPEND', {
+              contact: apiData,
+              isCurrentChat,
+            });
+            // const isCurrentChat =
+            //   this.currentUsers.man === apiData.Man.ID &&
+            //   this.currentUsers.lady === apiData.Lady.ID;
+            // this.$store.commit('NOTIFICATION_UPDATE_OR_PREPEND', {
+            //   notification: apiData,
+            //   isCurrentChat,
+            // });
+          })
+          .catch(err => {
+            this.showNotification({ message: err });
+          });
+
         this.fetchChats();
       }
     },

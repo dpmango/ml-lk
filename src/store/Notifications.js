@@ -46,7 +46,6 @@ const Notifications = {
     NOTIFICATION_UPDATE_OR_PREPEND(state, payload) {
       const stateCopy = state.notifications;
       const targetNtf = stateCopy.find(x => x.ID === payload.notification.ID);
-      console.log({ targetNtf });
       if (targetNtf) {
         // existing notification
         const targetIndex = stateCopy.indexOf(targetNtf);

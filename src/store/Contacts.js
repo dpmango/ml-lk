@@ -43,6 +43,30 @@ const Contacts = {
     CONTACT_REMOVE(state, removeId) {
       state.contacts = state.contacts.filter(x => x.ID !== removeId);
     },
+    CONTACT_UPDATE_OR_PREPEND(state, payload) {
+      const stateCopy = state.contacts;
+      const targetContact = stateCopy.find(x => x.ID === payload.contact.ID);
+      if (targetContact) {
+        // existing notification
+        const targetIndex = stateCopy.indexOf(targetContact);
+        targetContact.Marked = payload.contact.Marked;
+        targetContact.LastMessage = payload.contact.LastMessage;
+        targetContact.LastMessageDate = payload.contact.LastMessageDate;
+        if (!payload.isCurrentChat) {
+          targetContact.ChatNew = payload.contact.ChatNew;
+          targetContact.MsgNew = payload.contact.MsgNew;
+        }
+        stateCopy[targetIndex] = targetContact;
+        /* eslint-disable */
+        stateCopy.sort((x, y) =>
+          x.ID === payload.contact.ID ? -1 : y.ID === payload.contact.ID ? 1 : 0,
+        );
+        /* eslint-enable */
+        state.contacts = stateCopy;
+      } else {
+        state.contacts.unshift(payload.contact);
+      }
+    },
     CONTACT_READ(state, users) {
       const stateCopy = state.contacts;
       const targetContact = findByUsers(stateCopy, users);
