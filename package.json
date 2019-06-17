@@ -6,7 +6,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "deploy": "yarn build && surge --project ./dist --domain ml-lk.surge.sh"
+    "deploysurge": "yarn build && surge --project ./dist --domain ml-lk.surge.sh",
+    "deploy": "yarn build && netlify deploy --prod"
   },
   "dependencies": {
     "@vue/eslint-config-prettier": "^4.0.1",

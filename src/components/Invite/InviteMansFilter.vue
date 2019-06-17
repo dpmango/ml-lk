@@ -352,7 +352,7 @@ const selectOptions = {
   marital: [
     { label: 'Не был женат', value: 1 },
     { label: 'Разведен', value: 2 },
-    { label: 'Жента', value: 3 },
+    // { label: 'Женат', value: 3 },
     { label: 'Вдовец', value: 4 },
   ],
   education: [

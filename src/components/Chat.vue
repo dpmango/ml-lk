@@ -256,7 +256,6 @@ export default {
           params: this.currentUsers,
         })
         .then(res => {
-          const apiData = res.data[0];
           if (apiData.success) {
             console.log('res get /chats/typing', apiData);
           } else {
@@ -376,13 +375,14 @@ export default {
       ab._MESSAGE_TYPEID_EVENT = 8;
       /* eslint-enable */
 
-      const soketOpen = session => {
+      let sess;
+      const soketOpen = () => {
         // console.log('Connected!', session);
 
         // 1) subscribe to a topic
         const topicuri = `translator-${getToken()}`;
         // JSON.stringify([ab._MESSAGE_TYPEID_SUBSCRIBE, topicuri])
-        session.subscribe(topicuri, (topic, data) => {
+        sess.subscribe(topicuri, (topic, data) => {
           this.handleSocketResponce(data);
         });
       };
@@ -395,7 +395,10 @@ export default {
       ab.connect(
         'wss://marmeladies.com/ws/',
         //'ws://localhost:8081',
-        session => soketOpen(session),
+        session => {
+          sess = session;
+          soketOpen();
+        },
         (code, reason, detail) => soketClose(),
         {
           maxRetries: 60,
@@ -407,14 +410,18 @@ export default {
     },
     handleSocketResponce(data) {
       const msgType = data[3];
-      // const senderId = data[1];
+      const senderId = data[1].toString();
       const senderName = data[2];
+      const messageId = data[10].toString();
+      const receiverId = data[11].toString();
 
       if (msgType === 'typing_notification') {
         //  собеседник вводит текст
-        this.typingNotificationActive = senderName;
-        this.typingResetDebounce();
-        scrollToEnd(800, this.$refs.list);
+        if (this.currentUsers.man === senderId && this.currentUsers.lady === receiverId) {
+          this.typingNotificationActive = senderName;
+          this.typingResetDebounce();
+          scrollToEnd(800, this.$refs.list);
+        }
       } else if (msgType === 'chat_finish_1_notification') {
         this.showInfoNotification({
           message: `${senderName} have left the conversation`,
@@ -436,10 +443,25 @@ export default {
         // удаляем сообщение id из ленты
         this.fetchChats();
       } else if (msgType === 'chat_page_open_notification') {
-        // у мужчин не обрабатываем
+        // обрабатываем уведомление
         // this.showInfoNotification({
         //   message: `chat_page_open_notification`,
         // });
+        api
+          .get(`notifications/${messageId}`)
+          .then(res => {
+            const apiData = res.data[0];
+            const isCurrentChat =
+              this.currentUsers.man === apiData.Man.ID &&
+              this.currentUsers.lady === apiData.Lady.ID;
+            this.$store.commit('NOTIFICATION_UPDATE_OR_PREPEND', {
+              notification: apiData,
+              isCurrentChat,
+            });
+          })
+          .catch(err => {
+            this.showNotification({ message: err });
+          });
       } else {
         // текст сообщение, выводим в чат, если открыт экран чата с отправителем или в уведомления
         this.this.typingNotificationActive = false;

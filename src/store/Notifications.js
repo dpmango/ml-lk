@@ -39,6 +39,30 @@ const Notifications = {
     NOTIFICATION_REMOVE(state, removeId) {
       state.notifications = state.notifications.filter(x => x.ID !== removeId);
     },
+    NOTIFICATION_UPDATE_OR_PREPEND(state, payload) {
+      const stateCopy = state.notifications;
+      const targetNtf = stateCopy.find(x => x.ID === payload.notification.ID);
+      console.log({ targetNtf });
+      if (targetNtf) {
+        // existing notification
+        const targetIndex = stateCopy.indexOf(targetNtf);
+        targetNtf.Marked = payload.notification.Marked;
+        targetNtf.Message = payload.notification.Message;
+        targetNtf.LastMessageDate = payload.notification.LastMessageDate;
+        if (!payload.isCurrentChat) {
+          targetNtf.New = payload.notification.New;
+        }
+        stateCopy[targetIndex] = targetNtf;
+        /* eslint-disable */
+        stateCopy.sort((x, y) =>
+          x.ID === payload.notification.ID ? -1 : y.ID === payload.notification.ID ? 1 : 0,
+        );
+        /* eslint-enable */
+        state.notifications = stateCopy;
+      } else {
+        state.notifications.unshift(payload.notification);
+      }
+    },
     NOTIFICATION_READ(state, readId) {
       const stateCopy = state.notifications;
       const targetNtf = stateCopy.find(x => x.ID === readId);

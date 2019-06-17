@@ -42,7 +42,7 @@ export default {
   },
   data() {
     return {
-      isFilterOpen: true,
+      isFilterOpen: false,
     };
   },
   computed: {
