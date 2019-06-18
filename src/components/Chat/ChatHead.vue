@@ -1,5 +1,5 @@
 <template>
-  <div class="chat-head">
+  <div class="chat-head" v-if="storeData.Man && storeData.Lady">
     <div class="chat-head__wrapper">
       <div class="chat-head__col">
         <div class="chat-head__user user-head">

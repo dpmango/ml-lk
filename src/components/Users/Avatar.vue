@@ -1,5 +1,5 @@
 <template>
-  <div class="avatar" :class="{'size-44' : size === 44, 'size-70': size === 70}">
+  <div class="avatar" :class="{'size-44' : size === 44, 'size-70': size === 70}" v-if="Thumbnail">
     <div class="avatar__image">
       <img :src="Thumbnail" :alt="RealName">
     </div>

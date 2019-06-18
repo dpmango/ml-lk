@@ -174,12 +174,13 @@ export default {
         });
     },
     getImage(id) {
-      return this.photosBase64.find(x => x.ID === id).img;
+      const image = this.photosBase64.find(x => x.ID === id);
+      return image ? image.img : '';
     },
     getFiles() {
       if (this.photos.length > 0) {
         this.photos.forEach(x => {
-          this.getFile(x.Thumbnail, x.ID);
+          this.getFile(x.Image, x.ID);
         });
       }
     },

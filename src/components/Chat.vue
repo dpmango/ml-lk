@@ -327,7 +327,6 @@ export default {
       const MessageNodesReverse = [...childNodes].reverse();
 
       let lastMsgPos;
-      console.log(MessageNodesReverse);
       MessageNodesReverse.forEach(x => {
         if (
           x.nodeType !== 8 &&
