@@ -7,7 +7,7 @@ export const timestampToDate = d => {
 
 export const timestampToTime = d => {
   const date = moment.unix(d);
-  return date.format('HH:MM');
+  return date.format('HH:mm');
 };
 
 export const timestampToAgoStamp = d => {

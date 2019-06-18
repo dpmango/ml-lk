@@ -256,6 +256,7 @@ export default {
           params: this.currentUsers,
         })
         .then(res => {
+          const apiData = res.data[0];
           if (apiData.success) {
             console.log('res get /chats/typing', apiData);
           } else {
