@@ -3,7 +3,7 @@
     class="btn"
     :class="{ 'btn--primary': primary, 'btn--orange': orange, 'btn--block': block }"
     :type="type"
-    @click="$emit('click')"
+    @click="emitClick"
   >
     <slot></slot>
   </button>
@@ -17,6 +17,11 @@ export default {
     orange: Boolean,
     type: String,
     block: Boolean,
+  },
+  methods: {
+    emitClick(e) {
+      this.$emit('click', e);
+    },
   },
 };
 </script>
@@ -55,7 +60,7 @@ export default {
       background-color: $colorOrange;
     }
   }
-  &--block{
+  &--block {
     display: block;
     width: 100%;
     text-align: center;

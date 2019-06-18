@@ -78,6 +78,19 @@
             </div>
           </div>
         </div>
+        <div class="modal__cta">
+          <label for="fileladymodal">
+            <Button orange>
+              <span>Добавить фото</span>
+              <div class="modal__cta-icon">
+                <svg-icon name="image" width="18" height="18"/>
+              </div>
+            </Button>
+            <div class="modal__file-container">
+              <input type="file" id="fileladymodal" ref="file" v-on:change="handleFileUpload">
+            </div>
+          </label>
+        </div>
       </div>
     </Panel>
   </modal>
@@ -85,6 +98,7 @@
 
 <script>
 import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
+import Button from '@/components/Shared/UI/Button.vue';
 import UiRadio from '@/components/Shared/UI/Radio.vue';
 import Panel from '@/components/Shared/Layout/Panel.vue';
 import api from '@/helpers/Api';
@@ -93,6 +107,7 @@ export default {
   name: 'AddEditModal',
   components: {
     SvgIcon,
+    Button,
     UiRadio,
     Panel,
   },
@@ -184,6 +199,36 @@ export default {
           this.showNotification({ message: `File: ${err}` });
         });
     },
+    sendFile(file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('man', this.currentUsers.man);
+      formData.append('lady', this.currentUsers.lady);
+      api
+        .post('chats/photos', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+        .then(res => {
+          const apiData = res.data[0];
+          if (apiData.success) {
+            this.showNotification({ type: 'success', title: 'фото загружено' });
+            this.fetchApi();
+          } else {
+            this.showNotification({ message: apiData.message });
+          }
+        })
+        .catch(err => {
+          this.showNotification({ message: err });
+        });
+    },
+    handleFileUpload() {
+      this.sendFile(this.$refs.file.files[0]);
+    },
+    closeModal() {
+      this.$modal.hide('chat-lady-photos');
+    },
     resetState() {
       this.filter = {
         isSend: null,
@@ -203,22 +248,39 @@ export default {
 };
 </script>
 
+<style lang="scss">
+[data-modal='chat-lady-photos'] {
+  .v--modal-box.v--modal {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+</style>
 
 <style lang="scss" scoped>
 @import '@/theme/utils.scss';
 
+.panel {
+  // height: 100%;
+}
 .modal {
-  padding: 20px;
+  padding: 20px 0;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
   &__filter {
+    flex: 0 0 auto;
     display: flex;
     flex-wrap: wrap;
+    padding: 0 20px;
+    margin-bottom: 10px;
   }
   &__content {
     flex: 1 1 auto;
     max-height: 100%;
-    padding: 10px 0;
+    overflow-y: scroll;
     &::-webkit-scrollbar {
-      width: 3px;
+      width: 13px;
       margin-top: 10px;
     }
 
@@ -230,6 +292,50 @@ export default {
 
     &::-webkit-scrollbar-thumb {
       border-left: 3px solid $colorOrange;
+    }
+  }
+  &__cta {
+    margin-top: 10px;
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: center;
+    label {
+      cursor: pointer;
+      &:hover {
+        button {
+          background-color: $colorOrange;
+          color: white;
+        }
+        .modal__cta-icon {
+          color: white;
+        }
+      }
+    }
+    button {
+      pointer-events: none;
+      position: relative;
+      z-index: 1;
+      min-width: 190px;
+    }
+    &-icon {
+      position: absolute;
+      top: 50%;
+      right: 15px;
+      transform: translateY(-50%);
+      font-size: 5px;
+      color: $colorOrange;
+      transition: color 0.25s ease;
+    }
+  }
+  &__file-container {
+    input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0.1px;
+      height: 0.1px;
+      opacity: 0;
+      pointer-events: none;
     }
   }
 }
@@ -256,7 +362,7 @@ export default {
 .photo-grid {
   display: flex;
   flex-wrap: wrap;
-  margin: 0 -10px;
+  margin: 0 20px;
 }
 
 .photo {

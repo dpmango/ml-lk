@@ -20,11 +20,8 @@
             label="Нажать Enter для отправки"
           />
         </div>
-        <label for="file" class="add-message__cta add-message__cta--image">
+        <div @click="openLadiesModal" class="add-message__cta add-message__cta--image">
           <svg-icon name="image" width="18" height="18"/>
-        </label>
-        <div class="add-message__file-container">
-          <input type="file" id="file" ref="file" v-on:change="handleFileUpload">
         </div>
         <div class="add-message__cta add-message__cta--smile">
           <emoji-picker @emoji="appendEmoji" :search="search">
@@ -129,8 +126,11 @@ export default {
     typingNotification() {
       this.$emit('sendTypingNotification');
     },
-    handleFileUpload() {
-      this.$emit('addFile', this.$refs.file.files[0]);
+    openLadiesModal() {
+      this.$modal.show('chat-lady-photos', {
+        users: this.currentUsers,
+      });
+      // this.$emit('addFile', this.$refs.file.files[0]);
     },
   },
   directives: {

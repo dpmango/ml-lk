@@ -26,7 +26,6 @@
         <div class="messenger__add-message">
           <add-message
             @addMessage="sendMessage"
-            @addFile="sendFile"
             @sendTypingNotification="typingNotification"
             @finishChat="finishChat"
           />
@@ -229,32 +228,6 @@ export default {
           this.showNotification({ message: err });
         });
       // this.$socket.sendObj({msg: 'test'})
-    },
-    sendFile(file) {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('man', this.currentUsers.man);
-      formData.append('lady', this.currentUsers.lady);
-
-      api
-        .post('chats/photos', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        })
-        .then(res => {
-          const apiData = res.data[0];
-          console.log('res post /chats/photos', apiData);
-          if (apiData.success) {
-            this.showNotification({ type: 'success', title: 'фото загружено' });
-            this.fetchChats();
-          } else {
-            this.showNotification({ message: apiData.message });
-          }
-        })
-        .catch(err => {
-          this.showNotification({ message: err });
-        });
     },
     typingNotification() {
       api
