@@ -18,6 +18,10 @@ const Contacts = {
     contactsListLastId: state => {
       return state.contacts[state.contacts.length - 1].ID;
     },
+    getActiveContact: state => users => {
+      const res = findByUsers(state.contacts, users);
+      return res ? res.ID : {};
+    },
   },
   mutations: {
     SET_CONTACTS(state, arr) {

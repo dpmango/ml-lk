@@ -100,6 +100,12 @@ export default {
     currentUsers() {
       return this.$store.state.chat.currentUsers;
     },
+    currentActiveContact() {
+      return this.$store.getters.getActiveContact(this.currentUsers);
+    },
+    currentActiveNotification() {
+      return this.$store.getters.getActiveNotification(this.currentUsers);
+    },
     chatList() {
       return this.$store.getters.selectChatByUsers(this.currentUsers);
     },
@@ -484,13 +490,10 @@ export default {
               contact: apiData,
               isCurrentChat,
             });
-            // const isCurrentChat =
-            //   this.currentUsers.man === apiData.Man.ID &&
-            //   this.currentUsers.lady === apiData.Lady.ID;
-            // this.$store.commit('NOTIFICATION_UPDATE_OR_PREPEND', {
-            //   notification: apiData,
-            //   isCurrentChat,
-            // });
+            if (isCurrentChat) {
+              this.markContactAsRead();
+              this.markNotificationAsRead();
+            }
           })
           .catch(err => {
             this.showNotification({ message: err });
@@ -498,6 +501,36 @@ export default {
 
         this.fetchChats();
       }
+    },
+    markContactAsRead() {
+      api
+        .get(`contacts/${this.currentActiveContact}/read`)
+        .then(res => {
+          const apiData = res.data[0];
+          if (apiData.success) {
+            this.$store.commit('CONTACT_READ', this.currentUsers);
+          } else {
+            this.showNotification({ title: 'Ошибка при прочтении', message: apiData.message });
+          }
+        })
+        .catch(error => {
+          this.showNotification({ title: 'Ошибка при прочтении', message: error });
+        });
+    },
+    markNotificationAsRead() {
+      api
+        .get(`notifications/${this.currentActiveNotification}/read`)
+        .then(res => {
+          const apiData = res.data[0];
+          if (apiData.success) {
+            this.$store.commit('NOTIFICATION_READ', this.currentUsers);
+          } else {
+            this.showNotification({ title: 'Ошибка при прочтении', message: apiData.message });
+          }
+        })
+        .catch(error => {
+          this.showNotification({ title: 'Ошибка при прочтении', message: error });
+        });
     },
     typingReset() {
       this.typingNotificationActive = false;

@@ -18,6 +18,10 @@ const Notifications = {
     notificationsListLastId: state => {
       return state.notifications[state.notifications.length - 1].ID;
     },
+    getActiveNotification: state => users => {
+      const res = findByUsers(state.notifications, users);
+      return res ? res.ID : {};
+    },
   },
   mutations: {
     SET_NOTIFICATIONS(state, arr) {
