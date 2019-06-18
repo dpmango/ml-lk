@@ -33,7 +33,10 @@
     </div>
     <div class="relation__info">
       <div class="relation__date">{{timeStamp}}</div>
-      <div class="relation__message">{{data.LastMessage}}</div>
+      <div class="relation__message" v-if="!hasFile">{{data.LastMessage}}</div>
+      <div class="relation__file" v-if="hasFile">
+        <img :src="fileBase64Thumb">
+      </div>
     </div>
     <div class="relation__actions">
       <div
@@ -88,12 +91,26 @@ export default {
       Marked: String,
     },
   },
+  data() {
+    return {
+      errorMessage: '',
+      fileBase64Thumb: '',
+    };
+  },
+  mounted() {
+    if (this.hasFile) {
+      this.getFile(this.data.File.Url_1, 'thumb');
+    }
+  },
   computed: {
     isChatNew() {
       return this.data.ChatNew !== '0';
     },
     isMsgNew() {
       return this.data.MsgNew !== '0';
+    },
+    hasFile() {
+      return !Array.isArray(this.data.File);
     },
     timeStamp() {
       return timestampToTime(this.data.LastMessageDate);
@@ -107,7 +124,21 @@ export default {
       return manMathch && ladyMatch;
     },
   },
+
   methods: {
+    getFile(url) {
+      api
+        .get(url, {
+          responseType: 'arraybuffer',
+        })
+        .then(res => {
+          const imgToBase64 = Buffer.from(res.data, 'binary').toString('base64');
+          this.fileBase64Thumb = `data:image/png;base64, ${imgToBase64}`;
+        })
+        .catch(err => {
+          this.errorMessage = `File: ${err}`;
+        });
+    },
     markClickRouter(e) {
       e.stopPropagation();
 
@@ -240,6 +271,18 @@ export default {
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 240px;
+  }
+  &__file {
+    margin-left: 10px;
+    position: relative;
+    z-index: 1;
+    border-radius: 4px;
+    overflow: hidden;
+    font-size: 0;
+    img {
+      max-width: 40px;
+      max-height: 40px;
+    }
   }
   &__actions {
     position: absolute;
