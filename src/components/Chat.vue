@@ -79,6 +79,10 @@ export default {
       scrollMessageID: undefined,
       lastLoadId: undefined,
       typingNotificationActive: false,
+      sounds: {
+        notificationListSound: undefined,
+        contactListSound: undefined,
+      },
     };
   },
   created() {
@@ -88,6 +92,7 @@ export default {
     });
   },
   mounted() {
+    this.mountSounds();
     this.fetchChats();
     this.fetchChatInfo();
     this.mountSocket();
@@ -107,6 +112,12 @@ export default {
     },
     chatList() {
       return this.$store.getters.selectChatByUsers(this.currentUsers);
+    },
+    contactListSoundActive() {
+      return this.$store.getters.isSoundModuleActive('contactList');
+    },
+    notificationListSoundActive() {
+      return this.$store.getters.isSoundModuleActive('notificationList');
     },
     haveCurrentUsers() {
       return this.$store.getters.haveCurrentUsers;
@@ -436,6 +447,7 @@ export default {
         // this.showInfoNotification({
         //   message: `chat_page_open_notification`,
         // });
+        this.playNotificationListSound();
         api
           .get(`notifications/${messageId}`)
           .then(res => {
@@ -454,13 +466,12 @@ export default {
       } else {
         // текст сообщение, выводим в чат, если открыт экран чата с отправителем или в уведомления
         this.typingNotificationActive = false;
-
+        this.playContactListSound();
         api
           // .get(`chats/messages/${messageId}`)
           .get(`contacts/messages/${messageId}`)
           .then(res => {
             const apiData = res.data[0];
-            console.log(apiData);
             const isCurrentChat =
               this.currentUsers.man === apiData.Man.ID &&
               this.currentUsers.lady === apiData.Lady.ID;
@@ -512,6 +523,21 @@ export default {
     },
     typingReset() {
       this.typingNotificationActive = false;
+    },
+    mountSounds() {
+      this.sounds.notificationListSound = new Audio('sounds/open_chat_page.mp3');
+      this.sounds.contactListSound = new Audio('sounds/bell.mp3');
+      window.sounds = this.sounds;
+    },
+    playNotificationListSound() {
+      if (this.notificationListSoundActive) {
+        this.sounds.notificationListSound.play();
+      }
+    },
+    playContactListSound() {
+      if (this.contactListSoundActive) {
+        this.sounds.contactListSound.play();
+      }
     },
   },
   watch: {

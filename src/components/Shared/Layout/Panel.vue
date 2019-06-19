@@ -19,6 +19,10 @@
           <span>Очистить фильтр</span>
         </div>
       </template>
+      <div class="panel-head__sound" v-if="soundName" @click="toggleSound">
+        <svg-icon v-if="soundActive" name="sound" width="24" height="24"/>
+        <svg-icon v-else name="sound-turn-off" width="21" height="21"/>
+      </div>
     </div>
     <div class="panel__filter">
       <slot name="filter"></slot>
@@ -39,6 +43,7 @@ export default {
     name: String,
     noClearButton: Boolean,
     filter: Object,
+    soundName: String,
   },
   data() {
     return {
@@ -61,10 +66,18 @@ export default {
       }
       return false;
     },
+    soundActive() {
+      return this.$store.getters.isSoundModuleActive(this.soundName);
+    },
   },
   methods: {
     toggleFilter() {
       this.isFilterOpen = !this.isFilterOpen;
+    },
+    toggleSound(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.$store.commit('TOGGLE_SOUND_ACTIVE_MODULES', this.soundName);
     },
     clickClear(e) {
       e.stopPropagation();
@@ -102,6 +115,7 @@ export default {
     background: $colorBg;
     cursor: pointer;
   }
+
   &__filter {
     flex: 0 0 auto;
   }
@@ -121,6 +135,7 @@ export default {
 }
 
 .panel-head {
+  position: relative;
   display: flex;
   align-items: center;
   min-height: 40px;
@@ -132,6 +147,19 @@ export default {
     flex: 1 1 auto;
     font-size: 16px;
     text-align: center;
+  }
+  &__sound {
+    position: absolute;
+    z-index: 3;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    font-size: 0;
+    padding: 5px;
+    transition: opacity 0.25s ease;
+    &:hover {
+      opacity: 0.75;
+    }
   }
   &__action {
     flex: 0 0 110px;

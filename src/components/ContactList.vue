@@ -1,5 +1,5 @@
 <template>
-  <Panel name="Контакт-лист" :filter="filter" noClearButton>
+  <Panel name="Контакт-лист" :filter="filter" noClearButton soundName="contactList">
     <template v-slot:filter>
       <div class="filter botom-line">
         <button class="filter__clear" @click="clearFilter">Очистить</button>
