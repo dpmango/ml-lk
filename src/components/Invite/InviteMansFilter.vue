@@ -304,7 +304,6 @@ import SelectArrow from '@/components/Shared/UI/Partials/SelectArrow.vue';
 import Plurize from '@/helpers/Plurize';
 import { countriesSelect } from '@/data/countries';
 import {
-  arrayToSelect,
   ageSelect,
   weight1Select,
   weight2Select,
@@ -390,7 +389,6 @@ export default {
       if (this.filter) {
         return Object.keys(this.filter).some(f => {
           const fKey = this.filter[f];
-          console.log(typeof fKey, f);
           if (typeof fKey === 'boolean') {
             return fKey;
           } else if (typeof fKey === 'string') {

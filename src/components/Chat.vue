@@ -66,10 +66,7 @@ export default {
     return {
       filter: {
         checkbox: '0',
-        dates: {
-          start: undefined,
-          end: undefined,
-        },
+        dates: this.initialDates(),
       },
       scrollFetch: {
         isLoading: false,
@@ -151,6 +148,14 @@ export default {
     },
   },
   methods: {
+    initialDates() {
+      let oneWeekAgo = new Date();
+      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+      return {
+        start: oneWeekAgo,
+        end: Date.now(),
+      };
+    },
     filterToParams() {
       const result = {};
 

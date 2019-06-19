@@ -44,6 +44,9 @@
           <add-invite :textarea.sync="textarea" @sentInvite="sentInvite"/>
         </div>
       </div>
+      <div class="panel__loading" v-if="isListLoading">
+        <spinner class="panel__loader" size="medium" line-fg-color="#5aa6ff"/>
+      </div>
     </div>
   </div>
 </template>
@@ -51,6 +54,7 @@
 <script>
 import debounce from 'lodash/debounce';
 import cloneDeep from 'lodash/cloneDeep';
+import Spinner from 'vue-simple-spinner';
 import UiCheckbox from '@/components/Shared/UI/Checkbox.vue';
 import UiNotification from '@/components/Shared/UI/Notification.vue';
 import InviteMansFilter from '@/components/Invite/InviteMansFilter.vue';
@@ -66,6 +70,7 @@ const defaultFilterState = {
 export default {
   name: 'MansList',
   components: {
+    Spinner,
     UiCheckbox,
     UiNotification,
     InviteMansFilter,
@@ -78,10 +83,10 @@ export default {
       mans: [],
       selectedMans: [],
       moreMansAvailable: true,
-      isSecondListOrMore: false,
       errorMessage: '',
       textarea: '',
       wWdith: window.innerWidth,
+      isListLoading: true,
     };
   },
   props: {
@@ -195,9 +200,7 @@ export default {
       if (!this.forLady) {
         return;
       }
-      if (lastId) {
-        this.isSecondListOrMore = true;
-      }
+      this.isListLoading = true;
       api
         .get('mens', {
           params: this.filterToParams(lastId),
@@ -205,6 +208,7 @@ export default {
         .then(res => {
           this.errorMessage = '';
           this.mans = res.data;
+          this.isListLoading = false;
           this.moreMansAvailable = res.data.length === 21;
         })
         .catch(err => {
@@ -238,7 +242,6 @@ export default {
       this.mans = [];
       this.selectedMans = [];
       this.moreMansAvailable = true;
-      this.isSecondListOrMore = false;
       this.errorMessage = '';
     },
     sentInvite() {
@@ -264,7 +267,7 @@ export default {
               )}`,
               type: 'success',
             });
-            this.mans = [];
+            // this.mans = [];
             this.selectedMans = [];
             this.filter.allChecked = false;
             //  fetch new
@@ -299,6 +302,7 @@ export default {
 @import '@/theme/utils.scss';
 
 .panel {
+  position: relative;
   background: #ffffff;
   display: flex;
   flex-direction: column;
@@ -310,6 +314,20 @@ export default {
   }
   &__content {
     padding: 20px;
+  }
+  &__loading {
+    position: absolute;
+    top: 41px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 5;
+    background: rgba(white, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  &__loader {
   }
   &.is-filter-active {
     .panel-head__icon {

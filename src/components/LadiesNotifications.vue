@@ -4,11 +4,11 @@
       <div class="ladies-ntf__filter filter-ntf">
         <div class="filter-ntf__item">
           <label for>Онлайн для всех</label>
-          <ui-switch isGreen @click="handleFilterClick" :active="filter.online"/>
+          <ui-switch isGreen @click="toggleOnlineAll" :active="filter.online"/>
         </div>
         <div class="filter-ntf__item">
           <label for>Рассылки для всех</label>
-          <ui-switch isGreen @click="handleFilterClick" :active="filter.mailer"/>
+          <ui-switch isGreen @click="toggleInvitationAll" :active="filter.mailer"/>
         </div>
       </div>
       <div class="ladies-ntf__content" v-if="ladiesList.length > 0">
@@ -65,7 +65,7 @@ export default {
       },
       filter: {
         online: false,
-        mailer: true,
+        mailer: false,
       },
       errorMessage: '',
     };
@@ -104,7 +104,82 @@ export default {
           this.errorMessage = err;
         });
     },
-    handleFilterClick() {},
+    toggleOnlineAll() {
+      if (!this.filter.online) {
+        this.pingApi(
+          {
+            urlSuffix: `/online`,
+            commitAction: 'TOGGLE_LADIESNTF_ONLINE_ALL',
+            shouldOnStore: true,
+            errTitle: 'Ошибка при добавлении в онлайн',
+          },
+          () => {
+            this.filter.online = true;
+          },
+        );
+      } else {
+        this.pingApi(
+          {
+            urlSuffix: `/offline`,
+            commitAction: 'TOGGLE_LADIESNTF_ONLINE_ALL',
+            shouldOnStore: false,
+            errTitle: 'Ошибка при удалении из онлайн',
+          },
+          () => {
+            this.filter.online = false;
+          },
+        );
+      }
+    },
+    toggleInvitationAll() {
+      if (!this.filter.mailer) {
+        this.pingApi(
+          {
+            urlSuffix: `/oninvitations`,
+            commitAction: 'TOGGLE_LADIESNTF_INVITATION_ALL',
+            shouldOnStore: true,
+            errTitle: 'Ошибка при добавлении в рассылки',
+          },
+          () => {
+            this.filter.mailer = true;
+          },
+        );
+      } else {
+        this.pingApi(
+          {
+            urlSuffix: `/offinvitations`,
+            commitAction: 'TOGGLE_LADIESNTF_INVITATION_ALL',
+            shouldOnStore: false,
+            errTitle: 'Ошибка при удалении из рассылки',
+          },
+          () => {
+            this.filter.mailer = false;
+          },
+        );
+      }
+    },
+    handleFilterClick(type) {
+      console.log(this.filter[type]);
+      if (!this.filter) this.filter[type] = !this.filter[type];
+    },
+    pingApi(options, callback) {
+      api
+        .post(`ladies${options.urlSuffix}`, {
+          ladies: 'all',
+        })
+        .then(res => {
+          const apiData = res.data[0];
+          if (apiData.success) {
+            this.$store.commit(options.commitAction, options.shouldOnStore);
+            callback();
+          } else {
+            this.showNotification({ title: options.errTitle, message: apiData.message });
+          }
+        })
+        .catch(error => {
+          this.showNotification({ title: options.errTitle, message: error });
+        });
+    },
     handleListScroll() {
       const listDOM = this.$refs.list;
       const scrollRemaining = listDOM.scrollHeight - listDOM.scrollTop - listDOM.offsetHeight;
@@ -124,6 +199,12 @@ export default {
           this.scrollFetch.moreResultsAvailable = res.data.length === 21;
         });
       }
+    },
+  },
+  notifications: {
+    showNotification: {
+      title: 'Ошибка',
+      type: 'error',
     },
   },
 };

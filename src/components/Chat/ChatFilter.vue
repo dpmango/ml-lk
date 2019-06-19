@@ -7,7 +7,7 @@
     <ui-radio v-model="filter.checkbox" cbValue="3" name="messagesFilter" label="За период"/>
     <span class="chat-filter__calendar" v-if="shouldShowCalendar">
       <svg-icon name="calendar" width="24" height="24"/>
-      <v-date-picker mode="range" show-caps v-model="filter.dates">
+      <v-date-picker :show-day-popover="false" mode="range" show-caps v-model="filter.dates">
         <div :type="inputState.type" slot-scope="props">
           <input
             type="text"
@@ -36,6 +36,7 @@ export default {
       dates: ['start', 'end'],
     },
   },
+
   computed: {
     shouldShowCalendar() {
       return this.filter.checkbox === '3';
