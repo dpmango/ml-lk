@@ -63,7 +63,7 @@
               :data-id="photo.ID"
             >
               <div class="photo__image">
-                <img v-img :src="getImage(photo.ID)">
+                <img v-img="{thumbnails: true, group: 'photolistlady'}" :src="getImage(photo.ID)">
               </div>
               <div class="photo__content">
                 <div class="photo__content-row">
@@ -74,6 +74,9 @@
                   <span>Просмотрено:</span>
                   <span>{{photo.ReadDate}}</span>
                 </div>
+              </div>
+              <div class="photo__cta">
+                <Button orange small block @click="sendBtn(photo.ID)">Отправить</Button>
               </div>
             </div>
           </div>
@@ -239,6 +242,9 @@ export default {
       this.photos = [];
       this.photosBase64 = [];
     },
+    sendBtn(id) {
+      this.$emit('addMessage', { file: id });
+    },
   },
   notifications: {
     showNotification: {
@@ -370,14 +376,23 @@ export default {
   width: 100%;
   flex: 0 0 33.3333%;
   max-width: 33.3333%;
+  display: flex;
+  flex-direction: column;
   padding: 10px;
   &__image {
+    flex: 0 0 auto;
     img {
       max-width: 100%;
     }
   }
   &__content {
-    margin: 15px 0 20px;
+    flex: 0 0 auto;
+    margin: auto 0 10px;
+    padding-top: 15px;
+  }
+  &__cta {
+    flex: 0 0 auto;
+    padding-bottom: 10px;
   }
   &__content-row {
     display: flex;

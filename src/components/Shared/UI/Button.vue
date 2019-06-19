@@ -1,7 +1,7 @@
 <template>
   <button
     class="btn"
-    :class="{ 'btn--primary': primary, 'btn--orange': orange, 'btn--block': block }"
+    :class="{ 'btn--primary': primary, 'btn--orange': orange, 'btn--block': block, 'btn--small': small }"
     :type="type"
     @click="emitClick"
   >
@@ -17,6 +17,7 @@ export default {
     orange: Boolean,
     type: String,
     block: Boolean,
+    small: Boolean,
   },
   methods: {
     emitClick(e) {
@@ -64,6 +65,10 @@ export default {
     display: block;
     width: 100%;
     text-align: center;
+  }
+  &--small {
+    padding: 7px 15px;
+    font-size: 13px;
   }
 }
 @include r($sm) {

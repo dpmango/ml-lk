@@ -32,7 +32,7 @@
         </div>
       </div>
     </div>
-    <modal-photo-list-lady/>
+    <modal-photo-list-lady @addMessage="sendMessage"/>
   </div>
 </template>
 
@@ -207,13 +207,19 @@ export default {
           this.showNotification({ message: err });
         });
     },
-    sendMessage(val) {
+    sendMessage(opt) {
+      let options = {
+        man: this.currentUsers.man,
+        lady: this.currentUsers.lady,
+      };
+      if (opt.text) {
+        options = { ...options, ...{ text: opt.text } };
+      }
+      if (opt.file) {
+        options = { ...options, ...{ text: '', file: opt.file } };
+      }
       api
-        .post('chats', {
-          man: this.currentUsers.man,
-          lady: this.currentUsers.lady,
-          text: val,
-        })
+        .post('chats', options)
         .then(res => {
           const apiData = res.data[0];
           console.log('res post /chats', apiData);

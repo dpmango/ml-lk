@@ -10,7 +10,10 @@
       <div class="message__text" v-html="data.Text" v-if="!hasFile"/>
       <div class="message__file" v-if="hasFile">
         <!-- <a v-img="{'src': fileBase64Full}"></a> -->
-        <img v-img="{'src': fileBase64Full}" :src="fileBase64Thumb">
+        <img
+          v-img="{'src': fileBase64Full, thumbnails: true, group: 'messageFiles'}"
+          :src="fileBase64Thumb"
+        >
       </div>
       <div class="message__actions">
         <div
@@ -76,12 +79,18 @@ export default {
     },
   },
   mounted() {
-    if (this.hasFile) {
-      this.getFile(this.data.File.Url_1, 'thumb');
-      this.getFile(this.data.File.Url_2, 'full');
-    }
+    this.getFiles();
+  },
+  updated() {
+    this.getFiles();
   },
   methods: {
+    getFiles() {
+      if (this.hasFile) {
+        this.getFile(this.data.File.Url_1, 'thumb');
+        this.getFile(this.data.File.Url_2, 'full');
+      }
+    },
     getFile(url, type) {
       api
         .get(url, {

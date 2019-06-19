@@ -17,6 +17,7 @@ import 'v-calendar/lib/v-calendar.min.css';
 Vue.config.productionTip = false;
 // saveToken('fEYfNEUlMlVhEkQYQGanvihAWGeLqI19');
 window.saveToken = saveToken;
+// fEYfNEUlMlVhEkQYQGanvihAWGeLqI199
 // saveToken('BqxKJPW-BrOQA3YbNwp54gFaNcpnO9I');
 
 Vue.use(VModal);

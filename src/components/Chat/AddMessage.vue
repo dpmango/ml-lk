@@ -117,7 +117,7 @@ export default {
       }
     },
     handleSubmit() {
-      this.$emit('addMessage', this.textarea);
+      this.$emit('addMessage', { text: this.textarea });
       this.textarea = ''; // reset state
     },
     appendEmoji(emoji) {
