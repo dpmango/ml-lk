@@ -1,7 +1,6 @@
 <template>
   <div class="add-message">
-    <template v-if="true">
-      <!-- storeData.Chat_enable -->
+    <template v-if="storeData.Chat_enable">
       <div class="add-message__textarea">
         <textarea
           name="add-message"

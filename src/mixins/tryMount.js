@@ -1,4 +1,5 @@
 import throttle from 'lodash/throttle';
+import debounce from 'lodash/debounce';
 
 const tryMount = {
   data() {
@@ -8,6 +9,12 @@ const tryMount = {
   },
   created() {
     this.scrollWithThrottle = throttle(this.handleListScroll, 100);
+    if (this.MountWithDebounceScroll) {
+      this.scrollWithDebounce = debounce(
+        this.handleListScrollDebounce,
+        this.MountWithDebounceScroll,
+      );
+    }
   },
   mounted() {
     this.tryMount();
@@ -23,12 +30,18 @@ const tryMount = {
       if (!this.listMounted && this.$refs.list) {
         this.listMounted = true;
         this.$refs.list.addEventListener('scroll', this.scrollWithThrottle, false);
+        if (this.MountWithDebounceScroll) {
+          this.$refs.list.addEventListener('scroll', this.scrollWithDebounce, false);
+        }
       }
     },
     tryUnmount() {
       if (this.listMounted && this.$refs.list) {
         this.listMounted = false;
         this.$refs.list.removeEventListener('scroll', this.scrollWithThrottle, false);
+        if (this.MountWithDebounceScroll) {
+          this.$refs.list.removeEventListener('scroll', this.scrollWithDebounce, false);
+        }
       }
     },
   },

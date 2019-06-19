@@ -8,6 +8,7 @@
       <div class="messenger">
         <div
           class="messenger__timestamp"
+          :class="{'is-visible': shouldShowTimeStamp}"
           v-if="activeTimestamp && !scrollFetch.isLoading"
         >{{activeTimestamp.timestamp}}</div>
         <spinner
@@ -17,7 +18,17 @@
           line-fg-color="#5aa6ff"
         />
         <div class="messenger__list" ref="list">
-          <message v-for="(message, idx) in chatList" :key="idx" :data="message"/>
+          <template v-for="(sess, sessIdx) in chatListWithSession">
+            <div class="messenger__session-separator" :key="sessIdx">
+              <span>{{sess.timestamp}}</span>
+            </div>
+            <message
+              v-for="(message, idx) in sess.list"
+              :key="`${sessIdx}_${idx}`"
+              :data="message"
+            />
+          </template>
+
           <div
             class="messenger__typing-notification"
             v-if="typingNotificationActive"
@@ -73,6 +84,8 @@ export default {
         moreResultsAvailable: true,
       },
       lastScrollDir: undefined,
+      MountWithDebounceScroll: 2500,
+      shouldShowTimeStamp: true,
       scrollMessageID: undefined,
       lastLoadId: undefined,
       typingNotificationActive: false,
@@ -133,6 +146,26 @@ export default {
         }
       });
       return grouped;
+    },
+    chatListWithSession() {
+      return this.groupedDates.map((ts, idx) => {
+        const targetList = this.chatList.filter(msg => {
+          const msgId = parseInt(msg.ID, 10);
+          const lastIdx = this.groupedDates.length - 1;
+          if (idx === lastIdx) {
+            return msgId >= parseInt(ts.messageID, 10);
+          } else {
+            return (
+              msgId >= parseInt(ts.messageID, 10) &&
+              msgId < parseInt(this.groupedDates[idx + 1].messageID, 10)
+            );
+          }
+        });
+        return {
+          timestamp: ts.timestamp,
+          list: targetList,
+        };
+      });
     },
     activeTimestamp() {
       if (this.scrollMessageID) {
@@ -281,13 +314,16 @@ export default {
     handleListScroll() {
       const listDOM = this.$refs.list;
       const { scrollTop, childNodes } = listDOM;
-      const MessageNodesReverse = [...childNodes].reverse();
+      let MessageNodesReverse = [...childNodes].reverse();
       let currentScrollID;
 
+      MessageNodesReverse = MessageNodesReverse.filter(
+        x => x.nodeType !== 8 && x.hasAttribute('data-id'),
+      );
       const BreakException = {};
       try {
         MessageNodesReverse.forEach(x => {
-          if (scrollTop + 40 >= x.offsetTop) {
+          if (scrollTop + 60 >= x.offsetTop) {
             currentScrollID = x.getAttribute('data-id');
             throw BreakException;
           }
@@ -302,6 +338,7 @@ export default {
       const scrollRemaining = listDOM.scrollTop;
       const scrollDir = scrollRemaining > this.lastScrollDir ? 'down' : 'up';
       this.lastScrollDir = scrollRemaining;
+      this.shouldShowTimeStamp = true;
 
       if (
         scrollRemaining <= 150 &&
@@ -337,6 +374,9 @@ export default {
             this.showNotification({ message: err });
           });
       }
+    },
+    handleListScrollDebounce() {
+      this.shouldShowTimeStamp = false;
     },
     resetScrollFetch() {
       this.scrollFetch.isLoading = false;
@@ -632,12 +672,40 @@ export default {
   &__add-message {
     flex: 0 0 auto;
   }
+  &__session-separator {
+    position: relative;
+    font-size: 12px;
+    text-align: center;
+    margin: 30px 0;
+    span {
+      position: relative;
+      z-index: 2;
+      display: inline-block;
+      background: white;
+      min-width: 80px;
+      padding-left: 10px;
+      padding-right: 10px;
+      text-align: center;
+    }
+    &::before {
+      display: inline-block;
+      content: ' ';
+      position: absolute;
+      z-index: 1;
+      top: 50%;
+      transform: translateY(-50%);
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: rgba($fontColor, 0.2);
+    }
+  }
   &__timestamp {
     position: absolute;
-    z-index: 2;
+    z-index: 3;
     top: 10px;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%, -10px);
     padding: 3px 15px;
     font-size: 12px;
     line-height: 23px;
@@ -646,6 +714,14 @@ export default {
     background: #ffffff;
     box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.16);
     border-radius: 50px;
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.25s ease-out, opacity 0.25s ease;
+    &.is-visible {
+      opacity: 1;
+      pointer-events: all;
+      transform: translate(-50%, 0px);
+    }
   }
   &__loader {
     position: absolute;
