@@ -1,5 +1,9 @@
 <template>
-  <div class="wrapper" :class="{'is-active': isFilterOpen}" v-click-outside="closeFilter">
+  <div
+    class="wrapper"
+    :class="{'is-active': isFilterOpen, 'is-filter-active': isFilterActive}"
+    v-click-outside="closeFilter"
+  >
     <div class="icon-circle" @click="toggleFilterOpen">
       <svg-icon name="filter" width="13" height="15"/>
     </div>
@@ -381,7 +385,28 @@ export default {
       options: selectOptions,
     };
   },
-  computed: {},
+  computed: {
+    isFilterActive() {
+      if (this.filter) {
+        return Object.keys(this.filter).some(f => {
+          const fKey = this.filter[f];
+          console.log(typeof fKey, f);
+          if (typeof fKey === 'boolean') {
+            return fKey;
+          } else if (typeof fKey === 'string') {
+            return fKey.trim() !== '';
+          } else if (Array.isArray(fKey)) {
+            return fKey.length > 0;
+          } else if (typeof fKey === 'object' && fKey !== null && fKey.value) {
+            return fKey.value !== undefined;
+          } else {
+            return false;
+          }
+        });
+      }
+      return false;
+    },
+  },
   methods: {
     toggleFilterOpen() {
       this.isFilterOpen = !this.isFilterOpen;
@@ -438,6 +463,11 @@ export default {
       opacity: 1;
       transform: translate(0, 0);
       pointer-events: all;
+    }
+  }
+  &.is-filter-active {
+    .icon-circle {
+      background-color: $colorPrimary;
     }
   }
 }
