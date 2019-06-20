@@ -402,12 +402,12 @@ export default {
       listDOM.scrollTop = lastMsgPos;
     },
     mountSocket() {
-      const isDebug = true;
+      const isDebug = false;
 
       /* eslint-disable */
-      // ab._debugrpc = isDebug;
+      ab._debugrpc = isDebug;
       ab._debugpubsub = isDebug;
-      // ab._debugws  = isDebug;
+      ab._debugws = isDebug;
 
       ab._MESSAGE_TYPEID_WELCOME = 0;
       ab._MESSAGE_TYPEID_PREFIX = 1;

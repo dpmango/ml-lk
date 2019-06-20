@@ -76,6 +76,7 @@ export default {
     timeStamp() {
       // return timestampToAgoStamp(this.data.Date);
       return timestampToTime(this.data.Date);
+      // return timestampToDate(this.data.Date);
     },
   },
   mounted() {

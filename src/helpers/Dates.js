@@ -13,16 +13,28 @@ export const timestampToTime = d => {
 export const timestampToAgoStamp = d => {
   const mDate = moment.unix(d);
   mDate.locale('ru');
+  const REFERENCE = moment();
+  const TODAY = REFERENCE.clone().startOf('day');
+  const YESTERDAY = REFERENCE.clone()
+    .subtract(1, 'days')
+    .startOf('day');
+
   // if (moment().diff(mDate, 'seconds') <= 60) {
   //   return 'just now';
   // }
   // if (moment().diff(mDate, 'hours') < 12) {
   //   return mDate.fromNow(); // 1...60 minutes or 1...12 hours ago
   // }
-  if (moment().diff(mDate, 'hours') < 24) {
+  // if (moment().diff(mDate, 'hours') < 24) {
+  //   return `Сегодня`;
+  // }
+  if (mDate.isSame(TODAY, 'day')) {
     return `Сегодня`;
   }
-  if (moment().diff(mDate, 'days') < 2) {
+  // if (moment().diff(mDate, 'days') < 2) {
+  //   return `Вчера`;
+  // }
+  if (mDate.isSame(YESTERDAY, 'day')) {
     return `Вчера`;
   }
   if (moment().diff(mDate, 'days') < 7) {
