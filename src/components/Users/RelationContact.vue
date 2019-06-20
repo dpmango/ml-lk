@@ -33,9 +33,11 @@
     </div>
     <div class="relation__info">
       <div class="relation__date">{{timeStamp}}</div>
-      <div class="relation__message" v-if="!hasFile">{{data.LastMessage}}</div>
-      <div class="relation__file" v-if="hasFile">
-        <img :src="fileBase64Thumb">
+      <div class="relation__message-wrapper">
+        <div class="relation__message">{{textOnly}}</div>
+        <div class="relation__file" v-if="hasFile">
+          <img :src="fileBase64Thumb">
+        </div>
       </div>
     </div>
     <div class="relation__actions">
@@ -102,6 +104,11 @@ export default {
       this.getFile(this.data.File.Url_1, 'thumb');
     }
   },
+  updated() {
+    if (this.hasFile) {
+      this.getFile(this.data.File.Url_1, 'thumb');
+    }
+  },
   computed: {
     isChatNew() {
       return this.data.ChatNew !== '0';
@@ -122,6 +129,9 @@ export default {
       const manMathch = this.storeActiveUsers.man === this.data.Man.ID;
       const ladyMatch = this.storeActiveUsers.lady === this.data.Lady.ID;
       return manMathch && ladyMatch;
+    },
+    textOnly() {
+      return this.data.LastMessage.replace(/<img .*?>/g, '');
     },
   },
 
@@ -264,8 +274,16 @@ export default {
     font-size: 10px;
     text-align: center;
   }
-  &__message {
+  &__message-wrapper {
     padding-left: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    .relation__file {
+      margin-top: 5px;
+    }
+  }
+  &__message {
     font-size: 10px;
     white-space: nowrap;
     overflow: hidden;
@@ -273,14 +291,13 @@ export default {
     max-width: 240px;
   }
   &__file {
-    margin-left: 10px;
     position: relative;
     z-index: 1;
     border-radius: 4px;
     overflow: hidden;
     font-size: 0;
     img {
-      max-width: 40px;
+      max-width: 100px;
       max-height: 40px;
     }
   }
