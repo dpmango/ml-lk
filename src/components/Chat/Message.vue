@@ -7,13 +7,15 @@
         :RealName="storeUser.RealName"
         :Online="storeUser.Online"
       />
-      <div class="message__text" v-html="data.Text" v-if="!hasFile"/>
-      <div class="message__file" v-if="hasFile">
-        <!-- <a v-img="{'src': fileBase64Full}"></a> -->
-        <img
-          v-img="{'src': fileBase64Full, thumbnails: true, group: 'messageFiles'}"
-          :src="fileBase64Thumb"
-        >
+      <div class="message__text-wrapper">
+        <div class="message__text" v-html="data.Text_only"/>
+        <div class="message__file" v-if="hasFile">
+          <!-- <a v-img="{'src': fileBase64Full}"></a> -->
+          <img
+            v-img="{'src': fileBase64Full, thumbnails: true, group: 'messageFiles'}"
+            :src="fileBase64Thumb"
+          >
+        </div>
       </div>
       <div class="message__actions">
         <div
@@ -167,10 +169,18 @@ export default {
   &__wrapper {
     display: flex;
   }
+  &__text-wrapper {
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    .message__file {
+      margin-top: 8px;
+    }
+  }
   &__text {
     flex: 0 1 auto;
     padding: 10px 12px;
-    margin-left: 20px;
     background: rgba(#e7e7e7, 0.6);
     border-radius: 10px 10px 10px 0px;
     font-weight: normal;
@@ -182,7 +192,6 @@ export default {
   }
   &__file {
     position: relative;
-    margin-left: 20px;
     border: 1px solid #e1e1e1;
     box-sizing: border-box;
     border-radius: 10px 10px 10px 0px;
@@ -234,14 +243,16 @@ export default {
       &__wrapper {
         flex-direction: row-reverse;
       }
+      &__text-wrapper {
+        margin-right: 20px;
+        margin-left: 0px;
+      }
       &__text {
         background: rgba($colorPrimary, 0.2);
       }
       &__text,
       &__file {
         border-radius: 10px 10px 0px 10px;
-        margin-right: 20px;
-        margin-left: 0px;
       }
       &__actions {
         padding-right: 9px;
@@ -258,12 +269,10 @@ export default {
       transform: scale(0.5);
       transform-origin: left bottom;
     }
-    &__text {
+    &__text-wrapper {
       margin-left: -10px;
     }
-    &__file {
-      margin-left: -10px;
-    }
+
     &.is-outgoing {
       margin-left: 40px;
       // margin-right: 0px;
@@ -271,8 +280,7 @@ export default {
         transform-origin: right bottom;
       }
       .message {
-        &__text,
-        &__file {
+        &__text-wrapper {
           margin-right: -10px;
         }
       }
