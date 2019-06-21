@@ -19,6 +19,12 @@ export const getToken = () => {
   }
 };
 
+export const saveTokenIfEmpty = token => {
+  if (!getToken()) {
+    saveToken(token);
+  }
+};
+
 export const clearToken = () => {
   try {
     localStorage.clear();

@@ -10,15 +10,17 @@ import svg4everybody from 'svg4everybody';
 import App from './App.vue';
 import store from './store';
 import router from './router';
-import { saveToken } from '@/helpers/storeToken';
+import { saveToken, clearToken, saveTokenIfEmpty } from '@/helpers/storeToken';
 
 import 'v-calendar/lib/v-calendar.min.css';
 
 Vue.config.productionTip = false;
-// saveToken('fEYfNEUlMlVhEkQYQGanvihAWGeLqI19');
 window.saveToken = saveToken;
-// fEYfNEUlMlVhEkQYQGanvihAWGeLqI199
+window.clearToken = clearToken;
+// saveToken('fEYfNEUlMlVhEkQYQGanvihAWGeLqI19');
 // saveToken('BqxKJPW-BrOQA3YbNwp54gFaNcpnO9I');
+// fEYfNEUlMlVhEkQYQGanvihAWGeLqI199
+saveTokenIfEmpty(process.env.VUE_APP_TOKEN);
 
 Vue.use(VModal);
 Vue.use(VueTextareaAutosize);
