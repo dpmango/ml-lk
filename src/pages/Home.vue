@@ -41,6 +41,9 @@ export default {
     ContactList,
     Chat,
   },
+  created() {
+    this.$store.commit('INITIAL_ADD_SOUNDS');
+  },
   computed: {
     isChatActive() {
       return this.$store.getters.haveCurrentUsers;

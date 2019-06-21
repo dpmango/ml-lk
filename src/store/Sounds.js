@@ -1,7 +1,7 @@
 const Sounds = {
   state: {
     // activeModules: ['SendInvite'],
-    activeSounds: ['contactList', 'notificationList'],
+    activeSounds: [],
   },
   getters: {
     isSoundModuleActive: state => name => {
@@ -9,10 +9,15 @@ const Sounds = {
     },
   },
   mutations: {
+    INITIAL_ADD_SOUNDS(state) {
+      const ls = localStorage.marmeladies;
+      if (!ls) {
+        state.activeSounds = ['contactList', 'notificationList'];
+      }
+    },
     TOGGLE_SOUND_ACTIVE_MODULES(state, payload) {
       const index = state.activeSounds.indexOf(payload);
       const isActiveAlready = index !== -1;
-
       if (isActiveAlready) {
         state.activeSounds = state.activeSounds.filter(x => x !== payload);
       } else {
