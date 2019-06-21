@@ -20,10 +20,11 @@ const LadiesNtf = {
       const stateCopy = state.ladies;
       state.ladies = toggleObjectKey(stateCopy, tId, 'Online');
     },
-    TOGGLE_LADIESNTF_ONLINE_ALL(state, shouldOn) {
+    TOGGLE_LADIESNTF_ONLINE_ALL(state, payload) {
       const stateCopy = state.ladies;
-      stateCopy.forEach(x => {
-        x.Online = shouldOn ? '1' : '0';
+      const targetLadies = stateCopy.filter(x => payload.ladiesIDs.indexOf(x.ID) !== -1);
+      targetLadies.forEach(x => {
+        x.Online = payload.shouldOn ? '1' : '0';
       });
       state.ladies = stateCopy;
     },
@@ -31,10 +32,11 @@ const LadiesNtf = {
       const stateCopy = state.ladies;
       state.ladies = toggleObjectKey(stateCopy, tId, 'Invitation');
     },
-    TOGGLE_LADIESNTF_INVITATION_ALL(state, shouldOn) {
+    TOGGLE_LADIESNTF_INVITATION_ALL(state, payload) {
       const stateCopy = state.ladies;
-      stateCopy.forEach(x => {
-        x.Invitation = shouldOn ? '1' : '0';
+      const targetLadies = stateCopy.filter(x => payload.ladiesIDs.indexOf(x.ID) !== -1);
+      targetLadies.forEach(x => {
+        x.Invitation = payload.shouldOn ? '1' : '0';
       });
       state.ladies = stateCopy;
     },

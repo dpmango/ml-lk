@@ -56,6 +56,8 @@ const Notifications = {
         targetNtf.Marked = payload.notification.Marked;
         targetNtf.Message = payload.notification.Message;
         targetNtf.LastMessageDate = payload.notification.LastMessageDate;
+        targetNtf.Man.Online = payload.notification.Man.Online;
+        targetNtf.Lady.Online = payload.notification.Lady.Online;
         if (!payload.isCurrentChat) {
           targetNtf.New = payload.notification.New;
         }

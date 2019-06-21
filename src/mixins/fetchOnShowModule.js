@@ -4,8 +4,11 @@ const fetchOnShowModule = {
       initialListLoaded: false,
     };
   },
-  watch: {
-    shouldShowModule() {
+  mounted() {
+    this.shouldShowModuleRouter();
+  },
+  methods: {
+    shouldShowModuleRouter() {
       if (this.shouldShowModule) {
         if (!this.initialListLoaded) {
           this.fetchApi();
@@ -14,6 +17,11 @@ const fetchOnShowModule = {
       } else {
         this.initialListLoaded = false;
       }
+    },
+  },
+  watch: {
+    shouldShowModule() {
+      this.shouldShowModuleRouter();
     },
   },
 };

@@ -56,6 +56,8 @@ const Contacts = {
         targetContact.Marked = payload.contact.Marked;
         targetContact.LastMessage = payload.contact.LastMessage;
         targetContact.LastMessageDate = payload.contact.LastMessageDate;
+        targetContact.Man.Online = payload.contact.Man.Online;
+        targetContact.Lady.Online = payload.contact.Lady.Online;
         if (!payload.isCurrentChat) {
           targetContact.ChatNew = payload.contact.ChatNew;
           targetContact.MsgNew = payload.contact.MsgNew;

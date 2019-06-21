@@ -1,22 +1,28 @@
 <template>
   <panel-collapse name="Отправить приглашение">
-    <div class="send-invite__list" ref="list" v-if="inviteList.length > 0">
-      <Notification v-if="errorMessage" type="danger">{{errorMessage}}</Notification>
-      <swiper :options="swiperOption" ref="mySwiper" @slideChange="slideChange">
-        <swiper-slide v-for="(lady, idx) in inviteList" :key="idx">
-          <invite-card
-            @onSelect="onLadySelect"
-            :isSelected="selectedLady === lady.ID"
-            :data="lady"
-          />
-        </swiper-slide>
-        <div class="swiper-prev" slot="button-prev">
-          <svg-icon name="swiper-prev" width="8" height="12"/>
-        </div>
-        <div class="swiper-next" slot="button-next">
-          <svg-icon name="swiper-next" width="8" height="12"/>
-        </div>
-      </swiper>
+    <div class="send-invite__content-wrapper" :class="{'is-not-empty': listNotEmpty}">
+      <div class="send-invite__list" ref="list" v-if="listNotEmpty">
+        <Notification v-if="errorMessage" type="danger">{{errorMessage}}</Notification>
+        <swiper :options="swiperOption" ref="mySwiper" @slideChange="slideChange">
+          <swiper-slide v-for="(lady, idx) in inviteList" :key="idx">
+            <invite-card
+              @onSelect="onLadySelect"
+              :isSelected="selectedLady === lady.ID"
+              :data="lady"
+            />
+          </swiper-slide>
+          <div class="swiper-prev" slot="button-prev">
+            <svg-icon name="swiper-prev" width="8" height="12"/>
+          </div>
+          <div class="swiper-next" slot="button-next">
+            <svg-icon name="swiper-next" width="8" height="12"/>
+          </div>
+        </swiper>
+      </div>
+      <div class="send-invite__list-empty" v-if="!listNotEmpty && !scrollFetch.isLoading">
+        Отправка приглашений сейчас невозможна.
+        <br>Возможная причина - нет девушек онлайн.
+      </div>
       <spinner
         class="send-invite__loader"
         v-if="scrollFetch.isLoading"
@@ -99,6 +105,9 @@ export default {
     swiper() {
       return this.$refs.mySwiper.swiper;
     },
+    listNotEmpty() {
+      return this.inviteList.length > 0;
+    },
     pageModules() {
       return this.$store.state.page.activeModules;
     },
@@ -108,11 +117,13 @@ export default {
   },
   methods: {
     fetchApi() {
+      this.scrollFetch.isLoading = true;
       api
         .get('ladies?filter=2')
         .then(res => {
           this.errorMessage = '';
           this.inviteList = res.data;
+          this.scrollFetch.isLoading = false;
           this.scrollFetch.moreResultsAvailable = res.data.length === 21;
         })
         .catch(err => {
@@ -169,6 +180,12 @@ export default {
 
 .send-invite {
   position: relative;
+  &__content-wrapper {
+    padding: 2.5em 0 2em;
+    &.is-not-empty {
+      padding: 0;
+    }
+  }
   &__list {
     .swiper-container {
       padding: 15px 50px;
@@ -187,6 +204,12 @@ export default {
     bottom: 10px;
     left: 50%;
     transform: translateX(-50%);
+  }
+  &__list-empty {
+    font-size: 14px;
+    text-align: center;
+
+    color: rgba($fontColor, 0.6);
   }
 }
 .swiper-prev,

@@ -93,11 +93,13 @@ export default {
   },
   methods: {
     fetchApi() {
+      this.scrollFetch.isLoading = true;
       api
         .get('ladies?filter=1')
         .then(res => {
           this.errorMessage = '';
           this.$store.commit('SET_LADIESNTF', res.data);
+          this.scrollFetch.isLoading = false;
           this.scrollFetch.moreResultsAvailable = res.data.length === 21;
         })
         .catch(err => {
@@ -170,7 +172,10 @@ export default {
         .then(res => {
           const apiData = res.data[0];
           if (apiData.success) {
-            this.$store.commit(options.commitAction, options.shouldOnStore);
+            this.$store.commit(options.commitAction, {
+              shouldOn: options.shouldOnStore,
+              ladiesIDs: apiData.ladies,
+            });
             callback();
           } else {
             this.showNotification({ title: options.errTitle, message: apiData.message });
