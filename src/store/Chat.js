@@ -1,5 +1,3 @@
-import Vue from 'vue';
-
 const findByUsers = (arr, users) => {
   return arr.find(x => x.users.man === users.man && x.users.lady === users.lady);
 };
@@ -20,13 +18,9 @@ const Chat = {
       man: undefined,
       lady: undefined,
     },
+    enterForSubmit: false,
     chats: [],
     info: [],
-    socket: {
-      isConnected: false,
-      message: '',
-      reconnectError: false,
-    },
   },
   getters: {
     haveCurrentUsers: state => state.currentUsers.man && state.currentUsers.lady,
@@ -133,36 +127,11 @@ const Chat = {
       stateCopy[chatIndex].list[messageIndex] = targetMessage;
       state.chats = stateCopy;
     },
-    SOCKET_ONOPEN(state, event) {
-      Vue.prototype.$socket = event.currentTarget;
-      state.socket.isConnected = true;
-    },
-    SOCKET_ONCLOSE(state, event) {
-      state.socket.isConnected = false;
-      console.log('socket closed', event);
-    },
-    SOCKET_ONERROR(state, event) {
-      console.error(state, event);
-    },
-    // default handler called for all methods
-    SOCKET_ONMESSAGE(state, message) {
-      state.socket.message = message;
-    },
-    // mutations for reconnect methods
-    SOCKET_RECONNECT(state, count) {
-      console.info(state, count);
-    },
-    SOCKET_RECONNECT_ERROR(state) {
-      state.socket.reconnectError = true;
+    TOGGLE_ENTER_TO_SUBMIT(state) {
+      state.enterForSubmit = !state.enterForSubmit;
     },
   },
-  actions: {
-    // sendMessage: function(context, message) {
-    //   // .....
-    //   Vue.prototype.$socket.send(message);
-    //   // .....
-    // },
-  },
+  actions: {},
 };
 
 export default Chat;

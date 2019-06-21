@@ -14,7 +14,8 @@
       <div class="add-message__actions">
         <div class="add-message__enter-to-submit">
           <ui-checkbox
-            v-model="enterForSubmit"
+            @input="changeEnterSubmit"
+            :value="enterForSubmit"
             name="enterForSubmit"
             label="Нажать Enter для отправки"
           />
@@ -88,7 +89,6 @@ export default {
   data() {
     return {
       textarea: '',
-      enterForSubmit: false,
       search: '',
     };
   },
@@ -105,6 +105,9 @@ export default {
     storeData() {
       return this.$store.getters.selectInfoByUsers(this.currentUsers);
     },
+    enterForSubmit() {
+      return this.$store.state.chat.enterForSubmit;
+    },
   },
   methods: {
     handleKeyDown(e) {
@@ -114,6 +117,9 @@ export default {
 
         this.handleSubmit();
       }
+    },
+    changeEnterSubmit() {
+      this.$store.commit('TOGGLE_ENTER_TO_SUBMIT');
     },
     handleSubmit() {
       this.$emit('addMessage', { text: this.textarea });
