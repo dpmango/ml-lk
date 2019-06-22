@@ -86,6 +86,15 @@ const Notifications = {
       const stateCopy = state.notifications;
       state.notifications = toggleObjectKey(stateCopy, tId, 'Marked');
     },
+    NOTIFICATION_TOGGLE_LADY_ONLINE(state, payload) {
+      const stateCopy = state.notifications;
+      const ids = payload.ladiesIDs ? payload.ladiesIDs : [payload.ladyId];
+      const targetNotifications = stateCopy.filter(x => ids.indexOf(x.Lady.ID) !== -1);
+      targetNotifications.forEach(x => {
+        x.Lady.Online = payload.shouldOn ? '1' : '0';
+      });
+      state.notifications = stateCopy;
+    },
   },
 };
 

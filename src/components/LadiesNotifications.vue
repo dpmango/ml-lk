@@ -11,19 +11,21 @@
           <ui-switch isGreen @click="toggleInvitationAll" :active="filter.mailer"/>
         </div>
       </div>
-      <div class="ladies-ntf__content" v-if="ladiesList.length > 0">
-        <Notification v-if="errorMessage" type="danger">{{errorMessage}}</Notification>
-        <div class="ladies-ntf__head head-ntf">
-          <div v-for="(col, idx) in [1,2,3,4]" :key="idx" class="head-ntf__col">
-            <div class="head-ntf__holder">
-              <div class="head-ntf__title">Онлайн</div>
-              <div class="head-ntf__title">Рассылка</div>
+      <div class="ladies-ntf__content-wrapper">
+        <div class="ladies-ntf__content" v-if="ladiesList.length > 0">
+          <Notification v-if="errorMessage" type="danger">{{errorMessage}}</Notification>
+          <div class="ladies-ntf__head head-ntf">
+            <div v-for="(col, idx) in [1,2,3,4]" :key="idx" class="head-ntf__col">
+              <div class="head-ntf__holder">
+                <div class="head-ntf__title">Онлайн</div>
+                <div class="head-ntf__title">Рассылка</div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="ladies-ntf__list" ref="list">
-          <div v-for="(lady, idx) in ladies20" :key="idx" class="ladies-ntf__col">
-            <lady-ntf-card :data="lady"/>
+          <div class="ladies-ntf__list" ref="list">
+            <div v-for="(lady, idx) in ladies20" :key="idx" class="ladies-ntf__col">
+              <lady-ntf-card :data="lady"/>
+            </div>
           </div>
         </div>
         <spinner
@@ -111,7 +113,11 @@ export default {
         this.pingApi(
           {
             urlSuffix: `/online`,
-            commitAction: 'TOGGLE_LADIESNTF_ONLINE_ALL',
+            commitAction: [
+              'TOGGLE_LADIESNTF_ONLINE_ALL',
+              'NOTIFICATION_TOGGLE_LADY_ONLINE',
+              'CONTACT_TOGGLE_LADY_ONLINE',
+            ],
             shouldOnStore: true,
             errTitle: 'Ошибка при добавлении в онлайн',
           },
@@ -123,7 +129,11 @@ export default {
         this.pingApi(
           {
             urlSuffix: `/offline`,
-            commitAction: 'TOGGLE_LADIESNTF_ONLINE_ALL',
+            commitAction: [
+              'TOGGLE_LADIESNTF_ONLINE_ALL',
+              'NOTIFICATION_TOGGLE_LADY_ONLINE',
+              'CONTACT_TOGGLE_LADY_ONLINE',
+            ],
             shouldOnStore: false,
             errTitle: 'Ошибка при удалении из онлайн',
           },
@@ -138,7 +148,11 @@ export default {
         this.pingApi(
           {
             urlSuffix: `/oninvitations`,
-            commitAction: 'TOGGLE_LADIESNTF_INVITATION_ALL',
+            commitAction: [
+              'TOGGLE_LADIESNTF_INVITATION_ALL',
+              'NOTIFICATION_TOGGLE_LADY_ONLINE',
+              'CONTACT_TOGGLE_LADY_ONLINE',
+            ],
             shouldOnStore: true,
             errTitle: 'Ошибка при добавлении в рассылки',
           },
@@ -150,7 +164,11 @@ export default {
         this.pingApi(
           {
             urlSuffix: `/offinvitations`,
-            commitAction: 'TOGGLE_LADIESNTF_INVITATION_ALL',
+            commitAction: [
+              'TOGGLE_LADIESNTF_INVITATION_ALL',
+              'NOTIFICATION_TOGGLE_LADY_ONLINE',
+              'CONTACT_TOGGLE_LADY_ONLINE',
+            ],
             shouldOnStore: false,
             errTitle: 'Ошибка при удалении из рассылки',
           },
@@ -172,9 +190,11 @@ export default {
         .then(res => {
           const apiData = res.data[0];
           if (apiData.success) {
-            this.$store.commit(options.commitAction, {
-              shouldOn: options.shouldOnStore,
-              ladiesIDs: apiData.ladies,
+            options.commitAction.forEach(action => {
+              this.$store.commit(action, {
+                shouldOn: options.shouldOnStore,
+                ladiesIDs: apiData.ladies,
+              });
             });
             callback();
           } else {
@@ -226,13 +246,16 @@ export default {
     padding: 17px 20px;
     border: 1px solid rgba(#d1cfda, 0.4);
   }
+  &__content-wrapper {
+    position: relative;
+    padding: 15px 20px;
+  }
   &__content {
     position: relative;
     max-height: 230px;
     height: 100%;
     display: flex;
     flex-direction: column;
-    padding: 15px 20px;
   }
   &__head {
     flex: 0 0 auto;

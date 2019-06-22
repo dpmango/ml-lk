@@ -87,6 +87,15 @@ const Contacts = {
       const stateCopy = state.contacts;
       state.contacts = toggleObjectKey(stateCopy, tId, 'Marked');
     },
+    CONTACT_TOGGLE_LADY_ONLINE(state, payload) {
+      const stateCopy = state.contacts;
+      const ids = payload.ladiesIDs ? payload.ladiesIDs : [payload.ladyId];
+      const targetContacts = stateCopy.filter(x => ids.indexOf(x.Lady.ID) !== -1);
+      targetContacts.forEach(x => {
+        x.Lady.Online = payload.shouldOn ? '1' : '0';
+      });
+      state.contacts = stateCopy;
+    },
   },
 };
 

@@ -16,9 +16,9 @@ const LadiesNtf = {
     APPEND_LADIESNTF(state, arr) {
       state.ladies = state.ladies.concat(arr);
     },
-    TOGGLE_LADIESNTF_ONLINE(state, tId) {
+    TOGGLE_LADIESNTF_ONLINE(state, payload) {
       const stateCopy = state.ladies;
-      state.ladies = toggleObjectKey(stateCopy, tId, 'Online');
+      state.ladies = toggleObjectKey(stateCopy, payload.ladyId, 'Online');
     },
     TOGGLE_LADIESNTF_ONLINE_ALL(state, payload) {
       const stateCopy = state.ladies;
@@ -28,9 +28,9 @@ const LadiesNtf = {
       });
       state.ladies = stateCopy;
     },
-    TOGGLE_LADIESNTF_INVITATION(state, tId) {
+    TOGGLE_LADIESNTF_INVITATION(state, payload) {
       const stateCopy = state.ladies;
-      state.ladies = toggleObjectKey(stateCopy, tId, 'Invitation');
+      state.ladies = toggleObjectKey(stateCopy, payload.ladyId, 'Invitation');
     },
     TOGGLE_LADIESNTF_INVITATION_ALL(state, payload) {
       const stateCopy = state.ladies;

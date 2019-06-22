@@ -1,5 +1,5 @@
 <template>
-  <div class="ntf-lady">
+  <div class="ntf-lady" :data-id="data.ID">
     <Avatar :Thumbnail="data.Thumbnail" :RealName="data.RealName"/>
     <div class="ntf-lady__content">
       <div class="ntf-lady__name">{{data.RealName}}, {{age}}</div>
@@ -68,13 +68,23 @@ export default {
       if (!this.isOnline) {
         this.pingApi({
           urlSuffix: `/online`,
-          commitAction: 'TOGGLE_LADIESNTF_ONLINE',
+          commitAction: [
+            'TOGGLE_LADIESNTF_ONLINE',
+            'NOTIFICATION_TOGGLE_LADY_ONLINE',
+            'CONTACT_TOGGLE_LADY_ONLINE',
+          ],
+          shouldOnStore: true,
           errTitle: 'Ошибка при добавлении в онлайн',
         });
       } else {
         this.pingApi({
           urlSuffix: `/offline`,
-          commitAction: 'TOGGLE_LADIESNTF_ONLINE',
+          commitAction: [
+            'TOGGLE_LADIESNTF_ONLINE',
+            'NOTIFICATION_TOGGLE_LADY_ONLINE',
+            'CONTACT_TOGGLE_LADY_ONLINE',
+          ],
+          shouldOnStore: false,
           errTitle: 'Ошибка при удалении из онлайн',
         });
       }
@@ -83,13 +93,23 @@ export default {
       if (!this.isInvitation) {
         this.pingApi({
           urlSuffix: `/oninvitations`,
-          commitAction: 'TOGGLE_LADIESNTF_INVITATION',
+          commitAction: [
+            'TOGGLE_LADIESNTF_INVITATION',
+            'NOTIFICATION_TOGGLE_LADY_ONLINE',
+            'CONTACT_TOGGLE_LADY_ONLINE',
+          ],
+          shouldOnStore: true,
           errTitle: 'Ошибка при добавлении в рассылки',
         });
       } else {
         this.pingApi({
           urlSuffix: `/offinvitations`,
-          commitAction: 'TOGGLE_LADIESNTF_ONLINE',
+          commitAction: [
+            'TOGGLE_LADIESNTF_INVITATION',
+            'NOTIFICATION_TOGGLE_LADY_ONLINE',
+            'CONTACT_TOGGLE_LADY_ONLINE',
+          ],
+          shouldOnStore: false,
           errTitle: 'Ошибка при удалении из рассылки',
         });
       }
@@ -102,7 +122,12 @@ export default {
         .then(res => {
           const apiData = res.data[0];
           if (apiData.success) {
-            this.$store.commit(options.commitAction, this.data.ID);
+            options.commitAction.forEach(action => {
+              this.$store.commit(action, {
+                shouldOn: options.shouldOnStore,
+                ladyId: this.data.ID,
+              });
+            });
           } else {
             this.showNotification({ title: options.errTitle, message: apiData.message });
           }
