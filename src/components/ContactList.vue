@@ -15,13 +15,13 @@
             />
           </li>
           <li>
-            <ui-checkbox
+            <!-- <ui-checkbox
               @input="filterWithDebounce"
               v-model="filter.new"
               name="c_new"
               label="Неотвеченные"
               bigFont
-            />
+            />-->
           </li>
           <li>
             <ui-checkbox

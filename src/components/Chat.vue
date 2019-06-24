@@ -305,7 +305,12 @@ export default {
       api
         .get('chats/finish', { params: this.currentUsers })
         .then(res => {
-          console.log('finish responsce', res.data);
+          const apiData = res.data[0]
+          if (apiData.success) {
+            console.log('finish responsce', res.data);
+          } else {
+            this.showNotification({ message: apiData.message });
+          }
         })
         .catch(err => {
           this.showNotification({ message: err });
