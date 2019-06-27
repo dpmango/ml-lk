@@ -8,7 +8,7 @@
         :Online="storeUser.Online"
       />
       <div class="message__text-wrapper">
-        <div class="message__text" v-html="data.Text_only"/>
+        <div class="message__text" v-html="data.Text_only" v-if="isTextNotEmpty"/>
         <div class="message__file" v-if="hasFile">
           <!-- <a v-img="{'src': fileBase64Full}"></a> -->
           <img
@@ -74,6 +74,9 @@ export default {
     },
     hasFile() {
       return !Array.isArray(this.data.File);
+    },
+    isTextNotEmpty() {
+      return this.data.Text_only.trim() !== '';
     },
     timeStamp() {
       // return timestampToAgoStamp(this.data.Date);
@@ -174,7 +177,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    .message__file {
+    .message__text + .message__file {
       margin-top: 8px;
     }
   }
