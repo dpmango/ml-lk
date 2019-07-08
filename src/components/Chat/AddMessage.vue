@@ -21,7 +21,7 @@
           />
         </div>
         <div @click="openLadiesModal" class="add-message__cta add-message__cta--image">
-          <svg-icon name="image" width="18" height="18"/>
+          <svg-icon name="image" width="18" height="18" />
         </div>
         <div class="add-message__cta add-message__cta--smile">
           <emoji-picker @emoji="appendEmoji" :search="search">
@@ -31,12 +31,12 @@
               slot-scope="{ events: { click: clickEvent } }"
               @click.stop="clickEvent"
             >
-              <svg-icon name="smile" width="21" height="21"/>
+              <svg-icon name="smile" width="21" height="21" />
             </div>
             <div slot="emoji-picker" slot-scope="{ emojis, insert }">
               <div class="emoji-picker">
                 <div class="emoji-picker__search">
-                  <input type="text" v-model="search" v-focus>
+                  <input type="text" v-model="search" v-focus />
                 </div>
                 <div>
                   <div v-for="(emojiGroup, category) in emojis" :key="category">
@@ -58,14 +58,15 @@
 
         <button class="add-message__send-btn" type="button" @click="handleSubmit">
           <span>Отправить</span>
-          <svg-icon name="send" width="16" height="16"/>
+          <svg-icon name="send" width="16" height="16" />
         </button>
         <div
           class="add-message__cta add-message__cta--finish"
           title="Завершить чат"
           @click="$emit('finishChat')"
+          v-if="storeData.Open_chat"
         >
-          <svg-icon name="exit-chat" width="18" height="18"/>
+          <svg-icon name="exit-chat" width="18" height="18" />
         </div>
       </div>
     </template>

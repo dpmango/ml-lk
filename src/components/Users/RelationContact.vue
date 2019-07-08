@@ -225,6 +225,11 @@ export default {
         });
     },
   },
+  watch: {
+    data() {
+      this.fileBase64Thumb = '';
+    },
+  },
   notifications: {
     showNotification: {
       title: 'Ошибка',

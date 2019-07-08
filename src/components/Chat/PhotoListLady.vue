@@ -63,7 +63,7 @@
               :data-id="photo.ID"
             >
               <div class="photo__image">
-                <img v-img="{thumbnails: true, group: 'photolistlady'}" :src="getImage(photo.ID)">
+                <img v-img="{thumbnails: true, group: 'photolistlady'}" :src="getImage(photo.ID)" />
               </div>
               <div class="photo__content">
                 <div class="photo__content-row">
@@ -75,7 +75,7 @@
                   <span>{{photo.ReadDate}}</span>
                 </div>
               </div>
-              <div class="photo__cta">
+              <div class="photo__cta" v-if="storeData.Open_chat">
                 <Button orange small block @click="sendBtn(photo.ID)">Отправить</Button>
               </div>
             </div>
@@ -86,11 +86,11 @@
             <Button orange>
               <span>Добавить фото</span>
               <div class="modal__cta-icon">
-                <svg-icon name="image" width="18" height="18"/>
+                <svg-icon name="image" width="18" height="18" />
               </div>
             </Button>
             <div class="modal__file-container">
-              <input type="file" id="fileladymodal" ref="file" v-on:change="handleFileUpload">
+              <input type="file" id="fileladymodal" ref="file" v-on:change="handleFileUpload" />
             </div>
           </label>
         </div>
@@ -155,6 +155,9 @@ export default {
       };
 
       return this.photos.filter(x => bySend(x) && byRead(x));
+    },
+    storeData() {
+      return this.$store.getters.selectInfoByUsers(this.currentUsers);
     },
   },
   methods: {

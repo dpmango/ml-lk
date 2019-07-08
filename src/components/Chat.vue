@@ -487,9 +487,23 @@ export default {
         });
       } else if (msgType === 'chat_start_notification') {
         // старт чата, показываем кнопки «finish_chat» и «attach»
+        if (this.currentUsers.man === senderId && this.currentUsers.lady === receiverId) {
+          this.$store.commit('CHAT_TOGGLE_OPEN', {
+            users: this.currentUsers,
+            isOpen: true,
+          });
+        }
         this.showInfoNotification({
-          message: `старт чата, показываем кнопки «finish_chat» и «attach»`,
+          message: `Старт чата`,
         });
+      } else if (msgType === 'chat_finish_х_notification') {
+        // не доступны кнопки «Завершить чат» и «Отправить» в попапе «Фото»
+        if (this.currentUsers.man === senderId && this.currentUsers.lady === receiverId) {
+          this.$store.commit('CHAT_TOGGLE_OPEN', {
+            users: this.currentUsers,
+            isOpen: false,
+          });
+        }
       } else if (msgType === 'delete_chat_message') {
         // удаляем сообщение id из ленты
         this.fetchChats();

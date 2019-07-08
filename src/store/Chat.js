@@ -98,6 +98,18 @@ const Chat = {
         state.info = stateCopy;
       }
     },
+    CHAT_TOGGLE_OPEN(state, payload) {
+      const stateCopy = state.info;
+      const targetChat = findByUsers(state.info, payload.users);
+
+      if (targetChat !== undefined) {
+        // update
+        const targetIndex = stateCopy.indexOf(targetChat);
+        targetChat.data.Chat_open = payload.isOpen;
+        stateCopy[targetIndex] = targetChat;
+        state.info = stateCopy;
+      }
+    },
     CHAT_TOGGLE_FAVORITE(state, users) {
       const stateCopy = state.info;
       const targetChat = findByUsers(state.info, users);
