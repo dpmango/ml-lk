@@ -1,7 +1,7 @@
 <template>
   <div class="avatar" :class="{'size-44' : size === 44, 'size-70': size === 70}" v-if="Thumbnail">
     <div class="avatar__image">
-      <img :src="Thumbnail" :alt="RealName">
+      <img :src="Thumbnail" :alt="RealName" />
     </div>
     <span class="avatar__online" :class="{'is-online': Online ==='1'}"></span>
   </div>
@@ -43,7 +43,7 @@ export default {
     position: absolute;
     bottom: -5px;
     left: 0;
-    z-index: 2;
+    z-index: 1;
     width: 14px;
     height: 14px;
     border-radius: 50%;
