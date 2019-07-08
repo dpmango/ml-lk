@@ -2,10 +2,10 @@
   <div class="panel" :class="{'is-collapsed': isCollapsed}">
     <div class="panel__head panel-head">
       <div class="panel-head__name">{{name}}</div>
-      <div class="panel-head__collapse" @click="toggleCollapse">
+      <!-- <div class="panel-head__collapse" @click="toggleCollapse">
         <span>Свернуть</span>
         <svg-icon name="down-arrow" width="9" height="5"/>
-      </div>
+      </div> -->
     </div>
     <div class="panel__content">
       <slot></slot>

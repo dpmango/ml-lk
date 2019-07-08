@@ -1,16 +1,21 @@
 <template>
   <div class="ntf-lady" :data-id="data.ID">
-    <Avatar :Thumbnail="data.Thumbnail" :RealName="data.RealName"/>
+    <Avatar :Thumbnail="data.Thumbnail" :RealName="data.RealName" />
     <div class="ntf-lady__content">
-      <div class="ntf-lady__name">{{data.RealName}}, {{age}}</div>
+      <a
+        class="ntf-lady__name"
+        :href="outProfileLink"
+        target="_blank"
+        @click.stop
+      >{{data.RealName}}, {{age}}</a>
       <div class="ntf-lady__country">{{data.City}}, {{data.Country}}</div>
     </div>
     <div class="ntf-lady__actions">
       <div class="ntf-lady__toggle">
-        <ui-switch isGreen @click="toggleOnline" :active="isOnline"/>
+        <ui-switch isGreen @click="toggleOnline" :active="isOnline" />
       </div>
       <div class="ntf-lady__toggle">
-        <ui-switch isGreen @click="toggleInvitation" :active="isInvitation"/>
+        <ui-switch isGreen @click="toggleInvitation" :active="isInvitation" />
       </div>
     </div>
   </div>
@@ -58,6 +63,9 @@ export default {
     },
     isInvitation() {
       return this.data.Invitation === '1';
+    },
+    outProfileLink() {
+      return `https://marmeladies.com/profile.php?ID=${this.data.ID}`;
     },
   },
   methods: {
@@ -159,6 +167,11 @@ export default {
   &__name {
     font-size: 14px;
     line-height: 18px;
+    display: block;
+    transition: color 0.25s ease;
+    &:hover {
+      color: $colorPrimary;
+    }
   }
   &__country {
     margin-top: 0.5em;

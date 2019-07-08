@@ -10,23 +10,26 @@
             :Online="storeData.Man.Online"
           />
           <div class="user-head__content">
-            <div
+            <a
               class="user-head__name"
-            >{{storeData.Man.RealName}}, {{getAge(storeData.Man.DateOfBirth)}}</div>
+              :href="outProfileLinkMan"
+              target="_blank"
+              @click.stop
+            >{{storeData.Man.RealName}}, {{getAge(storeData.Man.DateOfBirth)}}</a>
             <div class="user-head__actions">
               <div
                 class="user-head__action user-head__action--heart"
                 :class="{'is-active' : storeData.Favorite}"
               >
-                <svg-icon name="heart" width="14" height="13"/>
+                <svg-icon name="heart" width="14" height="13" />
               </div>
               <div
                 class="user-head__action user-head__action--block"
                 :class="{'is-active' : storeData.Blocked}"
               >
-                <svg-icon name="block" width="13" height="13"/>
+                <svg-icon name="block" width="13" height="13" />
               </div>
-              <head-actions :Favorite="storeData.Favorite" :Blocked="storeData.Blocked"/>
+              <head-actions :Favorite="storeData.Favorite" :Blocked="storeData.Blocked" />
             </div>
           </div>
         </div>
@@ -40,9 +43,12 @@
             :Online="storeData.Lady.Online"
           />
           <div class="user-head__content">
-            <div
+            <a
               class="user-head__name"
-            >{{storeData.Lady.RealName}}, {{getAge(storeData.Lady.DateOfBirth)}}</div>
+              :href="outProfileLinkLady"
+              target="_blank"
+              @click.stop
+            >{{storeData.Lady.RealName}}, {{getAge(storeData.Lady.DateOfBirth)}}</a>
 
             <div class="user-head__modal-link" @click="openPhotoModal">
               <span>Фото</span>
@@ -54,7 +60,33 @@
         <div class="chat-head__info">
           <div class="chat-head__info-row">
             <span>Письма:</span>
-            <span>{{storeData.Msg_stats}}</span>
+            <span>
+              <a
+                :href="outLinkStatsPayed"
+                target="_blank"
+                @click.stop
+                v-if="msgStatsPayed !== '0'"
+                v-tooltip.bottom-start="'Оплаченные'"
+              >{{msgStatsPayed}}</a>
+              <span v-else>{{msgStatsPayed}}</span>
+              /
+              <a
+                :href="outLinkStatsNew"
+                target="_blank"
+                @click.stop
+                v-if="msgStatsNew !== '0'"
+                v-tooltip.bottom-start="'Новые'"
+              >{{msgStatsNew}}</a>
+              <span v-else>{{msgStatsNew}}</span> /
+              <a
+                :href="outLinkStatsUnanswered"
+                target="_blank"
+                @click.stop
+                v-if="msgStatsUnanswered !== '0'"
+                v-tooltip.bottom-start="'Неотвеченные'"
+              >{{msgStatsUnanswered}}</a>
+              <span v-else>{{msgStatsUnanswered}}</span>
+            </span>
           </div>
           <div class="chat-head__info-row">
             <span>Чаты:</span>
@@ -126,6 +158,30 @@ export default {
     },
     storeData() {
       return this.$store.getters.selectInfoByUsers(this.currentUsers);
+    },
+    outProfileLinkMan() {
+      return `https://marmeladies.com/profile.php?ID=${this.storeData.Man.ID}`;
+    },
+    outProfileLinkLady() {
+      return `https://marmeladies.com/profile.php?ID=${this.storeData.Lady.ID}`;
+    },
+    msgStatsPayed() {
+      return this.storeData.Msg_stats.split('/')[0].trim();
+    },
+    msgStatsNew() {
+      return this.storeData.Msg_stats.split('/')[1].trim();
+    },
+    msgStatsUnanswered() {
+      return this.storeData.Msg_stats.split('/')[2].trim();
+    },
+    outLinkStatsPayed() {
+      return `https://marmeladies.com/moderators/messages.php?action=view_messages&user_id=${this.storeData.Man.ID}&user_id_1=${this.storeData.Lady.ID}&status=5`;
+    },
+    outLinkStatsNew() {
+      return `https://marmeladies.com/moderators/messages.php?action=view_messages&user_id=${this.storeData.Man.ID}&user_id_1=${this.storeData.Lady.ID}&status=1`;
+    },
+    outLinkStatsUnanswered() {
+      return `https://marmeladies.com/moderators/messages.php?action=view_messages&user_id=${this.storeData.Man.ID}&user_id_1=${this.storeData.Lady.ID}&status=4`;
     },
   },
   methods: {
@@ -248,6 +304,11 @@ export default {
   }
   &__name {
     font-size: 14px;
+    display: block;
+    transition: color 0.25s ease;
+    &:hover {
+      color: $colorPrimary;
+    }
   }
   &__actions {
     margin: 2px -3px -3px;

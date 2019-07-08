@@ -17,11 +17,12 @@
         />
       </div>
       <div class="relation__separator">
-        <svg-icon name="relationSeparator" width="16" height="16"/>
+        <svg-icon name="relationSeparator" width="16" height="16" />
       </div>
       <div class="relation__user relation__user--right">
         <user-relation
           :ID="data.Lady.ID"
+          :IDMan="data.Man.ID"
           :RealName="data.Lady.RealName"
           :Age="data.Lady.Age"
           :Online="data.Lady.Online"
@@ -36,7 +37,7 @@
       <div class="relation__message-wrapper">
         <div class="relation__message">{{textOnly}}</div>
         <div class="relation__file" v-if="hasFile">
-          <img :src="fileBase64Thumb">
+          <img :src="fileBase64Thumb" />
         </div>
       </div>
     </div>
@@ -46,10 +47,10 @@
         :class="{'is-active': data.Marked ==='1'}"
         @click="markClickRouter"
       >
-        <svg-icon name="starmark" width="16" height="15"/>
+        <svg-icon name="starmark" width="16" height="15" />
       </div>
       <div class="relation__remove" @click="removeContact">
-        <svg-icon name="close" width="12" height="12"/>
+        <svg-icon name="close" width="12" height="12" />
       </div>
     </div>
   </div>

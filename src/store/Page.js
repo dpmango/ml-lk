@@ -11,7 +11,8 @@ const Page = {
       if (isActiveAlready) {
         state.activeModules = state.activeModules.filter(x => x !== payload);
       } else {
-        state.activeModules.push(payload);
+        // state.activeModules.push(payload);
+        state.activeModules = [payload];
       }
     },
   },

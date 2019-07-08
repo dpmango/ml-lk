@@ -32,10 +32,19 @@
                 bigFont
               />
             </li>
+            <li>
+              <ui-checkbox
+                @input="filterWithDebounce"
+                v-model="filter.openChatPage"
+                name="openChatPage"
+                label="Открыл страницу чата"
+                bigFont
+              />
+            </li>
           </ul>
         </UiSpoiler>
-        <LadyFilter :selected="ladyFilterIDs" filterGetList="3" @onSelect="ladyFilterSelected"/>
-        <LadyFilterSelected :data="filter.ladies" @onRemove="ladyFilterSelected"/>
+        <LadyFilter :selected="ladyFilterIDs" filterGetList="3" @onSelect="ladyFilterSelected" />
+        <LadyFilterSelected :data="filter.ladies" @onRemove="ladyFilterSelected" />
       </div>
     </template>
     <div class="table">
@@ -76,6 +85,7 @@ const defaultFilterState = {
   marked: false,
   new: false,
   maleOnline: false,
+  openChatPage: false,
   ladies: [],
 };
 
@@ -134,6 +144,8 @@ export default {
     filterToParams() {
       let filterString = '';
       let ladiesFilter = '';
+      let typeString = '';
+
       if (this.filter.marked) {
         filterString = '1';
       }
@@ -148,9 +160,14 @@ export default {
         ladiesFilter = this.filter.ladies.map(x => x.ID).join(',');
       }
 
+      if (this.filter.openChatPage) {
+        typeString = '1';
+      }
+
       return {
         filter: filterString,
         ladies: ladiesFilter,
+        type: typeString,
       };
     },
     fetchWithFilter() {

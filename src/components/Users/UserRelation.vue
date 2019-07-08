@@ -1,21 +1,32 @@
 <template>
   <div class="user-relation" :data-id="ID">
-    <Avatar :Thumbnail="Thumbnail" :RealName="RealName" :Online="Online"/>
+    <Avatar :Thumbnail="Thumbnail" :RealName="RealName" :Online="Online" />
     <div class="user-relation__content">
-      <div class="user-relation__name">{{RealName}}, {{Age}}</div>
+      <a
+        :href="outProfileLink"
+        target="_blank"
+        @click.stop
+        class="user-relation__name"
+      >{{RealName}}, {{Age}}</a>
       <div class="user-relation__country" :class="{'have-counters': haveMsgCounters}">{{Country}}</div>
       <div v-if="haveMsgCounters" class="user-relation__counters">
         <div class="user-relation__chatnew" v-if="haveChatNew">
-          <svg-icon name="relationComment" width="12" height="12"/>
+          <svg-icon name="relationComment" width="12" height="12" />
           <span>{{ChatNew}}</span>
         </div>
-        <div class="user-relation__msgnew" v-if="haveMessageNew">
-          <svg-icon name="relationMessage" width="14" height="11"/>
+        <a
+          :href="outLinkMsgNew"
+          target="_blank"
+          @click.stop
+          class="user-relation__msgnew"
+          v-if="haveMessageNew"
+        >
+          <svg-icon name="relationMessage" width="14" height="11" />
           <span>{{MsgNew}}</span>
-        </div>
+        </a>
       </div>
       <div class="user-relation__delete" v-if="removable" @click="$emit('onRemoveClick')">
-        <svg-icon name="close" width="12" height="12"/>
+        <svg-icon name="close" width="12" height="12" />
       </div>
     </div>
   </div>
@@ -33,6 +44,7 @@ export default {
   },
   props: {
     ID: String,
+    IDMan: String,
     RealName: String,
     Age: Number,
     Country: String,
@@ -52,6 +64,12 @@ export default {
     haveMessageNew() {
       return this.MsgNew && this.MsgNew !== '0';
     },
+    outProfileLink() {
+      return `https://marmeladies.com/profile.php?ID=${this.ID}`;
+    },
+    outLinkMsgNew() {
+      return `https://marmeladies.com/moderators/messages.php?action=view_messages&user_id=${this.IDMan}&user_id_1=${this.ID}&status=1`;
+    },
   },
 };
 </script>
@@ -69,7 +87,12 @@ export default {
     margin-left: 10px;
   }
   &__name {
+    display: block;
     font-size: 14px;
+    transition: color 0.25s ease;
+    &:hover {
+      color: $colorPrimary;
+    }
   }
   &__country {
     font-size: 11px;
@@ -94,7 +117,6 @@ export default {
   &__chatnew,
   &__msgnew {
     display: flex;
-    display: flex;
     align-items: center;
     font-size: 12px;
     span {
@@ -107,6 +129,10 @@ export default {
   }
   &__msgnew {
     color: #ff9800;
+    transition: color 0.25s ease;
+    &:hover {
+      color: $colorPrimary;
+    }
   }
   &__delete {
     position: absolute;

@@ -12,11 +12,16 @@
       :Online="data.Online"
     />
     <div class="invite-card__content">
-      <div class="invite-card__name">{{data.RealName}}</div>
+      <a
+        class="invite-card__name"
+        :href="outProfileLink"
+        target="_blank"
+        @click.stop
+      >{{data.RealName}}</a>
       <div class="invite-card__country">{{data.Country}}</div>
     </div>
     <div class="invite-card__checkbox">
-      <ui-checkbox yellow withCheckmark :value="isSelected" :name=" 'inviteSelected_' + data.ID"/>
+      <ui-checkbox yellow withCheckmark :value="isSelected" :name=" 'inviteSelected_' + data.ID" />
     </div>
   </div>
 </template>
@@ -42,6 +47,11 @@ export default {
     },
     isSelected: Boolean,
     isSmaller: Boolean,
+  },
+  computed: {
+    outProfileLink() {
+      return `https://marmeladies.com/profile.php?ID=${this.data.ID}`;
+    },
   },
   methods: {
     select() {
@@ -76,6 +86,11 @@ export default {
     // overflow: hidden;
     text-overflow: ellipsis;
     // white-space: nowrap;
+    display: block;
+    transition: color 0.25s ease;
+    &:hover {
+      color: $colorPrimary;
+    }
   }
   &__country {
     margin-top: 0.5em;
