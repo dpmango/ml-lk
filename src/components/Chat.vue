@@ -1,8 +1,8 @@
 <template>
   <div class="chat" v-if="haveCurrentUsers">
     <div class="chat__head">
-      <chat-head/>
-      <chat-filter :filter="filter"/>
+      <chat-head />
+      <chat-filter :filter="filter" />
     </div>
     <div class="chat__messenger">
       <div class="messenger">
@@ -43,7 +43,7 @@
         </div>
       </div>
     </div>
-    <modal-photo-list-lady @addMessage="sendMessage"/>
+    <modal-photo-list-lady @addMessage="sendMessage" />
   </div>
 </template>
 
@@ -182,7 +182,7 @@ export default {
   },
   methods: {
     initialDates() {
-      let oneWeekAgo = new Date();
+      const oneWeekAgo = new Date();
       oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
       return {
         start: oneWeekAgo,
@@ -305,7 +305,7 @@ export default {
       api
         .get('chats/finish', { params: this.currentUsers })
         .then(res => {
-          const apiData = res.data[0]
+          const apiData = res.data[0];
           if (apiData.success) {
             console.log('finish responsce', res.data);
           } else {
@@ -437,8 +437,9 @@ export default {
         });
       };
 
-      const soketClose = () => {
-        console.log('Connection closed');
+      const soketClose = ({ reason }) => {
+        // console.log('Connection closed');
+        this.showNotification({ title: 'Ошибка сети (wss)', message: reason });
       };
 
       /* eslint-disable */
@@ -449,10 +450,10 @@ export default {
           sess = session;
           soketOpen();
         },
-        (code, reason, detail) => soketClose(),
+        (code, reason, detail) => soketClose(code, reason, detail),
         {
           maxRetries: 60,
-          retryDelay: 2000,
+          retryDelay: 5 * 60,
           skipSubprotocolCheck: true,
         },
       );
