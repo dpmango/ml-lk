@@ -237,6 +237,7 @@ export default {
         const apiData = res.data[0];
         if (apiData.success) {
           this.fetchAttached();
+          this.fetchAvailable();
           this.$emit('sucessCallback');
           this.errorMessage = '';
           this.counterAttached = this.counterAttached + this.selectedLadies.length;
