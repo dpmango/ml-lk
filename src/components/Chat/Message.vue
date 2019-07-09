@@ -8,13 +8,13 @@
         :Online="storeUser.Online"
       />
       <div class="message__text-wrapper">
-        <div class="message__text" v-html="data.Text_only" v-if="isTextNotEmpty"/>
+        <div class="message__text" v-html="TextOnlyEmoji" v-if="isTextNotEmpty" />
         <div class="message__file" v-if="hasFile">
           <!-- <a v-img="{'src': fileBase64Full}"></a> -->
           <img
             v-img="{'src': fileBase64Full, thumbnails: true, group: 'messageFiles'}"
             :src="fileBase64Thumb"
-          >
+          />
         </div>
       </div>
       <div class="message__actions">
@@ -24,7 +24,7 @@
           :class="{'is-active': data.Marked ==='1'}"
           @click="markMessage"
         >
-          <svg-icon name="starmark" width="16" height="15"/>
+          <svg-icon name="starmark" width="16" height="15" />
         </div>
         <div class="message__timestamp">{{timeStamp}}</div>
       </div>
@@ -37,6 +37,7 @@ import { timestampToAgoStamp, timestampToTime } from '@/helpers/Dates';
 import UiNotification from '@/components/Shared/UI/Notification.vue';
 import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import Avatar from '@/components/Users/Avatar.vue';
+import replaceEmoji from '@/helpers/Emoji';
 import api from '@/helpers/Api';
 
 export default {
@@ -82,6 +83,9 @@ export default {
       // return timestampToAgoStamp(this.data.Date);
       return timestampToTime(this.data.Date);
       // return timestampToDate(this.data.Date);
+    },
+    TextOnlyEmoji() {
+      return replaceEmoji(this.data.Text_only);
     },
   },
   mounted() {
@@ -289,5 +293,15 @@ export default {
       }
     }
   }
+}
+</style>
+<style>
+.emoji-img {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  margin: 0 0.2em;
+  line-height: normal;
+  vertical-align: middle;
 }
 </style>

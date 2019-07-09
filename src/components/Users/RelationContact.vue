@@ -60,6 +60,7 @@
 import { timestampToTime } from '@/helpers/Dates';
 import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import UserRelation from '@/components/Users/UserRelation.vue';
+import replaceEmoji from '@/helpers/Emoji';
 import api from '@/helpers/Api';
 
 export default {
@@ -132,7 +133,8 @@ export default {
       return manMathch && ladyMatch;
     },
     textOnly() {
-      return this.data.LastMessage.replace(/<img .*?>/g, '');
+      const t = this.data.LastMessage.replace(/<img .*?>/g, '');
+      return replaceEmoji(t);
     },
   },
 
