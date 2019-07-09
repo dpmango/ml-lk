@@ -93,6 +93,7 @@ export default {
         notificationListSound: undefined,
         contactListSound: undefined,
       },
+      soketSubscribed: false,
     };
   },
   created() {
@@ -407,7 +408,7 @@ export default {
       listDOM.scrollTop = lastMsgPos;
     },
     mountSocket() {
-      const isDebug = false;
+      const isDebug = true;
 
       /* eslint-disable */
       ab._debugrpc = isDebug;
@@ -430,15 +431,23 @@ export default {
         // console.log('Connected!', session);
 
         // 1) subscribe to a topic
-        const topicuri = `translator-${getToken()}`;
-        // JSON.stringify([ab._MESSAGE_TYPEID_SUBSCRIBE, topicuri])
-        sess.subscribe(topicuri, (topic, data) => {
-          this.handleSocketResponce(data);
-        });
+        if (!this.soketSubscribed) {
+          const topicuri = `translator-${getToken()}`;
+          // JSON.stringify([ab._MESSAGE_TYPEID_SUBSCRIBE, topicuri])
+          try {
+            sess.subscribe(topicuri, (topic, data) => {
+              this.handleSocketResponce(data);
+            });
+            this.soketSubscribed = true;
+          } catch (e) {
+            console.log('cant subscribe to soket');
+          }
+        }
       };
 
       const soketClose = ({ reason }) => {
         // console.log('Connection closed');
+        this.soketSubscribed = false;
         this.showNotification({ title: 'Ошибка сети (wss)', message: reason });
       };
 
@@ -509,9 +518,9 @@ export default {
         this.fetchChats();
       } else if (msgType === 'chat_page_open_notification') {
         // обрабатываем уведомление
-        // this.showInfoNotification({
-        //   message: `chat_page_open_notification`,
-        // });
+        if ( messageId === 0 ){
+          return
+        }
         this.playNotificationListSound();
         api
           .get(`notifications/${messageId}`)
@@ -530,6 +539,9 @@ export default {
           });
       } else {
         // текст сообщение, выводим в чат, если открыт экран чата с отправителем или в уведомления
+        if ( messageId === 0 ){
+          return
+        }
         this.typingNotificationActive = false;
         this.playContactListSound();
         api
