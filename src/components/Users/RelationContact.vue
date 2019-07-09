@@ -228,8 +228,11 @@ export default {
     },
   },
   watch: {
-    data() {
-      this.fileBase64Thumb = '';
+    data: {
+      handler(oldVal, newVal) {
+        this.fileBase64Thumb = '';
+      },
+      deep: true,
     },
   },
   notifications: {

@@ -54,6 +54,7 @@ const Contacts = {
         // existing notification
         const targetIndex = stateCopy.indexOf(targetContact);
         targetContact.Marked = payload.contact.Marked;
+        targetContact.File = payload.contact.File;
         targetContact.LastMessage = payload.contact.LastMessage;
         targetContact.LastMessageDate = payload.contact.LastMessageDate;
         targetContact.Man.Online = payload.contact.Man.Online;
