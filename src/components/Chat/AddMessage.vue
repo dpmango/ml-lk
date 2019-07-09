@@ -135,7 +135,8 @@ export default {
       this.textarea = ''; // reset state
     },
     appendEmoji(emoji) {
-      this.textarea += emoji;
+      const eSymbol = String.fromCodePoint(emoji);
+      this.textarea += eSymbol;
     },
     typingNotification() {
       this.$emit('sendTypingNotification');
