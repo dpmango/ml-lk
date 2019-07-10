@@ -109,7 +109,7 @@ export default {
     this.mountSocket();
   },
   beforeDestroy() {
-    this.finishChat();
+    // this.finishChat();
   },
   computed: {
     currentUsers() {
@@ -518,8 +518,8 @@ export default {
         this.fetchChats();
       } else if (msgType === 'chat_page_open_notification') {
         // обрабатываем уведомление
-        if ( messageId === 0 ){
-          return
+        if (messageId === 0) {
+          return;
         }
         this.playNotificationListSound();
         api
@@ -539,8 +539,8 @@ export default {
           });
       } else {
         // текст сообщение, выводим в чат, если открыт экран чата с отправителем или в уведомления
-        if ( messageId === 0 ){
-          return
+        if (messageId === 0) {
+          return;
         }
         this.typingNotificationActive = false;
         this.playContactListSound();

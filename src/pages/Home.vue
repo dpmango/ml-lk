@@ -1,19 +1,19 @@
 <template>
   <div class="page">
-    <Header/>
+    <Header />
     <div class="page__content">
       <Container>
-        <LadiesNotifications/>
-        <SendInvite/>
+        <LadiesNotifications />
+        <SendInvite />
         <div class="grid" :class="{'is-chat-active': isChatActive}">
           <div class="col col--left">
-            <NotificationsList/>
+            <NotificationsList />
           </div>
           <div class="col col--chat">
-            <Chat/>
+            <Chat />
           </div>
           <div class="col col--right">
-            <ContactList/>
+            <ContactList />
           </div>
         </div>
       </Container>
@@ -82,7 +82,7 @@ export default {
     max-width: calc(100% - 760px);
   }
 }
-@include r($hd) {
+@include r(1280) {
   .grid {
     position: relative;
     .col--left,
