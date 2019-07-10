@@ -49,6 +49,7 @@ const CustomListObj = CustomListKeyValue.reduce((obj, item) => {
 }, {});
 
 export default {
+  Custom: CustomListObj,
   // 'Frequently used': {
   //   thumbs_up: '👍',
   //   '-1': '👎',
@@ -58,7 +59,6 @@ export default {
   //   blush: '😊',
   //   heart_eyes: '😍',
   // },
-  Custom: CustomListObj,
   // People: {
   //   smile: '😄',
   //   smiley: '😃',

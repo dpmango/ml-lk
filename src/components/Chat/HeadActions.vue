@@ -2,33 +2,33 @@
   <div class="head-actions" :class="{'is-active': isMoreOpen}" v-click-outside="hideDropdown">
     <div class="head-actions__toggle" @click="toggleMoreDropdown">
       <span>More</span>
-      <svg-icon name="down-arrow" width="9" height="5"/>
+      <svg-icon name="down-arrow" width="9" height="5" />
     </div>
     <div class="head-actions__dropdown">
       <ul class="head-actions__list">
         <li>
           <a href="#" class="action-markadd" v-if="!Favorite" @click="addFavorite">
-            <svg-icon name="heart" width="14" height="13"/>
+            <svg-icon name="heart" width="14" height="13" />
             <span>Добавить в Избранное</span>
           </a>
           <a href="#" class="action-markremove" v-else @click="removeFavorite">
-            <svg-icon name="heart" width="14" height="13"/>
+            <svg-icon name="heart" width="14" height="13" />
             <span>Удалить из Избранного</span>
           </a>
           <a href="#" class="action-kiss" @click="sendKiss">
-            <svg-icon name="kisssmile" width="15" height="15"/>
+            <svg-icon name="kisssmile" width="15" height="15" />
             <span>Подмигнуть</span>
           </a>
-          <!-- <a href="#" class="action-letter" @click="sendLetter">
-            <svg-icon name="mail" width="14" height="10"/>
+          <a href="#" class="action-letter" @click="sendLetter">
+            <svg-icon name="mail" width="14" height="10" />
             <span>Написать письмо</span>
-          </a>-->
+          </a>
           <a href="#" class="action-block" v-if="!Blocked" @click="addBlocked">
-            <svg-icon name="block" width="14" height="14"/>
+            <svg-icon name="block" width="14" height="14" />
             <span>Заблокировать</span>
           </a>
           <a href="#" class="action-unblock" v-else @click="removeBlocked">
-            <svg-icon name="block" width="14" height="14"/>
+            <svg-icon name="block" width="14" height="14" />
             <span>Разблокировать</span>
           </a>
         </li>
@@ -96,6 +96,9 @@ export default {
     },
     sendLetter() {
       // ссылка на другую страницу
+      this.$modal.show('send-letter', {
+        users: this.currentUsers,
+      });
     },
     addBlocked() {
       this.pingApi({
