@@ -39,12 +39,11 @@
               </template>
             </multiselect>
             <ui-input
-              v-if="shouldShowInput"
               group
               noLabel
               type="textarea"
               v-model="form.reasonInput"
-              placeholder="Причина"
+              placeholder="Комментарий"
             />
           </template>
 
@@ -109,9 +108,6 @@ export default {
     actionType() {
       return this.isBlockedAlready ? 'заблокирован' : 'будет заблокирован';
     },
-    shouldShowInput() {
-      return this.form.reason === 'Другое';
-    },
     blockDateFormated() {
       return timestampToDate(this.blockDate);
     },
@@ -131,7 +127,8 @@ export default {
       this.form = cloneDeep(defaultFormState);
     },
     getReason() {
-      return this.form.reason !== 'Другое' ? this.form.reason : this.form.reasonInput;
+      // return this.form.reason !== 'Другое' ? this.form.reason : this.form.reasonInput;
+      return `${this.form.reason} : ${this.form.reasonInput}`;
     },
     handleSubmit(e) {
       e.preventDefault();
