@@ -125,7 +125,6 @@
         />
       </div>
     </div>
-    <SendLetterModal />
   </div>
 </template>
 
@@ -134,7 +133,6 @@ import debounce from 'lodash/debounce';
 import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import Avatar from '@/components/Users/Avatar.vue';
 import HeadActions from '@/components/Chat/HeadActions.vue';
-import SendLetterModal from '@/components/Chat/SendLetterModal.vue';
 import { dateToAge } from '@/helpers/Dates';
 import api from '@/helpers/Api';
 
@@ -144,7 +142,6 @@ export default {
     SvgIcon,
     Avatar,
     HeadActions,
-    SendLetterModal,
   },
   mounted() {
     this.textareaDebounce = debounce(this.updateComments, 1000);

@@ -4,7 +4,7 @@
     :adaptive="true"
     width="570"
     height="auto"
-    :scrollable="false"
+    :scrollable="true"
     @before-open="beforeOpen"
     @before-close="resetState"
   >
@@ -18,7 +18,14 @@
         <Notification v-if="errorMessage" type="danger">{{errorMessage}}</Notification>
         <form @submit="handleSubmit">
           <ui-input group v-model="form.subject" placeholder="Тема" />
-          <ui-input group type="textarea" v-model="form.text" placeholder="Текст" />
+          <ui-input
+            group
+            type="textarea"
+            :minheight="240"
+            :maxheight="350"
+            v-model="form.text"
+            placeholder="Текст"
+          />
 
           <div class="modal__cta">
             <Button orange type="submit">Отправить</Button>
@@ -104,6 +111,15 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+[data-modal='send-letter'] {
+  .v--modal-box.v--modal {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+</style>
 
 <style lang="scss" scoped>
 @import '@/theme/utils.scss';

@@ -44,6 +44,7 @@
       </div>
     </div>
     <modal-photo-list-lady @addMessage="sendMessage" />
+    <send-letter-modal />
   </div>
 </template>
 
@@ -56,6 +57,7 @@ import ChatFilter from '@/components/Chat/ChatFilter.vue';
 import Message from '@/components/Chat/Message.vue';
 import AddMessage from '@/components/Chat/AddMessage.vue';
 import ModalPhotoListLady from '@/components/Chat/PhotoListLady.vue';
+import SendLetterModal from '@/components/Chat/SendLetterModal.vue';
 import { timestampToAgoStamp, dateToTimestamp } from '@/helpers/Dates';
 import api from '@/helpers/Api';
 import { setTimeout } from 'timers';
@@ -72,6 +74,7 @@ export default {
     Message,
     AddMessage,
     ModalPhotoListLady,
+    SendLetterModal
   },
   data() {
     return {
