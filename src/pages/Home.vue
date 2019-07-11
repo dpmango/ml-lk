@@ -82,7 +82,7 @@ export default {
     max-width: calc(100% - 760px);
   }
 }
-@include r(1280) {
+@include r(1279) {
   .grid {
     position: relative;
     .col--left,
