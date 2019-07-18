@@ -1,19 +1,19 @@
 <template>
   <div class="chat-filter">
     <div class="chat-filter__label">Показать:</div>
-    <ui-radio v-model="filter.checkbox" cbValue="0" name="messagesFilter" label="Все"/>
-    <ui-radio v-model="filter.checkbox" cbValue="1" name="messagesFilter" label="Избранные"/>
-    <ui-radio v-model="filter.checkbox" cbValue="2" name="messagesFilter" label="Фотографии"/>
-    <ui-radio v-model="filter.checkbox" cbValue="3" name="messagesFilter" label="За период"/>
+    <ui-radio v-model="filter.checkbox" cbValue="0" name="messagesFilter" label="Все" />
+    <ui-radio v-model="filter.checkbox" cbValue="1" name="messagesFilter" label="Избранные" />
+    <ui-radio v-model="filter.checkbox" cbValue="2" name="messagesFilter" label="Фотографии" />
+    <ui-radio v-model="filter.checkbox" cbValue="3" name="messagesFilter" label="За период" />
     <span class="chat-filter__calendar" v-if="shouldShowCalendar">
-      <svg-icon name="calendar" width="24" height="24"/>
+      <svg-icon name="calendar" width="24" height="24" />
       <v-date-picker :show-day-popover="false" mode="range" show-caps v-model="filter.dates">
         <div :type="inputState.type" slot-scope="props">
           <input
             type="text"
             :value="props.inputValue"
             @change.native="props.updateValue($event.target.value)"
-          >
+          />
         </div>
       </v-date-picker>
     </span>
@@ -98,9 +98,55 @@ export default {
     }
   }
 }
+@include r(1400) {
+  .chat-filter {
+    &__label {
+      display: none;
+    }
+  }
+}
+@include r(1320) {
+  .chat-filter {
+    &__label {
+      display: none;
+    }
+    .ui-radio {
+      margin-right: 15px;
+      &:last-of-type {
+        margin-right: 0;
+      }
+    }
+  }
+}
+@include r(1279) {
+  .chat-filter {
+    &__label {
+      display: block;
+    }
+    .ui-radio {
+      margin-right: 25px;
+      &:last-of-type {
+        margin-right: 0;
+      }
+    }
+  }
+}
+@include r(640) {
+  .chat-filter {
+    &__label {
+      display: none;
+    }
+  }
+}
 @include r($sm) {
   .chat-filter {
     margin-top: 0;
+    .ui-radio {
+      margin-right: 15px;
+      &:last-of-type {
+        margin-right: 0;
+      }
+    }
   }
 }
 </style>
