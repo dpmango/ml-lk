@@ -130,6 +130,16 @@ export default {
       // return this.form.reason !== 'Другое' ? this.form.reason : this.form.reasonInput;
       return `${this.form.reason} : ${this.form.reasonInput}`;
     },
+    validate() {
+      if (this.form.reason === '') {
+        this.errorMessage = 'Выберите причину';
+        return false;
+      } else if (this.form.reasonInput.trim() === '') {
+        this.errorMessage = 'Заполните комментарий';
+        return false;
+      }
+      return true;
+    },
     handleSubmit(e) {
       e.preventDefault();
       if (this.isRemovedAlready) {
@@ -143,16 +153,18 @@ export default {
             console.log(error);
           });
       } else if (!this.isRemovedAlready) {
-        api
-          .delete(`translators/${this.id}`, {
-            data: {
-              reason: this.getReason(),
-            },
-          })
-          .then(res => this.handleResponce(res))
-          .catch(error => {
-            console.log(error);
-          });
+        if (this.validate()) {
+          api
+            .delete(`translators/${this.id}`, {
+              data: {
+                reason: this.getReason(),
+              },
+            })
+            .then(res => this.handleResponce(res))
+            .catch(error => {
+              console.log(error);
+            });
+        }
       }
     },
     handleResponce(res) {

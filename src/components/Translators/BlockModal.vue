@@ -9,12 +9,12 @@
   >
     <div class="modal">
       <div class="modal__close" @click="closeModal">
-        <svg-icon name="close" width="14" height="14"/>
+        <svg-icon name="close" width="14" height="14" />
       </div>
       <div class="modal__title">
         Переводчик
         <strong>{{name}}</strong>
-        <br>
+        <br />
         {{actionType}}
       </div>
       <div class="modal__info" v-if="isBlockedAlready">
@@ -34,7 +34,7 @@
             >
               <template slot="caret">
                 <div class="multiselect__select multiselect__select--svg">
-                  <svg-icon name="down-arrow" width="10" height="6"/>
+                  <svg-icon name="down-arrow" width="10" height="6" />
                 </div>
               </template>
             </multiselect>
@@ -130,6 +130,16 @@ export default {
       // return this.form.reason !== 'Другое' ? this.form.reason : this.form.reasonInput;
       return `${this.form.reason} : ${this.form.reasonInput}`;
     },
+    validate() {
+      if (this.form.reason === '') {
+        this.errorMessage = 'Выберите причину';
+        return false;
+      } else if (this.form.reasonInput.trim() === '') {
+        this.errorMessage = 'Заполните комментарий';
+        return false;
+      }
+      return true;
+    },
     handleSubmit(e) {
       e.preventDefault();
 
@@ -144,11 +154,14 @@ export default {
           type: 'block',
           reason: this.getReason(),
         };
+        if (!this.validate()) {
+          return false;
+        }
       }
 
       api
         .patch(`translators/${this.id}`, patchObj)
-        .then((res) => {
+        .then(res => {
           if (res.data[0].success) {
             this.resetState();
             this.$emit('sucessCallback');
@@ -157,7 +170,7 @@ export default {
             this.errorMessage = res.data[0].message;
           }
         })
-        .catch((error) => {
+        .catch(error => {
           console.log(error);
         });
     },
@@ -198,10 +211,10 @@ export default {
       margin-bottom: 20px;
     }
   }
-  &__info{
+  &__info {
     margin: 20px 0;
     font-size: 11px;
-    color: rgba($fontColor, .6)
+    color: rgba($fontColor, 0.6);
   }
   &__cta {
     display: flex;
@@ -215,7 +228,7 @@ export default {
   }
 }
 @include r(375) {
-  .modal__cta{
+  .modal__cta {
     .btn {
       min-width: 135px;
     }
