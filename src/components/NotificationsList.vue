@@ -3,46 +3,50 @@
     <template v-slot:filter>
       <div class="filter botom-line">
         <button class="filter__clear" @click="clearFilter">Очистить</button>
-        <UiSpoiler title="Тип уведомления">
-          <ul class="list">
-            <li>
-              <ui-checkbox
-                @input="filterWithDebounce"
-                v-model="filter.marked"
-                name="marked"
-                label="Отмеченные"
-                bigFont
-              />
-            </li>
-            <li>
-              <ui-checkbox
-                @input="filterWithDebounce"
-                v-model="filter.new"
-                name="new"
-                label="Новые"
-                bigFont
-              />
-            </li>
-            <li>
-              <ui-checkbox
-                @input="filterWithDebounce"
-                v-model="filter.maleOnline"
-                name="maleOnline"
-                label="Мужчина онлайн"
-                bigFont
-              />
-            </li>
-            <li>
-              <ui-checkbox
-                @input="filterWithDebounce"
-                v-model="filter.openChatPage"
-                name="openChatPage"
-                label="Открыл страницу чата"
-                bigFont
-              />
-            </li>
-          </ul>
-        </UiSpoiler>
+        <ul class="list">
+          <li class="select">
+            <multiselect
+              @input="filterWithDebounce"
+              v-model="filter.type"
+              :options="['Все', 'Открыл страницу чата']"
+              placeholder="Тип уведомления"
+              :searchable="false"
+            >
+              <template slot="caret">
+                <div class="multiselect__select multiselect__select--svg">
+                  <svg-icon name="down-arrow" width="10" height="6" />
+                </div>
+              </template>
+            </multiselect>
+          </li>
+          <li>
+            <ui-checkbox
+              @input="filterWithDebounce"
+              v-model="filter.marked"
+              name="marked"
+              label="Отмеченные"
+              bigFont
+            />
+          </li>
+          <li>
+            <ui-checkbox
+              @input="filterWithDebounce"
+              v-model="filter.new"
+              name="new"
+              label="Новые"
+              bigFont
+            />
+          </li>
+          <li>
+            <ui-checkbox
+              @input="filterWithDebounce"
+              v-model="filter.maleOnline"
+              name="maleOnline"
+              label="Мужчина онлайн"
+              bigFont
+            />
+          </li>
+        </ul>
         <LadyFilter :selected="ladyFilterIDs" filterGetList="3" @onSelect="ladyFilterSelected" />
         <LadyFilterSelected :data="filter.ladies" @onRemove="ladyFilterSelected" />
       </div>
@@ -72,8 +76,9 @@ import throttle from 'lodash/throttle';
 import cloneDeep from 'lodash/cloneDeep';
 import Spinner from 'vue-simple-spinner';
 import Panel from '@/components/Shared/Layout/Panel.vue';
-// import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
+import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import UiCheckbox from '@/components/Shared/UI/Checkbox.vue';
+import Multiselect from 'vue-multiselect';
 import UiNotification from '@/components/Shared/UI/Notification.vue';
 import UiSpoiler from '@/components/Shared/UI/Spoiler.vue';
 import RelationNotification from '@/components/Users/RelationNotification.vue';
@@ -85,7 +90,7 @@ const defaultFilterState = {
   marked: false,
   new: false,
   maleOnline: false,
-  openChatPage: false,
+  type: '',
   ladies: [],
 };
 
@@ -94,8 +99,9 @@ export default {
   components: {
     Spinner,
     Panel,
-    // SvgIcon,
+    SvgIcon,
     UiCheckbox,
+    Multiselect,
     UiNotification,
     UiSpoiler,
     RelationNotification,
@@ -160,7 +166,7 @@ export default {
         ladiesFilter = this.filter.ladies.map(x => x.ID).join(',');
       }
 
-      if (this.filter.openChatPage) {
+      if (this.filter.type === 'Открыл страницу чата') {
         typeString = '1';
       }
 
@@ -241,6 +247,11 @@ export default {
   padding: 0;
   li {
     width: 100%;
+    &.select {
+      padding-left: 10px;
+      padding-right: 100px;
+      margin-bottom: 10px;
+    }
   }
 }
 
@@ -253,7 +264,7 @@ export default {
   &__clear {
     position: absolute;
     z-index: 3;
-    top: 15px;
+    top: 22px;
     right: 13px;
     cursor: pointer;
     text-decoration: underline;
