@@ -3,7 +3,7 @@
     <div class="chat-filter__label">Показать:</div>
     <ui-radio v-model="filter.checkbox" cbValue="0" name="messagesFilter" label="Все" />
     <ui-radio v-model="filter.checkbox" cbValue="1" name="messagesFilter" label="Избранные" />
-    <ui-radio v-model="filter.checkbox" cbValue="2" name="messagesFilter" label="Фотографии" />
+    <ui-radio v-model="filter.checkbox" cbValue="2" name="messagesFilter" label="Фото" />
     <ui-radio v-model="filter.checkbox" cbValue="3" name="messagesFilter" label="За период" />
     <span class="chat-filter__calendar" v-if="shouldShowCalendar">
       <svg-icon name="calendar" width="24" height="24" />
@@ -70,14 +70,14 @@ export default {
   border-radius: 2px;
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   &__label {
     font-weight: 500;
     font-size: 13px;
     margin-right: 20px;
   }
   .ui-radio {
-    margin-right: 25px;
+    margin-right: 15px;
     &:last-of-type {
       margin-right: 0;
     }
@@ -110,24 +110,12 @@ export default {
     &__label {
       display: none;
     }
-    .ui-radio {
-      margin-right: 15px;
-      &:last-of-type {
-        margin-right: 0;
-      }
-    }
   }
 }
 @include r(1279) {
   .chat-filter {
     &__label {
       display: block;
-    }
-    .ui-radio {
-      margin-right: 25px;
-      &:last-of-type {
-        margin-right: 0;
-      }
     }
   }
 }
@@ -140,13 +128,8 @@ export default {
 }
 @include r($sm) {
   .chat-filter {
+    flex-wrap: wrap;
     margin-top: 0;
-    .ui-radio {
-      margin-right: 15px;
-      &:last-of-type {
-        margin-right: 0;
-      }
-    }
   }
 }
 </style>
