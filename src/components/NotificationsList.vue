@@ -285,6 +285,7 @@ export default {
 .table {
   flex: 1 1 auto;
   max-height: 100%;
+  min-height: 1px;
   display: flex;
   flex-direction: column;
   &__cell {

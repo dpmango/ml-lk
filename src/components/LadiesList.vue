@@ -42,7 +42,7 @@
       >
         <template slot="caret">
           <div class="multiselect__select multiselect__select--svg">
-            <svg-icon name="down-arrow" width="10" height="6"/>
+            <svg-icon name="down-arrow" width="10" height="6" />
           </div>
         </template>
       </multiselect>
@@ -60,7 +60,7 @@
       </div>
       <div class="table__content" ref="list">
         <Notification v-if="errorMessage" type="danger">{{errorMessage}}</Notification>
-        <Lady v-for="(lady, idx) in ladies" :key="idx" :lady="lady"/>
+        <Lady v-for="(lady, idx) in ladies" :key="idx" :lady="lady" />
         <spinner
           class="table__loader"
           v-if="scrollFetch.isLoading"
@@ -68,7 +68,7 @@
           line-fg-color="#5aa6ff"
         />
       </div>
-      <AttachTranslatorModal @sucessCallback="updateComponenet"/>
+      <AttachTranslatorModal @sucessCallback="updateComponenet" />
     </div>
   </Panel>
 </template>
@@ -255,6 +255,7 @@ export default {
 .table {
   flex: 1 1 auto;
   max-height: 100%;
+  min-height: 1px;
   display: flex;
   flex-direction: column;
   &__head {
