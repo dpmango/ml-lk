@@ -80,7 +80,6 @@ import SvgIcon from '@/components/Shared/UI/SvgIcon.vue';
 import UiCheckbox from '@/components/Shared/UI/Checkbox.vue';
 import Multiselect from 'vue-multiselect';
 import UiNotification from '@/components/Shared/UI/Notification.vue';
-import UiSpoiler from '@/components/Shared/UI/Spoiler.vue';
 import RelationNotification from '@/components/Users/RelationNotification.vue';
 import LadyFilter from '@/components/Ladies/LadyFilter.vue';
 import LadyFilterSelected from '@/components/Ladies/LadyFilterSelected.vue';
@@ -103,7 +102,6 @@ export default {
     UiCheckbox,
     Multiselect,
     UiNotification,
-    UiSpoiler,
     RelationNotification,
     LadyFilter,
     LadyFilterSelected,
